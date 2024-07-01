@@ -1,0 +1,117 @@
+{% extends 'baseETH.html' %}
+{% block title %}contract{% endblock %}
+
+{% block head_style %}
+
+
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='plugins/amcharts/demo/index.css') }}"/>
+
+{% endblock %}
+
+{% block content %}
+{#    <h1>CONTRACT</h1>#}
+
+        {% include '_ethcrumb.html' %}
+
+
+    <div id="step_count_chart"></div>
+
+    <br>
+
+
+    <div class="bee-row2">
+
+        <div class="bee-row">
+
+            {#        <div>{{ pagination.info }}</div>#}
+
+            <div>共<span id="block_total">{{ total }}</span>个结果</div>
+
+
+
+            <div class="dropdown">
+                <button class="btn btn-primary btn-sm" type="button" id="fields-filter" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">选择字段 <span
+                        class="oi oi-elevator"></span>
+                </button>
+                <div id="ffm" class="dropdown-menu" aria-labelledby="fields-filter">
+                    {% for item in table_fields %}
+                        {#                    <div class="dropdown-item"><input type="checkbox" class="toggle-vis"/>{{ block_fields[item] }}</div>#}
+                        <div class="dropdown-item" data-stopPropagation="true"><i
+                                class="fa fa-square-o fa-fw"></i> {{ item }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+
+
+            <div>
+                <input id="table-search" type="text">
+            </div>
+
+
+        </div>
+        <div class="bee-row2 bee-pagination f-ai-c" style="width: 275px">
+            <button class="btn btn-primary btn-sm prev">上一页</button>
+            <input class="jump-ipt" style="width: 50px;" type="text" value="1">/ <span
+                id="block_pages">{{ pages }}</span>
+            <button class="btn btn-primary btn-sm next">下一页</button>
+        </div>
+    </div>
+
+    <!-- start contractList-->
+    <table class="table">
+        <thead>
+        <tr>
+            <th>合约地址</th>
+            <th>合约名字</th>
+            <th>编译器版本</th>
+            <th>账户余额</th>
+            <th>交易总数</th>
+            <th>编译器参数</th>
+            <th>已验证</th>
+            <th>验证日期</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in contractList %}
+            <tr>
+                <td><a href="{{  url_for('eth.eth_contract_detail',caddress = item['id']) }}">{{ item['id']|truncate(20) }}</a></td>
+
+                <td>NaN</td>
+                <td>NaN</td>
+                <td>NaN</td>
+                <td>NaN</td>
+                <td>NaN</td>
+                <td>NaN</td>
+                <td>NaN</td>
+            </tr>
+        {% endfor %}
+
+        </tbody>
+    </table>
+    {{ pagination.links }}
+    <!-- end contractList-->
+{% endblock %}
+
+{% block body_script %}
+    <script type="text/javascript">
+        date_list = {{ date_list|tojson }}
+        new_contract = {{ new_contract|tojson }}
+
+
+    </script>
+
+    <script src="{{ url_for('static', filename='plugins/amcharts/core.js') }}"></script>
+    <script src="{{ url_for('static', filename='plugins/amcharts/charts.js') }}"></script>
+    <script src="{{ url_for('static', filename='plugins/amcharts/themes/dark.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='plugins/amcharts/themes/animated.js') }}"></script>
+    <script src="{{ url_for('static', filename='plugins/amcharts/demo/step_count_chart.js') }}"></script>
+
+
+    {#    <script src="{{ url_for('static', filename='') }}"></script>#}
+
+
+{% endblock %}

@@ -1,0 +1,545 @@
+{#  三种dropdown button共存 #}
+
+{% extends 'base3.html' %}
+{% block title %}{% endblock %}
+
+{% block head_style %}
+      <script>
+    //弹出隐藏层
+    function ShowDiv(show_div,bg_div){
+document.getElementById(show_div).style.display='block';
+document.getElementById(bg_div).style.display='block' ;
+var bgdiv = document.getElementById(bg_div);
+bgdiv.style.width = document.body.scrollWidth;
+// bgdiv.style.height = $(document).height();
+$("#"+bg_div).height($(document).height());
+}
+//关闭弹出层
+    function CloseDiv(show_div,bg_div)
+{
+document.getElementById(show_div).style.display='none';
+document.getElementById(bg_div).style.display='none';
+}
+    </script>
+  <style>
+.black_overlay{
+display: none;
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background-color: black;
+z-index:1001;
+-moz-opacity: 0.8;
+opacity:.80;
+filter: alpha(opacity=80);
+}
+.white_content {
+display: none;
+position: absolute;
+top: 10%;
+left: 10%;
+width: 80%;
+height: 80%;
+border: 16px solid #0C0C0C;
+background-color: white;
+z-index:1002;
+overflow: auto;
+}
+</style>
+    {#   open-iconic 双箭头 #}
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='vendor/css/open-iconic/font/css/open-iconic-bootstrap.css') }}">
+
+    {#    checkbox #}
+    {#    paginationjs #}
+
+    {#    theme #}
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/bee.theme.dark.css') }}"/>
+
+    <style>
+    #keyword::placeholder {
+        color: #4c5667;
+    }
+    #inputaddrs::placeholder {
+        color: #8a8f92;
+    }
+    #outputaddrs::placeholder {
+        color: #8a8f92;
+    }
+    #remark::placeholder {
+        color: #4c5667;
+    }
+        .item-checked {
+            background-color: #EEE5DE;
+
+        }
+
+        .dropdown-item:active {
+            background-color: #EEDFCC;
+            color: black;
+        }
+
+        .item-checked:hover {
+            background-color: #EEE5DE;
+        }
+
+        .item-checked:active {
+            background-color: #EEDFCC;
+
+        }
+    </style>
+
+{% endblock %}
+
+{% block content %}
+    {% include '_btccrumb.html' %}
+<br>
+
+    <div class="card">
+        <div class="card-header">查询语句<button type="submit" style="float: right" class="btn btn-primary btn-sm" onclick="ShowDiv('MyDiv','fade')">查询助手</button><button type="submit" style="float: right;margin-right: 25px" class="btn btn-primary btn-sm" onclick="savequery()">记住此查询</button></div>
+        <div class="card-body">
+                    <form action="{{ url_for('btc.query_pro_search') }}" class="layui-form"   id="query_form" >
+                       <div class="layui-form-item" >
+                         <div >
+                             <input type="text" name="kw" style="height:100px;color: black; padding-bottom:60px;font-size:18px"
+                                                             class="layui-input" id="kws" value="{{ text }}"
+                                                             placeholder="示例：input:bc1q***"/>
+                        </div>
+                           <br>
+                        <center><button type="submit"  class="btn btn-primary btn-sm"  value="" >查询</button>
+                            <button type="reset"  style="margin-left: 20px "class="btn btn-primary btn-sm" onclick="layer.closeAll()">重置条件</button></center>
+                    </div>
+        </form>
+        </div>
+    </div>
+    <br>
+    <div class="card">
+            <div class="card-header">查询结果({{ pagination.total }})<button type="submit" style="float: right;margin-right: 25px" class="btn btn-primary btn-sm" onclick="window.location.href='{{ url_for('btc.query_pro') }}'">重新查询</button><button  id="{{ latestTransList }}" type="submit" style="float: right;margin-right: 25px" class="btn btn-primary btn-sm"  onclick="gen_sheet(this.id)">导出查询结果</button></div>
+        <div class="card-body">
+                    <table id="transes-table" class="table bee-transes-table" >
+        <thead>
+        <tr>
+            <th>交易哈希</th>
+            <th>所在区块</th>
+            <th>时间(北京)</th>
+            <th>输入地址数</th>
+            <th>输出地址数</th>
+            <th>交易额(BTC)</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody >
+        {% for item in latestTransList %}
+            <tr>
+                <td><a href="{{ url_for('btc.btc_tsc_detail', hash=item['_id']) }}">{{ item['_id']|truncate(20) }}</a>
+                </td>
+                <td>
+                    <a href="{{ url_for('btc.btc_block_detail',hash = item['_source']['blockhash']) }}">{{ item['_source']['blockheight'] }}</a>
+                </td>
+                <td title="UTC时间：{{ item['_source']['blocktime'] }}">{{ item['time_bj'] }}</td>
+                 <td>{{ item['vin_times'] }}</td>
+                 <td>{{ item['vout_times'] }}</td>
+                <td>{{ item['value'] }}</td>
+            <td><button type="submit" style="margin-left: 30px;" class="btn btn-primary btn-sm" id="{{ item['_id'] }}" onclick="add_tag(this.id)">添加关联事件</button></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{#                     {{ pagination.links }}#}
+        <nav>
+    <ul class="pagination">
+        {%if pagination.has_prev%}
+        <li class="page-item active"><a class="page-link" href="/btc/transaction/search?starttime={{ stime }}&&endtime={{ etime }}&&maxvalue={{ maxvalue }}&&page={{ pagination.page - 1 }}&&minvalue={{ minvalue }}&&inputaddr={{ inputaddr }}&&outputaddr={{ outputaddr }}&&height={{ height }}&&fee={{ fee }}&&input_num={{ inputnum }}&&output_num={{ outputnum }}&&topic={{ topic }}&&specvalue={{ specvalue }}">上一页</a></li>
+        {%else%}
+        <li class="page-item disabled"><a class="page-link" href="#">上一页</a></li>
+        {%endif%}
+        {%for page in pagination.pages.__iter__()%}
+            {%if page%}
+                <li class="page-item {%if page==pagination.page%}active{%endif%}"><a class="page-link" href="/btc/transaction/search?starttime={{ stime }}&&endtime={{ etime }}&&maxvalue={{ maxvalue }}&&page={{ page }}&&minvalue={{ minvalue }}&&inputaddr={{ inputaddr }}&&outputaddr={{ outputaddr }}&&height={{ height }}&&fee={{ fee }}&&input_num={{ inputnum }}&&output_num={{ outputnum }}&&topic={{ topic }}&&specvalue={{ specvalue }}">{{page}}</a></li>
+            {%else%}
+                <li class="page-item disabled"><a class="page-link" href="#">&hellip;</a></li>
+            {%endif%}
+
+        {%endfor%}
+
+        {%if pagination.has_next%}
+        <li class="page-item active"><a class="page-link" href="/btc/transaction/search?starttime={{ stime }}&&endtime={{ etime }}&&maxvalue={{ maxvalue }}&&page={{ pagination.page + 1 }}&&minvalue={{ minvalue }}&&inputaddr={{ inputaddr }}&&outputaddr={{ outputaddr }}&&height={{ height }}&&fee={{ fee }}&&input_num={{ inputnum }}&&output_num={{ outputnum }}&&topic={{ topic }}&&specvalue={{ specvalue }}">下一页</a></li>
+        {%else%}
+        <li class="page-item disabled"><a class="page-link" href="#">下一页</a></li>
+        {%endif%}
+
+    </ul>
+    </nav>
+                <br>
+        </div>
+    </div>
+    <div class="m-style M-box4"></div>
+<div id="fade" class="black_overlay">
+</div>
+<div id="MyDiv" class="white_content card">
+<div style="text-align: right; cursor: default; height: 40px;" id="move">
+<button class="btn btn-primary btn-sm" style="float: right;margin-right: 5px;margin-top: 5px"> <span style="font-size: 14px; " onclick="CloseDiv('MyDiv','fade')" color="black">关闭</span></button>
+</div>
+    <div>
+    <h3 style="color: black" align="center">语法参考</h3>
+    <br>
+ <table id="transes-table2" class="table">
+ <tr >
+            <th style="color: black">查询逻辑</th>
+            <th style="color: black" >说明</th>
+            <th style="color: black">示例</th>
+        </tr>
+        <tr>
+                <td><a style="color: black">and</a>
+                </td>
+                <td>
+                    <a style="color: black">在搜索框中输入“and”则表示“且”的运算逻辑</a>
+                </td>
+                <td>
+                    <a href="" style="color: black">date>2021-05-11 12:00:00 and TotalValueBTC=50</a>
+                </td>
+            </tr>
+       <tr >
+            <th style="color: black"></th>
+            <th style="color: black" ></th>
+            <th style="color: black"></th>
+        </tr>
+
+        <tr >
+            <th style="color: black">查询字段</th>
+            <th style="color: black">说明</th>
+            <th style="color: black">语法要求</th>
+        </tr>
+
+        <tbody>
+            <tr>
+                <td><a style="color: black">时间</a>
+                </td>
+                <td>
+                    <a style="color: black">查询指定时间范围内的交易</a>
+                </td>
+                <td>
+                    <a href="" style="color: black">date>、<、=2021-05-11 12:00:00</a>
+                </td>
+            </tr>
+        <tr>
+            <td><a style="color: black">Coinbase交易</a></td>
+            <td><a style="color: black">查询coinbase或非coinbase交易</a></td>
+            <td><a href="" style="color: black">isCoinbase=true、false</a></td>
+        </tr>
+        <tr>
+            <td><a style="color: black">输入地址</a></td>
+            <td><a style="color: black">查询包含指定输入地址的交易</a></td>
+            <td><a href="" style="color: black">inputaddress=3DGxAYYUA61WrrdbBac8Ra9eA9peAQwTJF</a></td>
+        </tr>
+        <tr>
+            <td><a style="color: black">输出地址</a></td>
+            <td><a style="color: black">查询包含指定输出地址的交易</a></td>
+            <td><a href="" style="color: black">outputaddress=3DGxAYYUA61WrrdbBac8Ra9eA9peAQwTJF</a></td>
+        </tr>
+        <tr>
+            <td><a style="color: black">输入地址数</a></td>
+            <td><a style="color: black">查询指定输入地址个数的交易</a></td>
+            <td><a href="" style="color: black">vin_num>、<、=10</a></td>
+        </tr>
+        <tr>
+            <td><a style="color: black">输出地址数</a></td>
+            <td><a style="color: black">查询指定输出地址个数的交易</a></td>
+            <td><a href="" style="color: black">vout_num>、<、=10</a></td>
+        </tr>
+        <tr>
+            <td><a style="color: black">手续费</a></td>
+            <td><a style="color: black">查询指定手续费的交易</a></td>
+            <td><a href="" style="color: black">fee>、<、=0.0001</a></td>
+        </tr>
+        <tr>
+            <td><a style="color: black">高度</a></td>
+            <td><a style="color: black">查询指定区块高度范围内的交易</a></td>
+            <td><a href="" style="color: black">height>、<、=683000</a></td>
+        </tr>
+        <tr>
+            <td><a style="color: black">交易额（btc）</a></td>
+            <td><a style="color: black">查询指定交易金额的交易，单位为btc</a></td>
+            <td><a href="" style="color: black">TotalValueBTC>、<、=0.0001</a></td>
+        </tr>
+        <tr>
+            <td><a style="color: black">交易额（usd）</a></td>
+            <td><a style="color: black">查询指定交易金额的交易，单位为usd</a></td>
+            <td><a href="" style="color: black">TotalValueUSD>、<、=63600</a></td>
+        </tr>
+        <tr>
+            <td><a style="color: black">单笔输入金额（btc）</a></td>
+            <td><a style="color: black">查询单个地址输入金额为指定金额的交易，单位为btc</a></td>
+            <td><a href="" style="color: black">InputValueBTC>、<、=15</a></td>
+        </tr>
+        <tr>
+            <td><a style="color: black">单笔输出金额（btc）</a></td>
+            <td><a style="color: black">查询单个地址输出金额为指定金额的交易，单位为btc</a></td>
+            <td><a href="" style="color: black">OutputValueBTC>、<、=15</a></td>
+        </tr>
+         <tr>
+            <td><a style="color: black">交易费率</a></td>
+            <td><a style="color: black">查询指定交易费率的交易</a></td>
+            <td><a href="" onclick="getText('feeRate>0.0001')"  style="color: black">feeRate>、 <、=0.0001</a></td>
+        </tr>
+            <tr></tr>
+
+        </tbody>
+    </table>
+    </div>
+
+</div>
+
+{% endblock %}
+{% block body_script %}
+
+    <script type="text/javascript"
+            src="{{ url_for('static', filename='assets/js/page/eth_block.js') }}"></script>
+
+    {#    checkbox block_order_switch#}
+    <script type="text/javascript"
+            src="{{ url_for('static', filename='assets/js/table-filter.js') }}"></script>
+    <script src="{{ url_for('static', filename='layui/layui.js') }}"></script>
+     <script src="{{ url_for('static', filename='My97DatePicker/WdatePicker.js') }}"></script>
+    <script>
+    function assis(){
+    layui.use(['layer', 'form'], function(){
+        var layer = layui.layer
+         ,form = layui.form;
+       layer.open({
+            type:1,
+            skin:'layui-layer-molv',
+            area: ['600px', '50%'],
+            content:'<div>'+
+            '<div >\n' +
+                '          <div >\n' +
+                '           <p style="color: black;font: 20px" >查询字段及格式：开始时间 starttime:2020-12-25 19:24:08,截止时间 endtime:2020-12-25 19:24:08 最大交易金额(BTC) maxvalue:double,最小交易金额(BTC) minvalue:double,手续费 fee：double 输入地址 inputaddr:String,输出地址 outputaddr:String，发送方地址个数 vin_num:int,接收方地址个数 vout_num:int</p>\n' +
+                '          </div>\n' +
+                '         </div>'+'</div>',
+            btn: ['保存', '关闭'],
+            btnAlign: 'c',
+            yes: function(){
+                saveNode();
+            },
+            btn2: function(){
+                layer.closeAll();
+            },
+            success: function(layero, index){
+                layui.use(['form','element'],function () {
+                    var form = layui.form, element = layui.element;
+                    form.render();
+                });
+
+            }
+        });
+
+});}
+function savequery() {
+    var r=confirm("是否记住本次查询？");
+    if (r==true){
+        layui.use(['layer', 'form'], function(){
+        var layer = layui.layer
+         ,form = layui.form;
+       layer.open({
+            type:1,
+            skin:'layui-layer-molv',
+            area: ['350px', '30%'],
+            content:'<div>'+'<form  style="margin-top: 20px"> ' +
+            '<div align="center" >' +
+            '<span class="layui-input-inline"><input type="text" name="topic_save" autocomplete="off"  class="layui-input"  id="keywords" placeholder="关键词" value=""></span><br>' +
++'</div>'+'<div align="center" >' +
+            '<span class="layui-input-inline"><input type="text" name="topic_save" autocomplete="off"  id="remarks" class="layui-input"   value="" placeholder="备注信息"></span>' +
+            '</div>' +
+            '</form>'+'</div>'+'</div>',
+            btn: ['保存', '关闭'],
+            btnAlign: 'c',
+            yes: function(){
+                remeber();
+            },
+            btn2: function(){
+                layer.closeAll();
+            },
+            success: function(layero, index){
+                layui.use(['form','element'],function () {
+                    var form = layui.form, element = layui.element;
+                    form.render();
+                });
+
+            }
+        });
+
+});
+    }
+    else
+    {
+        x="你按下了\"取消\"按钮!";
+    }
+}
+function saveTopic(item) {
+        var topic = $('#topic_save').val();
+        {#alert(topic+item)#}
+    var Udata= JSON.stringify({"topic":topic,"hash":item});
+        {#alert(topic+hash)#}
+        $.ajax({
+            url:'/btc/saveTxTopic/' ,
+            type:'POST',
+            contentType: 'application/json; charset=UTF-8',
+            data:Udata,
+            success:function (res) {
+                if(res.code == '0000'){
+                    layer.closeAll();
+                }else{
+                    layer.msg(res.message,{time:2000})
+                }
+                location.reload(true);
+            }
+        })
+    }
+    </script>
+<script>
+
+function remeber() {
+            var kw = $('#keywords').val();
+            var remark = $('#remarks').val();
+            var text=$('#kws').val();
+            var Udata= JSON.stringify({"kw":kw,"remark":remark,"text":text});
+           $.ajax({
+            url:'/saveTransQueryPro/' ,
+            type:'POST',
+            contentType: 'application/json; charset=UTF-8',
+            data:Udata,
+            success:function (res) {
+                    if(res.code == '0000'){
+                    layer.closeAll();
+                }else{
+                    layer.msg(res.message,{time:2000})
+                }
+                location.reload(true);
+
+            }
+        })
+        {#alert(max+min+stime+etime+kw);#}
+
+    {#alert(x);#}
+
+}
+	function dateClick() {
+		WdatePicker({
+			dateFmt : 'yyyy-MM-dd HH:mm:ss',  //格式设置相对应界面可选择也变化
+			highLineWeekDay:true,  //周末的日期是否高亮
+			readOnly:true,  //是否允许键盘输入值，false为禁止输入，只能鼠标选
+		});
+	}
+        function gen_query() {
+        var num=0;
+        var num_uncheck=0;
+        var check = new Array();
+        var uncheck = new Array();
+        var attr_ = document.getElementsByName("attr");
+        for ( var i = 0; i < attr_.length; i++) {
+            if (attr_[i].checked) {
+                check[num]=attr_[i].id;
+                num++;
+            }
+            else {
+                uncheck[num_uncheck]=attr_[i].id+'s';
+                num_uncheck++;
+            }
+
+        }
+        var Udata= JSON.stringify({"checked":check,"num":num});
+        if(num==0){
+            alert("未选条件!");
+        }
+        else{
+           gen_sql();
+            //alert(check);
+        for ( var i = 0; i < uncheck.length; i++) {
+               document.getElementById(uncheck[i]).hidden=true;
+        }
+        }
+    }
+   </script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/xlsx/0.16.5/xlsx.mini.min.js"></script>
+    <script>
+    function gen_sheet(item){
+            var kw=$('#kws').val();
+        let head_require=['查询语句'];
+        let head = ['交易哈希', '所在区块', '时间(北京)','输入地址数','输出地址数','交易额(BTC)']
+        let data = [];
+        let data_require=[[kw]]
+        test=JSON.parse(item.replace(/'/g,'"'));
+        for(i =0;i<test.length;i++){
+             console.log(test[i]['_id']);
+             data.push([test[i]._id,test[i]['_source']['blockheight'],test[i]['time_bj'],test[i]['vin_times'],test[i]['vout_times'],test[i]['value']])
+        }
+        console.log(data);
+          //将一个sheet转成最终的excel文件的blob对象
+        const sheetname1 = '查询结果'
+        const sheetname2 = '查询条件'
+        let workbook1 = {
+          SheetNames: [sheetname1,sheetname2],
+          Sheets: {}
+        }
+        let sheet1 = XLSX.utils.json_to_sheet(data)
+        sheet1.A1.v = head[0]
+        sheet1.B1.v = head[1]
+        sheet1.C1.v = head[2]
+        sheet1.D1.v = head[3]
+        sheet1.E1.v = head[4]
+        sheet1.F1.v = head[5]
+        let sheet2 = XLSX.utils.json_to_sheet(data_require)
+        sheet2.A1.v = head_require[0]
+        workbook1.Sheets[sheetname1] = sheet1
+        workbook1.Sheets[sheetname2] = sheet2
+        // 生成excel的配置项
+        const wopts = {
+          bookType: 'xlsx', // 要生成的文件类型
+          bookSST: false, // 是否生成Shared String Table，官方解释是，如果开启生成速度会下降，但在低版本IOS设备上有更好的兼容性
+          type: 'binary'
+        };
+        const wbout = XLSX.write(workbook1, wopts);
+        const blob = new Blob([s2ab(wbout)], {
+          type: "application/octet-stream"
+        });
+        console.log(head_require)
+        r=window.prompt("请输入文件名：")
+        if (r!=='.' && r){
+            title=r+'.xlsx';
+            download(blob, title);
+            {#console.log(title);#}
+        }
+        else {
+            alert("请输入正确的文件名!")
+        }
+
+    }
+
+      // 字符串转ArrayBuffer
+      function s2ab(s) {
+        var buf = new ArrayBuffer(s.length);
+        var view = new Uint8Array(buf);
+        for (var i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
+        return buf;
+      }
+
+      function download(blob, name) {
+        // 用URL.createObjectURL下载
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url;
+        a.download = name;
+        let event;
+        if (window.MouseEvent) {
+          event = new MouseEvent('click');
+        } else {
+          event = document.createEvent('MouseEvents');
+          event.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+        }
+        a.dispatchEvent(event);
+      }
+    </script>
+{% endblock %}
+</html>

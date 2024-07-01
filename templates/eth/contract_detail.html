@@ -1,0 +1,244 @@
+{% extends 'baseETH.html' %}
+{% block title %}{% endblock %}
+
+{% block head_style %}
+
+{# datatable   #}
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='plugins/jquery-datatable/css/jquery.dataTables.min.css') }}"/>
+
+{% endblock %}
+
+{% block content %}
+{#    <h1>CONTRACT DETAIL</h1>#}
+    {% include '_ethcrumb.html' %}
+
+
+    <br>
+
+    <h3>概要信息</h3>
+
+    <table class="table table-sm table-hover bee-table">
+        <tbody>
+        <tr>
+            <td>地址</td>
+            <td>{{ address }}<i class="fa fa-qrcode fa-lg"></i></td>
+        </tr>
+        <tr>
+            <td>余额</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td>交易数</td>
+            <td id="total">{{ total }}</td>
+        </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-hover bee-table">
+        <tbody>
+        <tr>
+            <td>创建时间</td>
+            <td>0000-00-00</td>
+        </tr>
+        <tr>
+            <td>最后活跃时间</td>
+            <td>0000-00-00</td>
+        </tr>
+        <tr>
+            <td>创建者</td>
+            <td>null</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <br>
+
+    <!-- Card Tabs Alternative Style -->
+    <div class="bee">
+        <div class="tab-card">
+            <ul class="nav nav-tabs nav-tabs-alt" data-toggle="tabs">
+                <li>
+                    <a href="#btabs-alt-static-trans" class="active">交易</a>
+                </li>
+                <li>
+                    <a href="#btabs-alt-static-code">代码</a>
+                </li>
+                <li>
+                    <a href="#btabs-alt-static-rc">读取合约</a>
+                </li>
+                <li>
+                    <a href="#btabs-alt-static-wc">写入合约</a>
+                </li>
+                <li>
+                    <a href="#btabs-alt-static-event">事件</a>
+                </li>
+                <li class="pull-right">
+                    <a href="#btabs-alt-static-settings" data-toggle="tooltip" title="Settings"><i
+                            class="ion-ios-gear-outline"></i></a>
+                </li>
+            </ul>
+            <div class="card-block tab-content">
+                <div class="tab-pane active" id="btabs-alt-static-trans">
+
+                </div>
+                <div class="tab-pane " id="btabs-alt-static-code">
+                    <p>合约源码</p>
+                    <textarea class="form-control" rows="5" readonly>{{ c_code }}</textarea>
+                </div>
+
+                <div class="tab-pane" id="btabs-alt-static-rc">
+
+                </div>
+                <div class="tab-pane" id="btabs-alt-static-wc">
+
+                </div>
+                <div class="tab-pane" id="btabs-alt-static-event">
+
+                </div>
+                <div class="tab-pane" id="btabs-alt-static-settings">
+                    <p>Etsy mixtape wayfarers, ethical wes anderson tofu before they sold out mcsweeney's organic lomo
+                        retro
+                        fanny pack lo-fi farm-to-table readymade. Messenger bag gentrify pitchfork tattooed craft beer,
+                        iphone skateboard
+                        locavore carles etsy salvia banksy hoodie helvetica. DIY synth PBR banksy irony. Leggings
+                        gentrify
+                        squid 8-bit cred pitchfork. Williamsburg banh mi whatever gluten-free, carles pitchfork
+                        biodiesel
+                        fixie
+                        etsy retro mlkshk vice blog. Scenester cred you probably haven't heard of them, vinyl craft beer
+                        blog stumptown. Pitchfork sustainable tofu synth chambray yr.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- End Card Tabs Alternative Style -->
+
+    <br>
+
+{#    <p>共{{ total }}个结果</p>#}
+    <table class="display" id="trans-of-caddress">
+        <thead>
+        <tr>
+            <th>交易哈希</th>
+            <th>所在区块</th>
+            <th>时间</th>
+            <th>发送方</th>
+            <th>接收方</th>
+            <th>类型</th>
+            <th>交易额(ETH)</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+
+
+
+{% endblock %}
+
+{% block body_script %}
+    {#    tab #}
+    <script src="{{ url_for('static', filename='muban/3527/app.js') }}"></script>
+
+
+
+{#    datatable #}
+        <script src="{{ url_for('static', filename='plugins/jquery-datatable/js/jquery.dataTables.min.js') }}"></script>
+    <script type="text/javascript">
+
+                var data_table = $('#trans-of-caddress').DataTable({
+                {#"aaSorting": [[2, "desc"]],#}
+                "searching": true,
+                "searchable": true,
+                "language":{
+                    "url":"/static/data/chinese.txt"
+                },
+                "serverSide": true,
+                "ajax": {
+                    url: "/data/address_trans",
+                    data: {address: "{{ address }}"},
+                    {#dataSrc: " ",#}
+
+                },
+                columns: [
+                    {data: "hash"},
+                    {data: "blockNumber"},
+                    {data: "time"},
+                    {data: "from"},
+                    {data: "to"},
+                    {data: "trans_type"},  // no data
+                    {data: "value"},
+
+                ],
+                "createdRow": function (row, data, index) {
+                    if (data['from'] =={{ address }}) {
+                        $('td', row).eq(5).addClass('out-trans')
+                        {#console.log(data['from'])#}
+                    } else if (data['to'] =={{ address }}) {
+                        $('td', row).eq(5).addClass('in-trans')
+
+                    }
+                }
+                ,
+                "columnDefs": [{
+                    "targets": 0,
+                    "render": function (data, type, row, meta) {
+                        return type === 'display' && data.length > 23 ?
+                            '<a href="' + '#' + '">' + data.substr(0, 20) + '...</a>'
+                            :
+                            data;
+                    }
+                },
+                    {
+                        "targets": 3,
+                        "render": function (data, type, row, meta) {
+                            return type === 'display' && data.length > 23 ?
+                                '<a href="' + '#' + '">' + data.substr(0, 20) + '...</a>' :
+                                data;
+                        }
+                    },
+                    {
+                        "targets": 4,
+                        "render": function (data, type, row, meta) {
+                            return type === 'display' && data.length > 23 ?
+                                '<a href="' + '#' + '">' + data.substr(0, 20) + '...</a>' :
+                                data;
+                        }
+                    },
+                    {
+                        "targets": 5,
+                        "render": function (data, type, row, meta) {
+                            var direction = "<span style='color:#'></span>"
+                            var drcolor = ""
+                            if (row['from'] =={{ address }}) {
+                                direction = "转出"
+                                {#drcolor = "#7CCD7C"#}
+
+                            } else if (row['to'] =={{ address }}) {
+                                direction = "转入"
+                                {#drcolor = "#EE2C2C"#}
+
+                            }
+                            {#return data + " <span style='color:"+drcolor+"'>"+direction+"</span>"#}
+                            return data + "<span>" + direction + "</span>"
+                            {#return row['blockNumber']#}
+                        }
+                    }
+                ],
+                initComplete: function (){
+
+                    $('#total').text(data_table.page.info().recordsTotal)
+                }
+            });
+
+
+    </script>
+
+
+
+
+
+    {#    <script src="{{ url_for('static', filename='') }}"></script>#}
+{% endblock %}

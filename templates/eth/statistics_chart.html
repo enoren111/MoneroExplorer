@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/css/bootstrap.min.css">
+
+
+     <!--slick 1.8.1-->
+
+
+    <link rel="stylesheet" href="/static/assets/temp/slick/slick.css">
+    <link rel="stylesheet" href="/static/assets/temp/slick/slick-theme.css">
+    <link rel="stylesheet" href="/static/assets/temp/slick/demo.css">
+
+
+    <title>Title</title>
+</head>
+<body>
+
+
+<div class="row">
+    <div class="col-md-6">
+
+        <div class="card">
+    <div class="card-header">大额交易</div>
+    <div class="card-body">
+        <div id="big-deal" style="width: 100%;height: 300px"></div>
+
+    </div>
+</div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card">
+        <div class="card-header">统计信息</div>
+        <div class="card-body">
+                                <div id="statistical-info" class="slider">
+                        <div>
+                            <div id="daily_trans_sum" style="height: 300px"></div>
+                        </div>
+                        <div>
+                            <div id="daily_trans_num" style="width: 100%;height: 300px"></div>
+                        </div>
+                        <div>
+                            <div id="daily_trans_type" style="width: 100%;height: 300px"></div>
+                        </div>
+                        <div >
+                            <div id="daily_new_contract" style="width: 100%;height: 300px"></div>
+                        </div>
+                        <div>
+                            <div id="daily_address" style="width: 100%;height: 300px"></div>
+                        </div>
+                    </div>
+
+
+
+        </div>
+            </div>
+    </div>
+</div>
+
+
+
+
+
+
+<script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdn.staticfile.org/popper.js/1.12.5/umd/popper.min.js"></script>
+<script src="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/js/bootstrap.min.js"></script>
+
+
+<!-- slick banner -->
+   <script src="/static/assets/temp/slick/slick.js" type="text/javascript"
+            charset="utf-8"></script>
+
+
+<script type="text/javascript">
+var dates =
+        {{ date|tojson }}
+        var values1 =
+        {{ exception_trans|tojson }}
+        var values2 =
+        {{ trans_sum|tojson }}
+        var values3 =
+        {{ trans_num|tojson }}
+        var values4 =
+        {{ new_contract|tojson }}
+        var values6 =
+        {{ active_address|tojson }}
+        var values7 =
+        {{ new_address|tojson }}
+        var values8 =
+        {{ trans_type|tojson }}
+</script>
+
+<!-- echarts -->
+<script src=""></script>
+    <script src="/static/assets/temp/echarts/echarts.js"></script>
+{#    <script src="/static/assets/temp/echarts/theme/dark_one.js"></script>#}
+
+
+<!-- page -->
+<script src="/static/assets/temp/sc.js"></script>
+
+
+</body>
+</html>

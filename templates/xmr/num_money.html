@@ -1,0 +1,116 @@
+{% extends 'baseXMR.html' %}
+{% block title %}
+{% endblock %}
+
+{% block head_style %}
+
+
+{% endblock %}
+
+{% block content %}
+{% include '_xmrcrumb.html' %}
+
+<div class="container">
+  <h1 class="text-center">Transaction details</h1>
+  <div class="row clearfix">
+    <div class="col-md-4 column">
+      <form action="/xmr/num_money" method="get">
+        <div class="form-group">
+          <div class="col-sm-4">
+            <select class="form-control" name="t">
+              <option value="all" {% if t=='all' %} selected {% else %} {% endif %}>All</option>
+              <option value="day" {% if t=='day' %} selected {% else %} {% endif %}>Last day</option>
+              <option value="week" {% if t=='week' %} selected {% else %} {% endif %}>Last week</option>
+              <option value="month" {% if t=='month' %} selected {% else %} {% endif %}>Last month</option>
+              <option value="year" {% if t=='year' %} selected {% else %} {% endif %}>Last year</option>
+            </select>
+          </div>
+        </div>
+        
+        <button type="submit" class="btn btn-success" >Query</button>
+      </form>
+      
+    </div>
+
+
+    <div class="col-md-1 column">
+      <a type="button" class="btn btn-success" href="/xmr/num_money?t={{t}}&d=true">Export</a>
+    </div>
+
+    <div class="col-md-7 column">
+      <a type="button" class="btn btn-success" href="/xmr/class_stat?t={{t}}">Transaction amount:{{all_money}}</a>
+      <a type="button" class="btn btn-success" href="/xmr/use_stat?t={{t}}">Distribution of addresses</a>
+      <a type="button" class="btn btn-success" href="/xmr/statistics">statistics</a>
+    </div>
+
+
+  </div>
+  <div class="row clearfix">
+    <table class="table">
+      <thead >
+        <tr >
+          <th class="text-center">
+            hash
+          </th>
+          <th class="text-center">
+            block
+          </th>
+          <th class="text-center">
+            time
+          </th>
+          <th class="text-center">
+            Transaction quantity
+          </th>
+          <th class="text-center">
+            TX Total transaction 
+          </th>
+          <th class="text-center">
+            Transaction format
+          </th>
+          <th class="text-center">
+            Type
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for block in blocks %}
+        <tr class="text-center">
+          <td>{{block['_source']['tx_hash']}} </td>
+          <td>{{block['_source']['block_height']}} </td>
+          <td>{{block['time_bj']}}</td>
+          
+          <td>{{block['_source']['as_json']['vout'][0]['amount']}} </td>
+          <td>{{block['_source']['as_json']['rct_signatures']['txnFee']}} </td>
+          <td>{{block['_source']['as_json']['version']}} </td>
+          <td>{{block['_type']}} </td>
+        </tr>
+        {% endfor%}
+
+      </tbody>
+    </table>
+
+
+
+  </div>
+  {{ pagination.links }}
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+{% endblock %}
+
+{% block body_script %}
+
+
+
+
+{% endblock %}

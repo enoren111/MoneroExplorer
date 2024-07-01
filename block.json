@@ -1,0 +1,41 @@
+
+select * from trade_info.csrcb where (txn_amt_d > 100 and txn_amt_d <= 1000) or (cust_name_s = 'rebort' and 'txn_date_s' > '2021-02-21 00:00:00' and txn_date_s < '2021-02-22 00:00:00')
+{
+    "query": {
+        "constant_score": {
+            "filter": {
+                "bool": {
+                    "should": [
+                        {
+                            "range": {
+                                "txn_amt_d": {
+                                    "gt": 100,
+                                    "lte": 1000
+                                }
+                            }
+                        },
+                        {
+                            "bool": {
+                                "must": [
+                                    {
+                                        "match": {
+                                            "cust_name_s.keyword": "rebort"
+                                        }
+                                    },
+                                    {
+                                        "range": {
+                                            "txn_date_s.keyword": {
+                                                "gt": "2021-02-21 00:00:00",
+                                                "lt": "2021-02-23 00:00:00"
+                                            }
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}

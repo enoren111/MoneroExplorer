@@ -1,0 +1,47 @@
+{% extends 'base2.html' %}
+{% block title %}home{% endblock %}
+
+{% block head_style %}
+
+{% endblock %}
+
+{% block content %}
+    <!-- Start Banner Area -->
+    <section class="home-banner-area relative">
+        <div class="container">
+            <div class="row fullscreen d-flex align-items-center justify-content-center">
+                <div class="banner-content col-lg-8 col-md-12">
+
+                    <div class="input-wrap">
+                        <form action="{{ url_for('.bee_search') }}" class="" > <!-- method="post"-->
+                            {#          无法通过post传递div的value值              <div name="search_option" style="font-size: 20px;color: white" value="af">options</div>#}
+                           <div>
+
+                               <label class="radio-inline">
+                                   <input type="radio" name="search_option"  value="BTC"
+                                          checked>BTC
+                               </label>
+                               <label class="radio-inline">
+                                   <input type="radio" name="search_option" value="ETH"> ETH
+                               </label>
+                           </div>
+                            <div class="form-box d-flex justify-content-between">
+                                <input type="text" placeholder="Search Courses" class="form-control" name="search_text">
+                                <button type="submit" class="btn search-btn">Search</button>
+                            </div>
+                        </form>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+    </section>
+    <!-- End Banner Area -->
+{% endblock %}
+
+{% block body_script %}
+
+{% endblock %}
+

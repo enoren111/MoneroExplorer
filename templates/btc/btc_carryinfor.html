@@ -1,0 +1,218 @@
+{% extends 'base3.html' %}
+{% block title %}{% endblock %}
+
+{% block head_style %}
+    {#    slick muban3527 #}
+    <style type="text/css">
+
+        #no1 {
+            margin-bottom: 10px;
+        }
+
+        .new_folat_left {
+            width: auto;
+            float: left;
+        }
+
+        .new_folat_right {
+
+            width: auto;
+
+            float: right;
+
+        }
+
+        #no1, #no2 {
+            width: 300px;
+            height: 10px;
+            float: left
+        }
+
+        #no2 {
+            clear: both;
+        }
+
+        #no3 {
+            margin-left: 110px;
+            *margin-left: 107px;
+            width: auto;
+            height: 30px;
+            float: right;
+            margin-top: -10px
+        }
+    </style>
+{% endblock %}
+{% block content %}
+    {% include '_btccrumb.html' %}
+    {#    <h1>BTC TRANSACTIONS</h1>#}
+    <br>
+    <div class="bee-row2">
+        <div class="bee-row">
+
+            <div>共<span id="totalnum" class="transes_total">{{ total_num }}</span>个结果(默认当天)，用时{{ time }}ms</div>
+            <div class="dropdown"></div>
+            <div>
+                <form action="{{ url_for('btc.btc_carryinfor_search') }}" class="">
+                    关键词：
+                    <input name="txhash" style="width: 100px;" type="text" id="target_str" value="{{ target_str }}">
+
+                    开始时间:
+                    <input class="jump-ipt" style="width:90px;" type="text" onclick="dateClick()"
+                           value="{{ starttime }}"
+                           name="starttime">
+                    结束时间:
+                    <input class="jump-ipt" style="width:90px;" type="text" onclick="dateClick()" value="{{ endtime }}"
+                           name="endtime">
+                    语言：
+                    <select id="test" name="lanname">
+                        <option value="english">英文</option>
+                        <option value="chinese">中文</option>
+                    </select>
+                    时间排序：
+                    <select id="sortname" name="sorttype">
+                        <option value="asc">升序</option>
+                        <option value="desc">降序</option>
+                    </select>
+                    <button type="submit" style="margin-left: 1px;" class="btn btn-primary btn-sm">搜索</button>
+                    <input name="lanname1" id="sel_text" type="hidden" value="{{ lanuage }}">
+                    <input name="starttime1" id="sel_starttime" type="hidden" value="{{ starttime }}">
+                    <input name="endtime1" id="sel_endtime" type="hidden" value="{{ endtime }}">
+                    <input name="sorttype1" id="sel_sorttype" type="hidden" value="{{ sorttype }}">
+                </form>
+                {#                <button style="margin-left: 1px;" id="clearbutton" class="btn btn-primary btn-sm">清除</button>#}
+            </div>
+        </div>
+    </div>
+    <div id="messagelist">
+        <!-- start latestTransList-->
+        {% for foo in list %}
+            <div class="card">
+                <div class="card-header">
+                    <table width="100%">
+                        <tr>
+                            <td>
+                                <div class="new_folat_left">
+                                    高度：<a href="{{ url_for('btc.btc_block_detail',hash = foo['_id']) }}">
+                                    {{ foo['_source']['height'] }}
+                                </a>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="new_folat_right">
+                                    交易哈希：<a
+                                        href="{{ url_for('btc.btc_tsc_detail',hash = foo['_id']) }}">{{ foo['_id'] }}</a>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="new_folat_left">时间：GMT{{ foo['tx_time'] }}</div>
+                            </td>
+                            <td>
+                                <div class="new_folat_right">语言：
+                                    {% for lanuage in foo['lanuagelist'] %}
+                                        {{ lanuage }}
+                                        {% if loop.index < foo['lanuagelist'] | length %}、
+                                        {% endif %}
+                                    {% endfor %}
+
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="card-body">
+                    {% for a in foo['highlight']['input.string'] %}
+                        <div style="font-size: larger">{{ a | safe }}</div>
+                    {% endfor %}
+                    {% for a in foo['highlight']['output.string'] %}
+                        <div style="font-size: larger">{{ a | safe }}</div>
+                    {% endfor %}
+
+                    <br>
+                    <button class="showbutton"
+                            style="background-color: black;border-color: black;color: #1d7db1;float: right;font-size: medium">
+                        展开/收起夹带信息
+                    </button>
+                    <br>
+                    <div class="allcarrycontent" type="hidden">
+                        {% for a in foo['_source']['input'] %}
+                            <div style="font-size: medium">{{ a['string'] }}</div>
+                        {% endfor %}
+                        {% for a in foo['_source']['output'] %}
+                            <div style="font-size: medium">{{ a['string'] }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div id="paginationpart">{{ pagination.links }}</div>
+    <div class="m-style pagination"></div> <!-- pagination.js -->
+    <!-- start latestTransList-->
+
+{% endblock %}
+
+{% block body_script %}
+
+    {#    chartjs 3492 demo #}
+    <script src="{{ url_for('static', filename='plugins/chart.js/Chart.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='plugins/chart.js/utils.js') }}"></script>
+    {#    <script src="{{ url_for('static', filename='muban/3492/charts-custom.js') }}"></script>  {# 饼状图 #}
+    {#    <script src="{{ url_for('static', filename='assets/demo/big-deal.js') }}"></script>#} <!-- 大额异动 -->
+    {#    3527 banner slick #}
+    <script src="{{ url_for('static', filename='assets/js/page/btc_carry.js') }}"></script>
+
+    {#    echarts #}
+    {#    <script src="{{ url_for('static', filename='plugins/echarts/echarts.js') }}"></script>#}
+    {#    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>#}
+    <script src="{{ url_for('static', filename='assets/js/page/transactions.js') }}"></script></div>
+    <script src="{{ url_for('static', filename='My97DatePicker/WdatePicker.js') }}"></script>
+    <script>
+        function ifnofunction() {
+
+            var total_num = document.getElementById('totalnum').innerText;
+            if (total_num == 0)
+                alert("查询的字段不存在！");
+        }
+
+        str1 = document.getElementById("sel_text").value;
+        str2 = document.getElementById("sel_starttime").value;
+        str3 = document.getElementById("sel_endtime").value;
+        str4 = document.getElementById("sel_sorttype").value;
+        obj1 = document.getElementById("test");
+        for (i = 0; i < obj1.length; i++) {
+            if (obj1[i].value == str1)
+                obj1[i].selected = true;
+        }
+
+        obj4 = document.getElementById("sortname");
+        for (i = 0; i < obj4.length; i++) {
+            if (obj4[i].value == str4)
+                obj4[i].selected = true;
+        }
+        window.onload = ifnofunction;
+
+    </script>
+    <script>
+        $(".allcarrycontent").hide();
+        $(".showbutton ").click(function () {
+            $(this).next().next().toggle(100);
+        });
+    </script>
+    <script>
+        function dateClick() {
+            WdatePicker({
+                dateFmt: 'yyyy-MM-dd HH:mm:ss',  //格式设置相对应界面可选择也变化
+                highLineWeekDay: true,  //周末的日期是否高亮
+                readOnly: true,  //是否允许键盘输入值，false为禁止输入，只能鼠标选
+            });
+        }
+    </script>
+
+    {#    ajax#}
+    <script>
+
+    </script>
+{% endblock %}

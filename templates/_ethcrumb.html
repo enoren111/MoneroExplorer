@@ -1,0 +1,43 @@
+<div class="bee-ssnav">
+    <ul id="nav" class="nav ">
+        <li class="nLi on">
+        <h3><a> 币种 <i class="fa fa-caret-down"></i></a></h3>
+            <ul class="sub" id ="sub_menu_1">
+                <li><a style="font-size:15px;" href="{{ url_for('btc.btc_home') }}" >Btc</a></li>
+                    <li><a style="font-size:15px;" href="{{ url_for('eth.eth_home') }}" >Eth</a></li>
+                <li><a style="font-size:15px;" href="{{ url_for('zcash.zcash_home') }}">Zcash</a></li>
+                <li><a style="font-size:15px;" href="{{ url_for('xmr.xmr_home') }}">Monero</a></li>
+
+        </ul>
+    </li>
+
+        <li class="nLi on">
+            <!-- 假设当前频道为“预告片”，手动或后台程序添加titOnClassName类名（默认是'on'），相当于设置参数defaultIndex:1。若同时设置参数returnDefault:true，则鼠标移走后0.3秒返回当前频道 -->
+              <h3><a>{#   {{ page_title }} #}功能模块 <i class="fa fa-caret-down"></i></a></h3>
+            <ul class="sub">
+{#                <li><a href="{{ url_for('eth.eth_home') }}">首页</a></li>#}
+                <li><a href="{{ url_for('eth.eth_block') }}">区块</a></li>
+                <li><a href="{{ url_for('eth.eth_transactions') }}">交易</a></li>
+{#                <li><a href="{{ url_for('eth.eth_address') }}">地址</a></li>#}
+{#                <li><a href="{{ url_for('eth.eth_pool') }}">矿池</a></li>#}
+{#                <li><a href="{{ url_for('eth.eth_node') }}">节点</a></li>#}
+{#                <li><a href="{{ url_for('eth.eth_contract') }}">合约</a></li>#}
+            </ul>
+        </li>
+
+        {% if page_id %}
+            <li class="nLi">
+                <h3><a class="np">/</a></h3>
+            </li>
+            <li class="nLi">
+                <h3><a>{{ page_id|truncate(20) }}</a></h3>
+            </li>
+        
+        {% endif %}
+        
+    </ul>
+
+
+</div>
+
+

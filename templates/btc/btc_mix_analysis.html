@@ -1,0 +1,151 @@
+
+{# suitable for base3 #}
+
+{% extends 'base3.html' %}
+{% block title %}{% endblock %}
+
+{% block head_style %}
+{#    <style type="text/css"></style>#}
+<style id="__jsx-3954331054">.section-stats.jsx-3954331054{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-box-pack:center;-webkit-justify-content:center;-ms-flex-pack:center;justify-content:center;background:#222;}.stats-container-content.jsx-3954331054{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-flex-wrap:nowrap;-ms-flex-wrap:nowrap;flex-wrap:nowrap;}.image-container.jsx-3954331054{background-image:url('/static/moon2.jpg?height=300&width=2000'),linear-gradient(#2f2f2f,#2f2f2f);background-size:cover;background-repeat:no-repeat;background-position:48%;position:relative;height:300px;}@media screen and (max-width:1500px) and (min-width:1000px){.image-container.jsx-3954331054{background-image:url('/static/moon2.jpg?height=300&width=1500'),linear-gradient(#2f2f2f,#2f2f2f);background-size:cover;background-repeat:no-repeat;background-position:48%;position:relative;height:300px;}}@media (min-width:1000px){.mobile-search.jsx-3954331054{display:none;}}@media screen and (max-width:1000px) and (min-width:614px){.stats-container-content.jsx-3954331054::before{content:'';-webkit-flex:0 0 3vw;-ms-flex:0 0 3vw;flex:0 0 3vw;}.stats-container-content.jsx-3954331054::after{content:'';-webkit-flex:0 0 3vw;-ms-flex:0 0 3vw;flex:0 0 3vw;}.stats-container.jsx-3954331054{margin:0 1rem;-webkit-mask-image:linear-gradient(to right,transparent,black 10%,black 90%,transparent);mask-image:linear-gradient(to right,transparent,black 10%,black 90%,transparent);cursor:-webkit-grab;cursor:-moz-grab;cursor:grab;padding:0 1rem;overflow-x:auto;overflow-y:hidden;-ms-overflow-style:-ms-autohiding-scrollbar;-webkit-overflow-scrolling:touch;-webkit-box-orient:horizontal;-webkit-box-direction:normal;}.image-container.jsx-3954331054{background-image:url('/static/moon2.jpg?height=300&width=1000'),linear-gradient(#2f2f2f,#2f2f2f);}}@media screen and (max-width:614px){.stats-container.jsx-3954331054{margin:0 1rem;-webkit-mask-image:linear-gradient(to right,transparent,black 10%,black 90%,transparent);mask-image:linear-gradient(to right,transparent,black 10%,black 90%,transparent);cursor:-webkit-grab;cursor:-moz-grab;cursor:grab;padding:0 1rem;overflow-x:auto;overflow-y:hidden;-ms-overflow-style:-ms-autohiding-scrollbar;-webkit-overflow-scrolling:touch;-webkit-box-orient:horizontal;-webkit-box-direction:normal;}.image-container.jsx-3954331054{background-image:url('/static/moon2.jpg?height=300&width=614'),linear-gradient(#2f2f2f,#2f2f2f);}}.stats-container.jsx-3954331054::-webkit-scrollbar{display:none;}.stats-card.jsx-3954331054{padding:1rem;-webkit-flex:0 0 auto;-ms-flex:0 0 auto;flex:0 0 auto;}.stats-header.jsx-3954331054{font-size:0.8rem;color:#aaa;}.stats-content.jsx-3954331054{color:#fff;font-size:1rem;}#stats.jsx-3954331054{border-radius:10px;background-color:#dfd6bc66;-webkit-transition-timing-function:cubic-bezier(0.25,0.46,0.45,0.94);transition-timing-function:cubic-bezier(0.25,0.46,0.45,0.94);-webkit-transition-property:all;transition-property:all;-webkit-transition-delay:0s;transition-delay:0s;-webkit-transition-duration:0.3s;transition-duration:0.3s;box-shadow:0 2px 3px rgba(10,10,10,0.1),0 0 0 1px rgba(10,10,10,0.1);}#stats.jsx-3954331054:hover{box-shadow:0 5px 10px 0 rgba(182,191,210,0.6);}.hero-text.jsx-3954331054{pointer-events:none;background-color:white;color:black;font-size:calc(2vw + 2rem);font-weight:bold;margin:0 auto;padding:10px;text-align:center;position:absolute;width:50%;top:50%;left:50%;-webkit-transform:translate(-50%,-50%);-ms-transform:translate(-50%,-50%);transform:translate(-50%,-50%);mix-blend-mode:screen;}.search.jsx-3954331054{padding:10px;position:absolute;margin:0 auto;width:80%;top:95%;left:50%;-webkit-transform:translate(-50%,-50%);-ms-transform:translate(-50%,-50%);transform:translate(-50%,-50%);}</style>
+<style id="__jsx-263509302">a.jsx-263509302{width:-webkit-fit-content;width:-moz-fit-content;width:fit-content;}.link-content.jsx-263509302>a.jsx-263509302{padding:0.15rem 0;font-size:0.9rem;}</style></head>
+
+{% endblock %}
+
+{% block content %}
+
+
+    {% include '_btccrumb.html' %}
+
+<div class="card">
+    <div class="card-header">
+                <h1 style="text-align:center;width:100%;line-height:40px;font-size:20px">CoinJoin测量分析(2013-08-21 ~ 2021-01-21)</h1>
+
+    </div>
+
+         <section class="jsx-3954331054 section-stats">
+              <div style="scrollbar-width:none" class="jsx-3954331054 stats-container">
+                <div class="jsx-3954331054 stats-container-content">
+                  <div class="jsx-3954331054 stats-card">
+                    <div class="jsx-3954331054 stats-header">
+                      <span>交易总量</span></div>
+                    <div class="jsx-3954331054 stats-content">
+                        <span>{{result_list.coinjoin}}笔</span>
+                    </div>
+                  </div>
+                  <div class="jsx-3954331054 stats-card">
+                    <div class="jsx-3954331054 stats-header">
+                      <span>最大输入金额</span></div>
+                    <div class="jsx-3954331054 stats-content">
+                        <a href="{{ url_for('btc.btc_tsc_detail',hash = result_list['coinjoin_max_txid'])}}">
+                      <span>{{result_list.coinjoin_value_max}} BTC</span></a></div>
+                  </div>
+                  <div class="jsx-3954331054 stats-card">
+                    <div class="jsx-3954331054 stats-header">
+                      <span>最小输入金额</span>
+                    </a>
+                    </div>
+                    <div class="jsx-3954331054 stats-content">
+                    <a href="{{ url_for('btc.btc_tsc_detail',hash = result_list['coinjoin_min_txid'])}}">
+
+                      <span>{{result_list.coinjoin_value_min}} BTC</span>
+                    </a></div>
+                  </div>
+
+                  <div class="jsx-3954331054 stats-card">
+                    <div class="jsx-3954331054 stats-header">
+                      <span>最大每日交易笔数</span></div>
+                    <div class="jsx-3954331054 stats-content">
+                      <span>{{result_list.coinjoin_per_day_max}} 笔 </span></div>
+                  </div>
+
+
+
+
+                  <div class="jsx-3954331054 stats-card">
+                    <div class="jsx-3954331054 stats-header">
+                      <span>每日平均交易量</span></div>
+                    <div class="jsx-3954331054 stats-content">
+                      <span>{{result_list.coinjoin_per_day}} 笔</span></div>
+                  </div>
+                   <div class="jsx-3954331054 stats-card">
+                    <div class="jsx-3954331054 stats-header">
+                      <span>每日平均交易数量占比</span></div>
+                    <div class="jsx-3954331054 stats-content">
+                      <span>{{result_list.coinjoin_per_day_range}}%</span></div>
+                  </div>
+
+
+                </div>
+              </div>
+            </section>
+    <div class="card-body">
+
+        <div id="active_month_bar" style="height: 500px"></div>
+
+<!--        <h1 style="text-align:center;width:100%;line-height:40px;font-size:15px">CoinJoin交易总量(2013-08-21 ~ 2021-01-21):{{result_list.coinjoin}} 笔</h1>-->
+<!--        <h1 style="text-align:center;width:100%;line-height:40px;font-size:15px">CoinJoin平均每日交易量(2013-08-21 ~ 2021-01-21):{{result_list.coinjoin_per_day}} 笔</h1>-->
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h1 style="text-align:center;width:100%;line-height:40px;font-size:20px">Stealth Address 测量分析(2015-09-23 ~ 2021-01-21)</h1>
+    </div>
+
+             <section class="jsx-3954331054 section-stats">
+              <div style="scrollbar-width:none" class="jsx-3954331054 stats-container">
+                <div class="jsx-3954331054 stats-container-content">
+                  <div class="jsx-3954331054 stats-card">
+                    <div class="jsx-3954331054 stats-header">
+                      <span>交易总量</span></div>
+                    <div class="jsx-3954331054 stats-content">
+                        <span>{{result_list.stealth_address}}笔</span>
+                    </div>
+                  </div>
+
+
+
+                  <div class="jsx-3954331054 stats-card">
+                    <div class="jsx-3954331054 stats-header">
+                      <span>最大每日交易笔数</span></div>
+                    <div class="jsx-3954331054 stats-content">
+                      <span>{{result_list.stealth_addr_per_day_max}} 笔 </span></div>
+                  </div>
+
+
+
+
+                  <div class="jsx-3954331054 stats-card">
+                    <div class="jsx-3954331054 stats-header">
+                      <span>每日平均交易量</span></div>
+                    <div class="jsx-3954331054 stats-content">
+                      <span>{{result_list.stealth_address_per_day}} 笔</span></div>
+                  </div>
+                   <div class="jsx-3954331054 stats-card">
+                    <div class="jsx-3954331054 stats-header">
+                      <span>每日平均交易数占比</span></div>
+                    <div class="jsx-3954331054 stats-content">
+                      <span>{{result_list.stealth_addr_per_day}}%</span></div>
+                  </div>
+
+
+
+                </div>
+              </div>
+            </section>
+    <div class="card-body">
+        <div id="active_stealth_bar" style="height: 500px"></div>
+
+<!--        <h1 style="text-align:center;width:100%;line-height:40px;font-size:15px">Stealth Address交易总量(2015-09-23 ~ 2021-01-21):{{result_list.stealth_address}} 笔</h1>-->
+<!--        <h1 style="text-align:center;width:100%;line-height:40px;font-size:15px">Stealth Address平均每日交易量(2015-09-23 ~ 2021-01-21):{{result_list.stealth_address_per_day}} 笔</h1>-->
+    </div>
+</div>
+{% endblock %}
+
+{% block body_script %}
+<script src="{{ url_for('static', filename='assets/js/page/coinjoin_analy.js') }}"></script>
+
+<script src="{{ url_for('static', filename='assets/js/page/stealth_address_analy.js') }}"></script>
+{#    <script type="text/javascript"></script>#}
+{% endblock %}
+

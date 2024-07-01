@@ -1,0 +1,174 @@
+{% extends 'base_zcash.html' %}
+{% from 'macros.html' import reciver %}
+{% block title %}{% endblock %}
+
+{% block head_style %}{% endblock %}
+
+{% block content %}
+{#    <h1>TRANSACTION DETAIL</h1>#}
+{% include '_zcashcrumb.html' %}
+    <br>
+<div class="card" style="box-sizing: border-box">
+        <div class="card-header">概要信息</div>
+        <div class="card-body">
+            <div class="bee-row2" ​>
+                ​
+                <div style="flex: 1" class="bee-border-r-b">
+                    <table class="table table-sm table-hover bee-table">
+                        <tbody>
+                        <tr>
+                            <td>地址</td>
+                            <td>{{ address }}</td>
+                        </tr>
+                        <tr>
+                            <td>交易数</td>
+                            <td>{{ pagination.total }}</td>
+                        </tr>
+                        <tr>
+                            <td>总发送数</td>
+                            <td>{{ sent_num }}</td>
+                        </tr>
+                        <tr>
+                            <td>总接受数</td>
+                            <td>{{ recv_num }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div style="flex: 1">
+                    <table class="table table-sm table-hover bee-table">
+                        <tbody>
+                        <tr>
+                            <td>第一次出现时间</td>
+                            <td>{{ first_seen }}</td>
+                        </tr>
+                         <tr>
+                            <td>总发送金额</td>
+                            <td>{{ sent }}  ZEC</td>
+                        </tr>
+                        <tr>
+                            <td>总接受金额</td>
+                            <td>{{ recv }}  ZEC</td>
+                        </tr>
+                        <tr>
+                            <td>余额</td>
+                            <td>{{ balance }}  ZEC</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{#    <div>共<span id="block_total">{{ pagination.total }}</span>个结果</div>#}
+    {% for tx in txs %}
+    <br>
+    <div class="bee-card card bg-dark">
+    <div class="card-header tx_head">
+        <div>
+        <a style="float: left" href="/zcash/trans_detail/{{ tx.txid }}" >交易hash: {{ tx.txid }}</a>
+        <div style="text-align: right">{{ tx.blocktime }}</div>
+        </div>
+            <div style="color: #1E90FF;text-align:right" class="tx_button">查看交易列表</div>
+    </div>
+    <div class="tx_content">
+    <div class="card-body">
+
+        <div class="card-body">
+            <div class="bee-row2" ​>
+                ​
+                <div style="flex: 1" class="bee-border-r-b">
+                    <table class="table table-sm table-hover bee-table">
+                        <tbody>
+                        <tr>
+                            <td>发送方</td>
+                        </tr>
+                        {% for i in range(0,tx['vin'] | length) %}
+                                <tr>
+                                    <td>
+                                        <a style="{% if address == tx['vin'][i][0]  %}color: #1E90FF{% endif %}" href="{{ url_for('zcash.zcash_address_detail',address = tx['vin'][i][0]) }}">{{ tx['vin'][i][0]|truncate(45) }}</a>
+                                    </td>
+                                    <td>{{ tx['vin'][i][1] }}ZEC</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </tbody>
+                    </table>
+                </div>
+                <div style="flex: 1">
+                    <table class="table table-sm table-hover bee-table">
+                        <tbody>
+                        <tr>
+                            <td>接收方</td>
+                        </tr>
+                        {% for i in range(0,tx['vout'] | length) %}
+                                <tr>
+                                    <td>
+                                        <a style="{% if address == tx['vout'][i][0]  %}color: #1E90FF{% endif %}" href="{{ url_for('zcash.zcash_address_detail',address = tx['vout'][i][0]) }}">{{ tx['vout'][i][0]|truncate(45) }}</a>
+                                    </td>
+                                    <td>{{ tx['vout'][i][1] }}ZEC</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+        <div class="card-header">
+            <div>
+        <div style="text-align: left">总输入(ZEC)：{{ tx['inputvalue'] }}</div>
+        <div style="text-align: left">总输出(ZEC)：{{ tx['outputvalue'] }}</div>
+        <div style="text-align: left">交易费(ZEC)：{{ tx['fee'] }}</div>
+            </div>
+            </div>
+    </div>
+
+    </br>
+    {% endfor %}
+    <nav>
+    <ul class="pagination">
+        {%if pagination.has_prev%}
+        <li class="page-item active"><a class="page-link" href="/zcash/address/{{ address }}?page={{ pagination.page-1 }}">上一页</a></li>
+        {%else%}
+        <li class="page-item disabled"><a class="page-link" href="#">上一页</a></li>
+        {%endif%}
+        {%for page in pagination.pages.__iter__()%}
+            {%if page%}
+                <li class="page-item {%if page==pagination.page%}active{%endif%}"><a class="page-link" href="/zcash/address/{{ address }}?page={{ page }}">{{page}}</a></li>
+            {%else%}
+                <li class="page-item disabled"><a class="page-link" href="#">&hellip;</a></li>
+            {%endif%}
+
+        {%endfor%}
+
+        {%if pagination.has_next%}
+        <li class="page-item active"><a class="page-link" href="/zcash/address/{{ address }}?page={{ pagination.page+1 }}">下一页</a></li>
+        {%else%}
+        <li class="page-item disabled"><a class="page-link" href="#">下一页</a></li>
+        {%endif%}
+
+    </ul>
+    </nav>
+{% endblock %}
+{% block body_script %}
+    <script src="{{ url_for('static', filename='') }}"></script>
+    <script type="text/javascript"></script>
+    <script type="text/javascript">
+    $(".tx_content").hide();
+    $(".tx_head").click(function () {
+                var text=$(this).children().last().text();
+                if (text=="查看交易列表")
+                {
+                    $(this).next().slideDown();
+                    $(this).children().last().text("关闭交易列表");
+                }
+                if (text=="关闭交易列表")
+                {
+                    $(this).next().slideUp();
+                    $(this).children().last().text("查看交易列表");
+                }
+        });
+</script>
+{% endblock %}

@@ -1,0 +1,160 @@
+{% extends 'baseETH.html' %}
+
+
+{% block head_style %}
+{#    datatable #}
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='plugins/jquery-datatable/css/jquery.dataTables.min.css') }}"/>
+
+
+{% endblock %}
+{# <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/bee.theme.dark.css') }}"/>#}
+
+
+
+
+{% block content %}
+        {% include '_ethcrumb.html' %}
+
+{#    <h1>ETH BLOCK DETAIL</h1>#}
+    <br>
+<div class="bee-card card bg-dark">
+    <div class="card-header">概要信息</div>
+    <div class="card-body">
+        <div class="bee-row2">
+        <div style="flex:1"class="bee-border-r-b">
+            <table class="table table-sm table-hover bee-table">
+                <tbody>
+                <tr>
+                    <td>高度</td>
+                    <td>{{ blockInfo['height'] }}</td>
+                </tr>
+                <tr>
+                    <td>出块时间</td>
+                    <td>{{ blockInfo['time'] }}</td>
+                </tr>
+                <tr>
+                    <td>交易数量</td>
+                    <td>{{ blockInfo['ntn'] }}个普通交易，{{ blockInfo['ctn'] }}个内部合约交易</td>
+                </tr>
+                <tr>
+                    <td>叔块</td>
+                    <td>{{ blockInfo['uncles'] }}</td>
+                </tr>
+                <tr>
+                    <td>区块大小</td>
+                    <td>{{ blockInfo['size'] }}</td>
+                </tr>
+                <tr>
+                    <td>矿工</td>
+                    <td><a href="{{ url_for('eth.eth_address_detail',addr =  blockInfo['miner'] ) }}">{{ blockInfo['miner'] }}</a></td>
+                </tr>
+                <tr>
+                    <td>挖矿难度(difficulty)</td>
+                    <td>{{ blockInfo['difficulty'] }}</td>
+                </tr>
+                <tr>
+                    <td>总难度</td>
+                    <td>{{ blockInfo['totalDifficulty'] }}</td>
+                </tr>
+                <tr>
+                    <td>出块奖励</td>
+                    <td>{{ blockInfo['block_reward'] }}</td>
+                </tr>
+                <tr>
+                    <td>包含叔块奖励</td>
+                    <td>{{ blockInfo['uncle_reward'] }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div style="flex: 1">
+            <table class="table table-sm table-hover bee-table">
+                <tbody>
+                <tr>
+                    <td>手续费</td>
+                    <td>{{ blockInfo['fees'] }}</td>
+                </tr>
+                <tr>
+                    <td>Gas消耗</td>
+                    <td>{{ blockInfo['gasUsed'] }}</td>
+                </tr>
+                <tr>
+                    <td>Gas限额</td>
+                    <td>{{ blockInfo['gasLimit'] }}</td>
+                </tr>
+                <tr>
+                    <td>Gas均价</td>
+                    <td>{{ blockInfo['average_gasPrice'] }}</td>
+                </tr>
+                <tr>
+                    <td>区块哈希</td>
+                    <td>{{ blockInfo['hash']|truncate(30) }}</td>
+                </tr>
+                <tr>
+                    <td>父块哈希</td>
+                    <td>{{ blockInfo['parentHash']|truncate(30) }}</td>
+                </tr>
+                <tr>
+                    <td>Sha3Uncles值</td>
+                    <td>{{ blockInfo['sha3Uncles']|truncate(30) }}</td>
+                </tr>
+                <tr>
+                    <td>附加数据</td>
+                    <td>{{ blockInfo['extraData'] }}</td>
+                </tr>
+                <tr>
+                    <td>Nonce值</td>
+                    <td>{{ blockInfo['nonce'] }}</td>
+                </tr>
+                <tr>
+                    <td>确认数</td>
+                    <td>{{ blockInfo['confirm_num'] }}</td>
+                </tr>
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+    </div>
+</div>
+
+    <br>
+    <div class="bee-card card bg-dark">
+    <div class="card-header">交易信息</div>
+    <div class="card-body">
+
+        <table class="display bee-db" id="trans-in-block1" >
+
+            <thead>
+            <tr>
+                <th>交易哈希</th>
+                <th>所在区块</th>
+                <th>时间</th>
+                <th>发送方</th>
+                <th>接收方</th>
+                <th>类型</th>
+                <th>手续费(ETH)</th>
+                <th>交易额(ETH)</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+    </div>
+    <br>
+
+
+
+{% endblock %}
+
+{% block body_script %}
+    <script src="{{ url_for('static', filename='plugins/jquery-datatable/js/jquery.dataTables.min.js') }}"></script>
+    <script type="text/javascript">
+
+        var bid = {{ blockInfo['height'] }};
+        var col_names = {{ col_names|tojson }}
+
+    </script>
+    <script src="{{ url_for('static', filename='assets/js/page/block_detail.js') }}"></script>
+
+{% endblock %}

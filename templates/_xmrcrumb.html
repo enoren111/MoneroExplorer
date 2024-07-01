@@ -1,0 +1,129 @@
+<!--
+ * @Author: @Jinhao Liu
+ * @Date: 2023-03-27 15:09:15
+ * Copyright (c) 2023 by @Jinhao Liu, All Rights Reserved.
+-->
+
+<style type="text/css">
+    #sub_menu_1,
+    #sub_menu_2,
+    #sub_menu_3,
+    #sub_menu_4 {
+        display: none;
+
+    }
+
+    #leftMenu {
+        width: 300px;
+    }
+
+    #leftMenu ul {
+        width: 300px;
+        background: #000000;
+        position: absolute;
+        list-style: none;
+    }
+
+    #leftMenu li {
+        width: 300px;
+        position: relative;
+    }
+
+    #leftMenu li>ul {
+        left: 300px;
+        top: 0;
+        display: none;
+    }
+
+    #leftMenu li:hover>ul {
+        display: block;
+    }
+</style>
+<div class="bee-ssnav">
+    <ul id="nav" class="nav ">
+        <li class="nLi on">
+            <h3><a> Currency {# 币种 #} <i class="fa fa-caret-down"></i></a></h3>
+            <ul class="sub" id="sub_menu_1">
+                <li><a style="font-size:15px;" href="{{ url_for('btc.btc_home') }}">Btc</a></li>
+                <li><a style="font-size:15px;" href="{{ url_for('eth.eth_home') }}">Eth</a></li>
+                <li><a style="font-size:15px;" href="{{ url_for('zcash.zcash_home') }}">Zcash</a></li>
+                <li><a style="font-size:15px;" href="{{ url_for('xmr.xmr_home') }}">Monero</a></li>
+
+            </ul>
+        </li>
+        <li class="nLi">
+            <h3><a class="np">/</a></h3>
+        </li>
+        <li class="nLi on">
+            <!-- 假设当前频道为“预告片”，手动或后台程序添加titOnClassName类名（默认是'on'），相当于设置参数defaultIndex:1。若同时设置参数returnDefault:true，则鼠标移走后0.3秒返回当前频道 -->
+            <h3><a>{# {{ page_title }} #}{# 功能模块 #} Module <i class="fa fa-caret-down"></i></a></h3>
+            <ul class="sub" id="leftMenu">
+                <li><a style="font-size:15px;">{# 查询系统 #} QUERY SYSTEM<i class="fa fa-caret-right"></i></a>
+                    <ul id="sub_menu_1">
+                        <li><a href="{{ url_for('xmr.xmr_block') }}">{# 区块 #} Block</a></li>
+                        <li><a href="{{ url_for('xmr.xmr_transaction') }}">{# 交易 #} Transaction</a></li>
+                        {# <li><a href="{{ url_for('btc.btc_query') }}"> Query wizard</a></li>#}
+                        <li><a href="{{ url_for('xmr.xmr_query_test') }}">{# 查询工作台 #} Query Workbench</a></li>
+
+
+                    </ul>
+                <li><a style="font-size:15px;">{# 去匿名化 #}Deanonymization<i class="fa fa-caret-right"></i></a>
+                    <ul id="sub_menu_1">
+                        <li><a href="{{ url_for('xmr.xmr_rings') }}">{# 环签名去匿名 #}Ring signature to anonymity</a></li>
+                        <li><a href="{{ url_for('xmr.xmr_spentstatus') }}">{# 输出花费状况 #}Output Spending Status</a></li>
+
+                    </ul>
+                <li><a style="font-size:15px;">{# 网络测绘 #}Network surveying and mapping<i
+                            class="fa fa-caret-right"></i></a>
+                    <ul id="sub_menu_1">
+                        <li><a href="http://0.0.0.0:8000/">{# 网络测绘 #} Network surveying and mapping</a></li>
+                        {# 注意网络节点要设置端口为8000#}
+
+                    </ul>
+                </li>
+                <li><a style="font-size:15px;">{# 节点信息 #}Node information<i class="fa fa-caret-right"></i></a>
+                    <ul id="sub_menu_1">
+                        <li><a href="{{ url_for('xmr.xmr_nodes') }}">{# 节点始发交易 #} Node initiating transaction</a></li>
+                        <li><a href="{{ url_for('xmr.xmr_supernodes') }}">{# 节点交易信息 #} Node transaction information</a>
+                        </li>
+
+                    </ul>
+
+                </li>
+                <li><a style="font-size:15px;">{# 详细信息 #} Detailed Information<i class="fa fa-caret-right"></i></a>
+                    <ul id="sub_menu_1">
+                        <li><a href="{{ url_for('xmr.num_money') }}">{# 交易详情 #} Transaction details</a></li>
+                        <li><a href="{{ url_for('xmr.class_stat') }}">{# 交易分类 #} Transaction classification</a></li>
+                        <li><a href="{{ url_for('xmr.use_stat') }}">{# 地址使用 #}Address usage</a></li>
+
+                    </ul>
+
+                </li>
+            </ul>
+        </li>
+        {% if page_id %}
+        <li class="nLi">
+            <h3><a class="np">/</a></h3>
+        </li>
+        <li class="nLi">
+            <h3><a>{{ page_id|truncate(20) }}</a></h3>
+        </li>
+
+        {% endif %}
+
+    </ul>
+
+
+</div>
+<script type="text/javascript">
+    function f(str) {
+        var sub_menu = document.getElementById(str);
+        var dis_v = sub_menu.style.display;
+
+        if (dis_v == "block")
+            sub_menu.style.display = "none";
+        else
+            sub_menu.style.display = "block";
+
+    }
+</script>

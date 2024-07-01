@@ -1,0 +1,442 @@
+{% extends 'baseETH.html' %}
+{% block title %}eth node home{% endblock %}
+
+{% block head_style %}
+
+    {#    <link rel="stylesheet" href="{{ url_for('static', filename='muban/3527/app_forbee.css') }}"/>#}
+
+    {#swiperTab#}
+    <link rel="stylesheet" href="{{ url_for('static', filename='plugins/swiperTab/swiper/swiper.min.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='plugins/swiperTab/css/page_style.css') }}"/>
+
+    <!-- amchart -->
+{#    <link rel="stylesheet" href="{{ url_for('static', filename='plugins/amcharts/demo/index.css') }}"/>#}
+    <style>
+
+
+    </style>
+{% endblock %}
+
+{% block content %}
+{#    <h1>NODE</h1>#}
+    {% include '_ethcrumb.html' %}
+
+
+
+    <div style="width: 80%;margin: 0 auto;">
+        <div class="bee-row2">
+            <div class="bee-node"><h3>{{ node_total }}</h3>
+                <p>节点</p></div>
+            <div class="bee-node"><h3>9155</h3>
+                <p>IPV4</p></div>
+            <div class="bee-node"><h3>1328</h3>
+                <p>IPV6</p></div>
+{#            <div class="bee-node"><h3>192</h3>#}
+{#                <p>onion</p></div>#}
+            <div class="bee-node"><h3>{{ height }}</h3>
+                <p>高度</p></div>
+        </div>
+    </div>
+
+
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">节点分布</div>
+                <div class="card-body">
+
+
+                    <div id="node-banner" class="middle-ele">
+                        <div>
+                            <div id="version-pie" style="height: 322px;width: 100%"></div>
+                        </div>
+                        <div>
+                            <div id="country-pie" style="height: 322px;width: 100%"></div>
+                        </div>
+                        <div>
+                            <div id="asn-pie" style="height: 322px;width: 100%"></div>
+                        </div>
+                        <div>
+                            <div id="os-pie" style="height: 322px;width: 100%"></div>
+
+                        </div>
+                    </div>
+
+
+
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">网络拓扑</div>
+                <div class="card-body">
+
+                    <div id="network-topology"></div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <br>
+
+
+
+
+    <div class="row">
+        <div class="col-md-4">
+
+            <div class="swiper-container">
+                <div class="my-pagination">
+                    <ul class="my-pagination-ul"></ul>
+                </div>
+                <div class="swiper-wrapper">
+
+                    <div class="swiper-slide">
+                        <div class="user_zc_body">
+                            <table class="table bee-table table-sm table-hover bee-l-m-b-0 node-dist-tb">
+                                <tbody>
+                                {% for item in node_dist['cv_dist'][0:8] %}
+                                    <tr class="bee-border-b-b">
+                                        <td>{{ loop.index }}</td>
+                                        <td>{{ item['name'] }}</td>
+                                        <td>{{ item['value'] }}({{ item['p'] }})</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                            <div class="bee-node-all"><a class="bee-c-p" data-target="#all-cv" data-toggle="modal" >查看全部...</a></div>
+                        </div>
+
+
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="user_zc_body">
+                            <table class="bee-table table table-sm table-hover node-dist-tb bee-l-m-b-0">
+                                <tbody>
+                                {% for item in node_dist['ct_dist'][0:8] %}
+                                    <tr class="bee-border-b-b">
+                                        <td>{{ loop.index }}</td>
+                                        <td>{{ item['name'] }}</td>
+                                        <td>{{ item['value'] }}({{ item['p'] }})</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                            <div class="bee-node-all"><a class="bee-c-p" data-target="#all-country" data-toggle="modal">查看全部...</a></div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="user_zc_body">
+                            <table class="table table-sm table-hover bee-table bee-l-m-b-0 node-dist-tb">
+                                <tbody>
+                                {% for item in node_dist['asn_dist'][0:8] %}
+                                    <tr class="bee-border-b-b">
+                                        <td>{{ loop.index }}</td>
+                                        <td>{{ item['name'] }}</td>
+                                        <td>{{ item['value'] }}({{ item['p'] }})</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                            <div class="bee-node-all"><a class="bee-c-p" data-target="#all-asn" data-toggle="modal">查看全部...</a></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+        <div class="col-md-8">
+
+            <div id="amnodemap" style="height: 345px;"></div>
+
+            <!-- <div id="nodemap" style="height: 345px"></div> -->
+
+
+        </div>
+    </div>
+    <br>
+    <div class="card">
+        <div class="card-body">
+
+            <span style="font-size: 1.5em">节点检测</span>
+            <span>输入IP和端口，检测节点的以太坊客户端当前是否接受来自其他节点的传入连接</span>
+
+
+            <div class="form-inline" style="justify-content: center">
+                <input type="text" class="form-control" id="ip" placeholder="IP地址">
+                <input type="text" class="form-control" id="port" placeholder="端口">
+                <button id="check-ip" class="btn btn-primary" data-href="{{ url_for('eth.check_node') }}">检测</button>
+            </div>
+
+                <div id="check_result"></div>
+            <br>
+            <div id="check-node-status" hidden>
+{#                <i class="fa fa-exclamation-circle"></i> 67.203.1.170:30303 在线#}
+{#                <i class="fa fa-check-circle"></i> 67.203.1.170:30303 在线#}
+
+            </div>
+                <table id="node_state" hidden class="table">
+                    <thead>
+                    <tr>
+
+                        <th>IP地址</th>
+                        <th>端口</th>
+                        <th>状态</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+
+
+        </div>
+    </div>
+
+
+
+
+
+
+    {#    <button class="btn btn-outline-secondary btn-sm uncollect-btn"#}
+    {#            data-href="{{ url_for('uncollect') }}"#}
+    {#            data-ip="0000" style="display:block;margin:0 auto">检测#}
+    {#    </button>#}
+
+
+
+
+
+    <br>
+
+    <!-- start nodeList filter-->
+
+        <div class="bee-row2">
+
+        <div class="bee-row">
+
+            {#        <div>{{ pagination.info }}</div>#}
+
+            <div>共<span id="table_item_total">{{ node_total }}</span>个结果，用时{{ took }}ms</div>
+
+
+
+            <div class="dropdown">
+                <button class="btn btn-primary btn-sm" type="button" id="fields-filter" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">选择字段 <span
+                        class="oi oi-elevator"></span>
+                </button>
+                <div id="ffm" class="dropdown-menu" aria-labelledby="fields-filter">
+                    {% for item in table_fields %}
+                        {#                    <div class="dropdown-item"><input type="checkbox" class="toggle-vis"/>{{ block_fields[item] }}</div>#}
+                        <div class="dropdown-item" data-stopPropagation="true"><i
+                                class="fa fa-square-o fa-fw"></i> {{ item }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+
+
+            <div>
+                <input id="table-search" type="text">
+            </div>
+
+
+        </div>
+        <div class="bee-row2 bee-pagination f-ai-c" style="width: 275px">
+            <button class="btn btn-primary btn-sm prev">上一页</button>
+            <input class="jump-ipt" style="width: 50px;" type="text" value="1">/ <span
+                id="block_pages">{{ pages }}</span>
+            <button class="btn btn-primary btn-sm next">下一页</button>
+        </div>
+    </div>
+
+    <!-- end nodeList filter-->
+
+
+
+    <!-- start nodeList-->
+
+
+
+    <table class="table" id="node-table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>IP地址</th>
+            <th>端口</th>
+            <th>最后在线</th>
+            <th>客户端</th>
+            <th>版本</th>
+            <th>操作系统</th>
+            <th>地理位置</th>
+            <th>网络</th>
+            <th>高度</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in node_list %}
+            <tr>
+                <td><a href="{{ url_for('eth.eth_node_detail', node_id=item['nodeID']) }}">{{ item['nodeID']|truncate(20) }}</a>
+                </td>
+                <td>{{ item['nodeIP'] }}</td>
+                <td>{{ item['nodePort'] }}</td>
+                <td>{{ item['lastOnline'] }}</td>
+                <td>{{ item['client'] }}</td>
+                <td>{{ item['clientVersion'] }}</td>
+                <td>{{ item['os'] }}</td>
+                <td>{{ item['country']}}</td>
+                <td>{{ item['asnum'] }}</td>
+                <td>{{ item['height'] }}</td>
+
+
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{#    {{ pagination.links }}#}
+    <div class="m-style pagination"></div>
+{#    <div class="m-style M-box4"></div>#}
+
+
+    <!-- end nodeList-->
+
+    {% include 'local/node_modal.html' %}
+
+
+{% endblock %}
+
+{% block body_script %}
+    {#    <script src="{{ url_for('static', filename='muban/3527/app.js') }}"></script>#}
+
+    <script>
+        var pages = {{ pages }}
+        {#var cv_dist = {{ cv_dist }}#}
+        {#var cv_series = {{ node_dist['cv_dist']|tojson }}#}
+        var cv_series = {{ pie_series['cv_dist']|tojson }}
+        var ct_series = {{ pie_series['ct_dist']|tojson }}
+        var co_series = {{ pie_series['co_dist']|tojson }}
+        var asn_series = {{ pie_series['asn_dist']|tojson }}
+
+
+
+    </script>
+    {#  tab #}
+    <script src="{{ url_for('static', filename='plugins/swiperTab/swiper/swiper.min.js') }}"></script>
+    <script type="text/javascript">
+        var mySwiper = new Swiper('.swiper-container', {
+            pagination: '.my-pagination-ul',
+            paginationClickable: true,
+            paginationBulletRender: function (index, className) {
+                switch (index) {
+                    case 0:
+                        name = '版本';
+                        break;
+                    case 1:
+                        name = '国家';
+                        break;
+                    case 2:
+                        name = '网络';
+                        break;
+                    // case 3: name='我好';break;
+                    default:
+                        name = '';
+                }
+                return '<li class="' + className + '">' + name + '</li>';
+            }
+        });
+
+        $(function () {
+
+            function check_node(e) {
+                var $el = $(e.target).data('href') ? $(e.target) : $(e.target).parent('.uncollect-btn');
+                {#var ip = $el.data('ip');#}
+                $('#check-node-status').removeAttr("hidden");
+                $('#check-node-status').removeAttr("class");
+                $('#check-node-status').html('<i class="fa fa-spinner fa-spin "></i>');
+                $.ajax({
+                    type: 'POST',
+                    url: $el.data('href'),
+                    data: {"ip": $('#ip').val(), "port": $('#port').val()},
+                    success: function (data) {
+                        {#alert("success")#}
+                        {#$('#check_result').html("节点在线");#}
+
+                        if(data['status']=='online'){
+                            $('#check-node-status').addClass('online')
+                            $('#check-node-status').html('<i class="fa fa-check-circle"></i> '+data['node_ip']+':'+data['node_port']+' 在线');
+                        }else{
+                            $('#check-node-status').addClass('offline')
+                            $('#check-node-status').html('<i class="fa fa-exclamation-circle"></i> '+data['node_ip']+':'+data['node_port']+' 离线');
+                        }
+                        {#$('#node_state').removeAttr("hidden");#}
+                        {#var tr = "<tr><td>"+data.node_ip+"</td><td>"+data['node_port']+"</td><td>"+data['status']+"</td></tr>";#}
+                        {#$("#node_state tr:eq(0)").after(tr);#}
+
+                    }
+                });
+            }
+
+            $(document).on('click', '#check-ip', check_node.bind(this));
+
+        });
+    </script>
+
+
+    {#    echarts map #}
+    {#    <script src="{{ url_for('static', filename='plugins/echarts/echarts.js') }}"></script>#}
+{#    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/china.js"></script>#}
+{#    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/world.js"></script>#}
+{#    <script type="text/javascript"#}
+{#            src="https://api.map.baidu.com/api?v=2.0&ak=ODgoeqFx6DHAhNwXSeO8ld9W2DUQmKIr"></script>#}
+{#    <script type="text/javascript"#}
+{#            src="http://echarts.baidu.com/gallery/vendors/echarts/extension/bmap.min.js"></script>#}
+{#        <script src="{{ url_for('static', filename='assets/demo/emap.js')     }}"></script>  #}
+
+
+
+
+    {#    this page #}
+    <script src="{{ url_for('static', filename='assets/js/page/eth_node.js') }}"></script>
+
+
+    {#    d3 + force-directed #}
+    <script src="{{ url_for('static', filename='plugins/d3/d3.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='assets/demo/force-directed-graph.js') }}"></script>
+    <!-- -->
+    <script>
+        $(function () {
+            $('.M-box4').pagination({
+                pageCount: 5,
+                jump: true,
+                callback: function (api) {
+                    var data = {
+                        page: api.getCurrent(),
+                        name: 'mss',
+                        say: 'oh'
+                    };
+                    {#update_bt();#}
+                    //  可在此处发送ajax请求
+                }
+            });
+        });
+    </script>
+
+
+    <!-- amcharts -->
+    <script src="{{ url_for('static', filename='plugins/amcharts/core.js') }}"></script>
+    <script src="{{ url_for('static', filename='plugins/amcharts/maps.js') }}"></script>
+    <script src="{{ url_for('static', filename='plugins/amcharts/themes/dark.js') }}"></script>
+    <script src="{{ url_for('static', filename='plugins/amcharts/geodata/worldLow.js') }}"></script>
+    <script src="{{ url_for('static', filename='plugins/amcharts/themes/animated.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='plugins/amcharts/demo/node_geo_map.js') }}"></script>
+
+
+{% endblock %}

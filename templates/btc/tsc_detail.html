@@ -1,0 +1,456 @@
+{% extends 'base3.html' %}
+{% from 'macros.html' import reciver %}
+{% block title %}{% endblock %}
+
+{% block head_style %}
+    <style type="text/css">
+        #wrap {
+            word-break: break-all;
+            width: 800px;
+        }
+    </style>
+    <style type="text/css">
+        dd {
+            color: black;
+        }
+
+    </style>
+{% endblock %}
+
+{% block content %}
+
+    {#    <h1>TRANSACTION DETAIL</h1>#}
+    {% include '_btccrumb.html' %}
+    <br>
+
+    <div class="card">
+        <div class="card-header">概要信息</div>
+        <div class="card-body">
+            <div class="bee-row2" ​>
+                ​
+                <div style="flex: 1" class="bee-border-r-b">
+                    <table class="table table-sm table-hover bee-table">
+                        <tbody>
+                        <tr>
+                            <td>交易哈希</td>
+                            <td>
+                                <a href="{{ url_for('btc.btc_tsc_detail', hash=tsc_info['_id']) }}">{{ tsc_info['_id']|truncate(30) }}</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>交易结果</td>
+                            <td>{{ tsc_info['status'] }}</td>
+                            {#                            <td>成功|失败</td>#}
+                        </tr>
+                        <tr>
+                            <td>所在区块</td>
+                            <td>
+                                <a href="{{ url_for('btc.btc_block_detail',hash = tsc_info['_source']['blockhash']) }}">{{ tsc_info['_source']['blockheight'] }}</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>时间(北京)</td>
+                            <td title="UTC时间：{{ tsc_info['_source']['blocktime'] }}">{{ tsc_info['time_bj'] }}</td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+                <div style="flex: 1">
+                    <table class="table table-sm table-hover bee-table">
+                        <tbody>
+                        <tr>
+                            <td>总输入</td>
+                            <td>{{ tsc_info['_source']['inputvalue']/(10**8) }} BTC</td>
+                        </tr>
+                        <tr>
+                            <td>总输出</td>
+                            <td>{{ tsc_info['_source']['outputvalue']/(10**8) }} BTC</td>
+                        </tr>
+                        <tr>
+                            <td>Fees</td>
+                            <td>{{ tsc_info['_source']['fee']/(10**8) }} BTC</td>
+                        </tr>
+                        <tr>
+                            <td>交易大小</td>
+                            <td>{{ tsc_info['_source']['size'] }} bytes</td>
+                        </tr>
+                        <tr>
+                            <td>交易额</td>
+                            <td>${{ tsc_info['USD'] }} | ￥{{ tsc_info['CNY'] }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {% if tsc_info['iscarry'] %}
+                        <button id="showcarrybutton"
+                                style="background-color: black;border-color: black;color: #1d7db1;float: left">
+                            显示/收起夹带信息
+                        </button>
+                    {% endif %}
+
+            <table class="table table-sm table-hover bee-table" id="carryparttable">
+                <tbody>
+                {% for foo in tsc_info["carrypart"]["input"] %}
+                    <tr><td><div style="float: left">{{ foo["string"] }}</div></td></tr>
+                {% endfor %}
+                {% for foo in tsc_info["carrypart"]["output"] %}
+                    <tr><td><div style="float: left">{{ foo["string"] }}</div></td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+    <br>
+    <button type="button" class="btn btn-primary"><a href="/btc/traceTest?txid={{tsc_info['_id']  }}">向后追踪</a></button>
+    <div class="card">
+        <div class="card-header">地址总览<button type="submit"  class="btn btn-primary btn-sm" onclick="add_tag()">添加标签</button></div>
+        <div class="card-body">
+            <div class="bee-row2" ​>
+                ​
+                <div style="flex: 1" class="bee-border-r-b">
+                    {% if tsc_info['vin']|length < 5 %}
+                        <table class="table table-sm table-hover bee-table">
+                            <tbody>
+                            <tr>
+                                <td><strong>发送方</strong></td>
+                                <td>标签</td>
+                                <td></td>
+                            </tr>
+                            {% for i in range(0,tsc_info['vin'] | length) %}
+                                <tr>
+                                    <td>
+                                        <a href="{{ url_for('btc.btc_address_detail',address = tsc_info['vin'][i][0]) }}">{{ tsc_info['vin'][i][0]|truncate(45) }}</a>
+                                    </td>
+                                     <td title="{{ tsc_info['vin'][i][3] }}"><a href="{{ url_for('btc.btc_tag_detail',address = tsc_info['vin'][i][0])}}">{{ tsc_info['vin'][i][3]|truncate(20) }} </a></td>
+                                    <td>{{ tsc_info['vin'][i][1] }}BTC</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <table class="table table-sm table-hover bee-table">
+                            <tbody>
+                            <tr>
+                                <td><strong>发送方</strong></td>
+                                <td>标签</td>
+                                <td></td>
+                            </tr>
+                            {% for i in range(0,5) %}
+                                <tr>
+                                    <td>
+                                        <a href="{{ url_for('btc.btc_address_detail',address = tsc_info['vin'][i][0]) }}">{{ tsc_info['vin'][i][0]|truncate(45) }}</a>
+                                    </td>
+
+                                    <td title="{{ tsc_info['vin'][i][3] }}"><a href="{{ url_for('btc.btc_tag_detail',address = tsc_info['vin'][i][0])}}">{{ tsc_info['vin'][i][3]|truncate(15) }}</a> </td>
+                                <td>{{ tsc_info['vin'][i][1] }} BTC</td>
+                                </tr>
+                            {% endfor %}
+
+                            </tbody>
+                        </table>
+                        <table class="table table-sm table-hover bee-table" id="intable">
+                            <tbody>
+                            {% for i in range(5,tsc_info['vin'] | length) %}
+                                <tr>
+                                    <td>
+                                        <a href="{{ url_for('btc.btc_address_detail',address = tsc_info['vin'][i][0]) }}">{{ tsc_info['vin'][i][0]|truncate(45) }}</a>
+                                    </td>
+
+                                    <td title="{{ tsc_info['vin'][i][3] }}"><a href="{{ url_for('btc.btc_tag_detail',address = tsc_info['vin'][i][0])}}">{{ tsc_info['vin'][i][3]|truncate(15) }}</a> </td>
+                                <td>{{ tsc_info['vin'][i][1] }} BTC</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endif %}
+
+                    {% if tsc_info['vin']|length > 5 %}
+                        <button id="showinaddress"
+                                style="background-color: black;border-color: black;color: #1d7db1;float: right">展示所有地址
+                        </button>
+                    {% endif %}
+                </div>
+                <div style="flex: 1">
+                    {% if tsc_info['vout']|length < 5 %}
+                        <table class="table table-sm table-hover bee-table">
+                            <tbody>
+                            <tr>
+                                <td><strong>接收方</strong></td>
+                                <td>标签</td>
+                                <td></td>
+                            </tr>
+                            {% for i in range(0,tsc_info['vout'] | length) %}
+                                <tr>
+                                    <td>
+                                        <a href="{{ url_for('btc.btc_address_detail',address = tsc_info['vout'][i][0]) }}">{{ tsc_info['vout'][i][0]|truncate(45) }}</a>
+                                    </td>
+                                    <td title="{{ tsc_info['vout'][i][4] }}"><a href="{{ url_for('btc.btc_tag_detail',address = tsc_info['vout'][i][0])}}">{{ tsc_info['vout'][i][4] |truncate(20) }}</a></td>
+                                    <td>{{ tsc_info['vout'][i][1] }}BTC</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <table class="table table-sm table-hover bee-table">
+                            <tbody>
+                            <tr>
+                                <td><strong>接收方</strong></td>
+                                 <td>标签</td>
+                                <td></td>
+                            </tr>
+                            {% for i in range(0,5) %}
+                                <tr>
+                                    <td>
+                                        <a href="{{ url_for('btc.btc_address_detail',address = tsc_info['vout'][i][0]) }}">{{ tsc_info['vout'][i][0]|truncate(45) }}</a>
+                                    </td>
+                                    <td title="{{ tsc_info['vout'][i][4] }}"><a href="{{ url_for('btc.btc_tag_detail',address = tsc_info['vout'][i][0])}}">{{ tsc_info['vout'][i][4] |truncate(20) }}</a></td>
+                                    <td>{{ tsc_info['vout'][i][1] }} BTC</td>
+                                </tr>
+                            {% endfor %}
+
+                            </tbody>
+                        </table>
+                        <table class="table table-sm table-hover bee-table" id="outtable">
+                            <tbody>
+                            {% for i in range(5,tsc_info['vout'] | length) %}
+                                <tr>
+                                    <td>
+                                        <a href="{{ url_for('btc.btc_address_detail',address = tsc_info['vout'][i][0]) }}">{{ tsc_info['vout'][i][0]|truncate(45) }}</a>
+                                    </td>
+                                    <td title="{{ tsc_info['vout'][i][4] }}"><a href="{{ url_for('btc.btc_tag_detail',address = tsc_info['vout'][i][0])}}">{{ tsc_info['vout'][i][4] |truncate(20) }}</a></td>
+                                    <td>{{ tsc_info['vout'][i][1] }} BTC</td>
+                                </tr>
+                            {% endfor %}
+
+                            </tbody>
+                        </table>
+                    {% endif %}
+
+
+                    {% if tsc_info['vout']|length > 5 %}
+                        <button id="showoutaddress"
+                                style="background-color: black;border-color: black;color: #1d7db1;float: right">
+                            展示/收起所有地址
+                        </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="bee-tab">
+        <ul class="nav nav-tabs nav-tabs-alt" data-toggle="tabs">
+            <li>
+                <a href="#btabs-alt-static-input" class="active">输入详情信息</a>
+            </li>
+            <li>
+                <a href="#btabs-alt-static-output">输出详情信息</a>
+            </li>
+
+        </ul>
+        <div class="card-block tab-content">
+            <div class="tab-pane active" id="btabs-alt-static-input">
+                <br>
+                <br>
+                {% for foo in tsc_info['vin'] %}
+                    <table class="table table-sm table-hover bee-table">
+                        <tbody>
+                        <tr>
+                            <td>序号</td>
+                            <td>{{ loop.index }}</td>
+                        </tr>
+                        <tr>
+                            <td>地址</td>
+                            <td><a href="{{ url_for('btc.btc_address_detail',address = foo[0]) }}">{{ foo[0] }}</a></td>
+                        </tr>
+                        <tr>
+                            <td>SigScript</td>
+                            <td>
+                                <div id="wrap">{{ foo[2] }}</div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                {% endfor %}
+                {% if tsc_info['vin']|length > 5 %}
+                    <button id="indetail"
+                            style="background-color: black;border-color: black;color: #1d7db1;float: left">展示/收起所有地址
+                    </button>
+                {% endif %}
+                <br>
+
+            </div>
+            <div class="tab-pane " id="btabs-alt-static-output">
+                <br>
+                <br>
+                {% for foo in tsc_info['vout'] %}
+                    <table class="table table-sm table-hover bee-table">
+                        <tbody>
+                        <tr>
+                            <td>序号</td>
+                            <td>{{ loop.index }}</td>
+                        </tr>
+                        <tr>
+                            <td>地址</td>
+                            <td><a href="{{ url_for('btc.btc_address_detail',address = foo[0]) }}">{{ foo[0] }}</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Pkscript</td>
+                            <td>
+                                <div id="wrap">{{ foo[2] }}</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>类型</td>
+                            <td>{{ foo[3] }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                {% endfor %}
+                {% if tsc_info['vout']|length > 5 %}
+                    <button id="outdetail"
+                            style="background-color: black;border-color: black;color: #1d7db1;float: left">展示/收起所有地址
+                    </button>
+                {% endif %}
+                <br>
+            </div>
+        </div>
+    </div>
+
+
+
+    <br>
+{% endblock %}
+
+{% block body_script %}
+    <script type="text/javascript">
+        $("#carryparttable tbody ").hide();
+        $("#intable tbody ").hide();
+        $("#outtable tbody").hide();
+        $("#btabs-alt-static-output table").eq(4).nextAll().hide();
+        $("#btabs-alt-static-input table").eq(4).nextAll().hide();
+
+        var outdetail = "<button id=\"outdetail\" style=\"background-color: black;border-color: black;color: #1d7db1;float: left\">展示/收起所有地址</button>"
+        var outdetaillength ={{ tsc_info['vout']|length }}
+        if (outdetaillength > 5) {
+            $("#btabs-alt-static-output").append(outdetail);
+        }
+
+        var indetail = "<button id=\"indetail\" style=\"background-color: black;border-color: black;color: #1d7db1;float: left\">展示/收起所有地址</button>"
+        var indetaillength ={{ tsc_info['vin']|length }}
+        if (indetaillength > 5) {
+            $("#btabs-alt-static-output").append(indetail);
+        }
+
+        $("#showoutaddress").click(function () {
+            $("#outtable tbody ").toggle(500);
+        });
+        $("#showinaddress").click(function () {
+            $("#intable tbody ").toggle(500);
+        });
+        $("#btabs-alt-static-output button").click(function () {
+            $("#btabs-alt-static-output table").eq(4).nextAll().toggle(500);
+        });
+        $("#btabs-alt-static-input button").click(function () {
+            $("#btabs-alt-static-input table").eq(4).nextAll().toggle(500);
+        });
+        $("#showcarrybutton").click(function () {
+            $("#carryparttable tbody").toggle(500);
+        });
+    </script>
+    <script src="{{ url_for('static', filename='muban/3527/app.js') }}"></script>
+
+
+    {#    <script src="{{ url_for('static', filename='assets/js/page/btc_tsc_detail.js') }}" charset="GB2312"></script>#}
+    {#    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>#}
+    {#    tab #}
+     <script src="{{ url_for('static', filename='layui/layui.js') }}"></script>
+    <script>
+       function add_tag(){
+    layui.use(['layer', 'form'], function(){
+        var layer = layui.layer
+         ,form = layui.form;
+       layer.open({
+            type:1,
+            skin:'layui-layer-molv',
+            area: ['370px', '50%'],
+            content:'<form class="layui-form" style="margin-top: 20px"> ' +
+            '<div class="layui-form-item" >' +
+            ' <label class="layui-form-label" style="color:black">地址</label>' +
+            '<div class="layui-input-inline"> ' +
+            '<input type="text" name="addr" autocomplete="off" class="layui-input" id="treeNodeName">' +
+            '</div>' +
+            '</div>' +
+            '<div class="layui-form-item" >' +
+            ' <label class="layui-form-label" style="color:black">标签</label>      <div class="layui-input-inline"> ' +
+            '<input type="text" name="tag" autocomplete="off" class="layui-input" id="memo" ></div> ' +
+
+            '<div class="layui-form-item" >' +
+            ' <label class="layui-form-label" style="color:black">类型</label>      <div class="layui-input-inline"> ' +
+            '<select class="layui-form-select" name="type" id="type"  type="text" >   <option value="Services" selected style="color:black">Services(服务)</option>  <option value ="Exchanges" >Exchanges(交易平台)</option>  <option value ="user">User(社交网站用户)</option>  <option value="Gambling">Gambling(赌博)</option> > <option value="Scam" >Scam(诈骗地址)</option>   <option value="Pools" >Pools(矿池地址)</option> <option value="Ransomware" >Ransomware(勒索地址)</option> <option value="victim" >victim(被勒索的受害者)</option> <option value="Historic" >Historic(历史服务地址如silk road)</option> <option value="other" >other(其他地址)</option></select> </div> ' +
+            '<div class="layui-form-item" >' +
+            ' <label class="layui-form-label" style="color:black">来源</label>     ' +
+            ' <div class="layui-input-inline"> ' +
+            '<input type="text" name="source" autocomplete="off" class="layui-input" id="source" value="user-defined" readonly="true" >' +
+            '</div>'+
+             '<div class="layui-form-item" >' +
+            ' <label class="layui-form-label" style="color:black">备注</label>'+'<div class="layui-input-inline"> ' +
+            '<input type="text" name="com" autocomplete="off" class="layui-input" id="com" ></div>'+
+            '</form>',
+            btn: ['保存', '关闭'],
+            btnAlign: 'c',
+            yes: function(){
+                saveNode();
+            },
+            btn2: function(){
+                layer.closeAll();
+            },
+            success: function(layero, index){
+                layui.use(['form','element'],function () {
+                    var form = layui.form, element = layui.element;
+                    form.render();
+                });
+
+            }
+        });
+
+});}
+
+       function look_detail(single){
+       addr = JSON.parse(single.replace(/'/g,'"')).addr;
+       source = JSON.parse(single.replace(/'/g,'"')).source;
+       category = JSON.parse(single.replace(/'/g,'"')).category;
+       com = JSON.parse(single.replace(/'/g,'"')).com
+       alert('地址:'+addr+'\n'+'来源:'+source+'\n'+'标签:'+category+'\n'+'网站:'+com);
+            }
+
+      function saveNode() {
+        var addr = $('#treeNodeName').val();
+        var source = $('#source').val();
+        var tag = $('#memo').val();
+        var com = $('#com').val();
+        var type = $('#type').val();
+        var Udata= JSON.stringify({"addr":addr,"tag":tag,"source":source,"detail":com,"type":type});
+        $.ajax({
+            url:'/btc/saveMyTag/' ,
+            type:'POST',
+            contentType: 'application/json; charset=UTF-8',
+            data:Udata,
+            success:function (res) {
+                if(res.code == '0000'){
+                    alert("添加成功!");
+                    layer.closeAll();
+                }else{
+                     alert("添加失败!请检查地址是否正确！");
+                }
+                location.reload(true);
+            }
+        })
+    }
+   </script>
+
+{% endblock %}

@@ -1,0 +1,6 @@
+.bee .nav-justified>li{
+	display: table-cell;
+	width: 1%;
+	float:none;
+	position: relative;
+}

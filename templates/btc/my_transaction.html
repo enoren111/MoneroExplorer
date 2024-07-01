@@ -1,0 +1,182 @@
+{# 删除日统计信息 20190523 #}
+
+{% extends 'base3.html' %}
+{% block title %}{% endblock %}
+
+{% block head_style %}
+    {#    slick muban3527 #}
+
+ <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+<script src="{{ url_for('static', filename='My97DatePicker/WdatePicker.js') }}"></script>
+<script src="{{ url_for('static', filename='js/jquery-1.8.min.js') }}"></script>
+
+{% endblock %}
+
+{% block content %}
+
+    {% include '_btccrumb.html' %}
+
+
+    {#    <canvas id="trans_eg1"></canvas>#}
+    {#    <canvas id="trans_eg2"></canvas>#}
+
+    <div class="bee-row2">
+
+
+        <div class="bee-row">
+            <div>共<span class="transes_total">{{ trans_total }}</span>个结果，用时{{ took }}ms</div>
+            <form action="{{ url_for('btc.my_btc_tran_search') }}" class="">
+                    显示规则：
+                    <input name="name1" id="seltext" type="hidden" value="{{ sortname }}">
+                    <select id="ttest" name="sortname">
+                        <option value="desc">desc</option>
+                        <option value="asc">asc</option>
+                    </select>
+                    开始时间:
+                    <input class="jump-ipt" style="width:90px;" type="text" onclick="dateClick()" value="" name="starttime">
+                    截至时间:
+                    <input class="jump-ipt" style="width:90px;" type="text" onclick="dateClick()" value=""  name="endtime">
+                    最小值:
+                    <input class="jump-ipt" style="width:40px;" type="text" value="" name="minvalue">
+                    最大值:
+                    <input class="jump-ipt" style="width:40px;" type="text" value="" name="maxvalue">
+                     类别:
+                    <input name="name2" class ="dropdown" id="sel_text" type="hidden" value="{{ servicename }}">
+                    <select id="test" name="servicename">
+                        <option value="BTC">BTC</option>
+                        <option value="USD">USD</option>
+                    </select>
+                    <button type="submit" style="margin-left: 30px;" class="btn btn-primary btn-sm">搜索</button>
+                </form>
+        </div>
+    </div>
+
+    <!-- start latestTransList-->
+    <table id="transes-table" class="table bee-transes-table">
+        <thead>
+        <tr>
+            <th>交易哈希</th>
+            <th>时间</th>
+            <th>发送方</th>
+            <th>输入地址</th>
+            <th>接收方</th>
+            <th>输出地址</th>
+            <th>交易额(BTC)</th>
+            <th>交易额(USD)</th>
+        </tr>
+        </thead>
+        <tbody id="tbodydata">
+        {% for single in single_list %}
+            {% if single['hash'] in hash_list %}
+            <tr class="parent" id="{{ single['hash'] }}">
+                <td><i>+</i>&nbsp&nbsp
+                    <a href="{{ url_for('btc.btc_tsc_detail', hash=single['hash']) }}">{{ single['hash']|truncate(20) }}</a>
+                </td>
+                <td>{{ single['time'] }}</td>
+                <td>{{ single['from_owner']}}</td>
+                <td><a href="{{ url_for('btc.btc_tag_detail', address=single['from_addr']) }}">{{ single['from_addr']|truncate(20) }}</a></td>
+                <td>{{ single['to_owner']}}</td>
+
+                <td><a href="{{ url_for('btc.btc_tag_detail', address=single['to_addr']) }}">{{ single['to_addr']|truncate(20) }}</a></td>
+                <td>{{ single['amount'] }}</td>
+                <td>{{ single['amount_usd'] }}</td>
+
+            </tr>
+            {% for repeat in repeat_list %}
+                {% if repeat['hash'] == single['hash'] %}
+                <tr class="child_{{ repeat['hash'] }}" style="display: none">
+                    <td><a href="{{ url_for('btc.btc_tsc_detail', hash=repeat['hash']) }}">
+                        &nbsp&nbsp&nbsp&nbsp{{ repeat['hash']|truncate(20) }}</a>
+                    </td>
+                    <td>{{ repeat['time'] }}</td>
+                    <td>{{ repeat['from_owner']}}</td>
+                    <td><a href="{{ url_for('btc.btc_tag_detail', address=repeat['from_addr']) }}">{{ repeat['from_addr']|truncate(20) }}</a></td>
+                    <td>{{ repeat['to_owner']}}</td>
+
+                    <td><a href="{{ url_for('btc.btc_tag_detail', address=repeat['to_addr']) }}">{{ repeat['to_addr']|truncate(20) }}</a></td>
+                    <td>{{ repeat['amount'] }}</td>
+                    <td>{{ repeat['amount_usd'] }}</td>
+
+                </tr>
+                {% endif %}
+            {% endfor %}
+            {% else %}
+            <tr class="parent" id="{{ single['hash'] }}">
+                <td>
+                    <a href="{{ url_for('btc.btc_tsc_detail', hash=single['hash']) }}">{{ single['hash']|truncate(20) }}</a>
+                </td>
+                <td>{{ single['time'] }}</td>
+                <td>{{ single['from_owner']}}</td>
+                <td><a href="{{ url_for('btc.btc_tag_detail', address=single['from_addr']) }}">{{ single['from_addr']|truncate(20) }}</a></td>
+                <td>{{ single['to_owner']}}</td>
+                <td><a href="{{ url_for('btc.btc_tag_detail', address=single['to_addr']) }}">{{ single['to_addr']|truncate(20) }}</a></td>
+                <td>{{ single['amount'] }}</td>
+                <td>{{ single['amount_usd'] }}</td>
+
+            </tr>
+            {% endif %}
+        {% endfor %}
+        </tbody>
+    </table>
+     {{ pagination.links }}
+    <div class="m-style pagination"></div> <!-- pagination.js -->
+    <!-- start latestTransList-->
+
+{% endblock %}
+
+{% block body_script %}
+
+    {#    chartjs 3492 demo #}
+<script type="text/javascript"
+        src="{{ url_for('static', filename='plugins/superslide/jquery.SuperSlide.2.1.3.js') }}"></script>
+    <script src="{{ url_for('static', filename='plugins/chart.js/Chart.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='plugins/chart.js/utils.js') }}"></script>
+{#    <script src="{{ url_for('static', filename='muban/3492/charts-custom.js') }}"></script>  {# 饼状图 #}
+    {#    <script src="{{ url_for('static', filename='assets/demo/big-deal.js') }}"></script>#} <!-- 大额异动 -->
+    {#    3527 banner slick #}
+
+
+    <!--{#    <script src="{{ url_for('static', filename='plugins/echarts/echarts.js') }}"></script>#}-->
+
+    <!--<script src="{{ url_for('static', filename='assets/js/page/transactions.js') }}"></script>-->
+     <script>
+        $(function() {
+        $("tr.parent").on("click", function() {
+         $(this).siblings('.child_'+this.id).toggle(1000, function() {
+             if ($(this).prev().find("i").text() == "+") {
+                 $(this).prev().find("i").text("-");
+             } else {
+                 $(this).prev().find("i").text("+");
+             }
+         });
+            {#  $("tr.parent").click(function() {
+        $(this).toggleClass("selected").siblings('.child_'+this.id).toggle();
+        #}
+        });
+        });
+         function fun() {
+            str = document.getElementById("sel_text").value;
+            obj = document.getElementById("test");
+            for (i = 0; i < obj.length; i++) {
+                if (obj[i].value == str)
+                    obj[i].selected = true;
+            }
+            sort = document.getElementById("seltext").value;
+            select = document.getElementById("ttest");
+            for (i = 0; i < select.length; i++) {
+                if (select[i].value == sort)
+                    select[i].selected = true;
+            }
+            }
+        window.onload=fun
+     </script>
+     <script>
+	function dateClick() {
+		WdatePicker({
+			dateFmt : 'yyyy-MM-dd HH:mm:ss',  //格式设置相对应界面可选择也变化
+			highLineWeekDay:true,  //周末的日期是否高亮
+			readOnly:true,  //是否允许键盘输入值，false为禁止输入，只能鼠标选
+		});
+	}
+	</script>
+{% endblock %}

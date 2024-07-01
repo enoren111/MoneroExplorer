@@ -1,0 +1,233 @@
+{% extends 'base3.html' %}
+{% block title %}{% endblock %}
+
+{% block head_style %}
+    {#    slick muban3527 #}
+
+ <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+<script src="{{ url_for('static', filename='My97DatePicker/WdatePicker.js') }}"></script>
+<script src="{{ url_for('static', filename='js/jquery-1.8.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/jquery-2.1.4.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='layui/layui.js') }}"></script>
+<style id="__jsx-3954331054">.section-stats.jsx-3954331054{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-box-pack:center;-webkit-justify-content:center;-ms-flex-pack:center;justify-content:center;background:#222;}.stats-container-content.jsx-3954331054{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-flex-wrap:nowrap;-ms-flex-wrap:nowrap;flex-wrap:nowrap;}.image-container.jsx-3954331054{background-image:url('/static/moon2.jpg?height=300&width=2000'),linear-gradient(#2f2f2f,#2f2f2f);background-size:cover;background-repeat:no-repeat;background-position:48%;position:relative;height:300px;}@media screen and (max-width:1500px) and (min-width:1000px){.image-container.jsx-3954331054{background-image:url('/static/moon2.jpg?height=300&width=1500'),linear-gradient(#2f2f2f,#2f2f2f);background-size:cover;background-repeat:no-repeat;background-position:48%;position:relative;height:300px;}}@media (min-width:1000px){.mobile-search.jsx-3954331054{display:none;}}@media screen and (max-width:1000px) and (min-width:614px){.stats-container-content.jsx-3954331054::before{content:'';-webkit-flex:0 0 3vw;-ms-flex:0 0 3vw;flex:0 0 3vw;}.stats-container-content.jsx-3954331054::after{content:'';-webkit-flex:0 0 3vw;-ms-flex:0 0 3vw;flex:0 0 3vw;}.stats-container.jsx-3954331054{margin:0 1rem;-webkit-mask-image:linear-gradient(to right,transparent,black 10%,black 90%,transparent);mask-image:linear-gradient(to right,transparent,black 10%,black 90%,transparent);cursor:-webkit-grab;cursor:-moz-grab;cursor:grab;padding:0 1rem;overflow-x:auto;overflow-y:hidden;-ms-overflow-style:-ms-autohiding-scrollbar;-webkit-overflow-scrolling:touch;-webkit-box-orient:horizontal;-webkit-box-direction:normal;}.image-container.jsx-3954331054{background-image:url('/static/moon2.jpg?height=300&width=1000'),linear-gradient(#2f2f2f,#2f2f2f);}}@media screen and (max-width:614px){.stats-container.jsx-3954331054{margin:0 1rem;-webkit-mask-image:linear-gradient(to right,transparent,black 10%,black 90%,transparent);mask-image:linear-gradient(to right,transparent,black 10%,black 90%,transparent);cursor:-webkit-grab;cursor:-moz-grab;cursor:grab;padding:0 1rem;overflow-x:auto;overflow-y:hidden;-ms-overflow-style:-ms-autohiding-scrollbar;-webkit-overflow-scrolling:touch;-webkit-box-orient:horizontal;-webkit-box-direction:normal;}.image-container.jsx-3954331054{background-image:url('/static/moon2.jpg?height=300&width=614'),linear-gradient(#2f2f2f,#2f2f2f);}}.stats-container.jsx-3954331054::-webkit-scrollbar{display:none;}.stats-card.jsx-3954331054{padding:1rem;-webkit-flex:0 0 auto;-ms-flex:0 0 auto;flex:0 0 auto;}.stats-header.jsx-3954331054{font-size:0.8rem;color:#aaa;}.stats-content.jsx-3954331054{color:#fff;font-size:1rem;}#stats.jsx-3954331054{border-radius:10px;background-color:#dfd6bc66;-webkit-transition-timing-function:cubic-bezier(0.25,0.46,0.45,0.94);transition-timing-function:cubic-bezier(0.25,0.46,0.45,0.94);-webkit-transition-property:all;transition-property:all;-webkit-transition-delay:0s;transition-delay:0s;-webkit-transition-duration:0.3s;transition-duration:0.3s;box-shadow:0 2px 3px rgba(10,10,10,0.1),0 0 0 1px rgba(10,10,10,0.1);}#stats.jsx-3954331054:hover{box-shadow:0 5px 10px 0 rgba(182,191,210,0.6);}.hero-text.jsx-3954331054{pointer-events:none;background-color:white;color:black;font-size:calc(2vw + 2rem);font-weight:bold;margin:0 auto;padding:10px;text-align:center;position:absolute;width:50%;top:50%;left:50%;-webkit-transform:translate(-50%,-50%);-ms-transform:translate(-50%,-50%);transform:translate(-50%,-50%);mix-blend-mode:screen;}.search.jsx-3954331054{padding:10px;position:absolute;margin:0 auto;width:80%;top:95%;left:50%;-webkit-transform:translate(-50%,-50%);-ms-transform:translate(-50%,-50%);transform:translate(-50%,-50%);}</style>
+<style id="__jsx-263509302">a.jsx-263509302{width:-webkit-fit-content;width:-moz-fit-content;width:fit-content;}.link-content.jsx-263509302>a.jsx-263509302{padding:0.15rem 0;font-size:0.9rem;}</style></head>
+
+{% endblock %}
+
+{% block content %}
+
+    {% include '_btccrumb.html' %}
+
+
+    {#    <canvas id="trans_eg1"></canvas>#}
+    {#    <canvas id="trans_eg2"></canvas>#}
+
+<!--    <div class="blacknav">-->
+<!--        <ul class="nav" style="width: 100%">-->
+<!--        <li id="search" style="align-content: center">-->
+<!--                <form action="/btc/search" class="">-->
+<!--                    <input type="text" name="search_text" id="search_text" placeholder="请输入比特币地址">-->
+<!--                    <input type="submit" name="search_button" value="" id="search_button">-->
+<!--                </form>-->
+<!--        </li>-->
+<!--            </ul>-->
+<!--    </div>-->
+
+    <div class="bee-tab">
+        <form action="{{ url_for('btc.syc_cluster_search') }}" class="layui-form" style="margin-top: 20px " id="query_form" >
+
+                <div class="card-block tab-content">
+                    <div class="tab-pane active" id="attrs_input">
+
+                       <div class="layui-form-item" >
+                           <div>
+                               请输入比特币地址或集群标签查询集群信息：
+                           </div>
+                         <div style="margin-top: 10px;">
+                            <input type="text" name="address" class="layui-input" id="address" value="{{ reback.address }}" placeholder="请输入比特币地址或集群标签" >
+                        </div>
+                       </div>
+                        {% if reback.info %}
+                        <div>
+                            <a style="color:red"> 抱歉，未查到！</a>
+                        </div>
+                        {% endif %}
+                        <center>
+                            <button type="submit"  class="btn btn-primary btn-sm"  value="" >查询</button>
+                        </center>
+                    </div>
+                </div>
+        </form>
+    </div>
+
+
+
+    <!-- start latestTransList-->
+    <!-- start latestTransList-->
+
+{% endblock %}
+
+{% block body_script %}
+
+    {#    chartjs 3492 demo #}
+<script type="text/javascript"
+        src="{{ url_for('static', filename='plugins/superslide/jquery.SuperSlide.2.1.3.js') }}"></script>
+    <script src="{{ url_for('static', filename='plugins/chart.js/Chart.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='plugins/chart.js/utils.js') }}"></script>
+{#    <script src="{{ url_for('static', filename='muban/3492/charts-custom.js') }}"></script>  {# 饼状图 #}
+    {#    <script src="{{ url_for('static', filename='assets/demo/big-deal.js') }}"></script>#} <!-- 大额异动 -->
+    {#    3527 banner slick #}
+
+
+    <!--{#    <script src="{{ url_for('static', filename='plugins/echarts/echarts.js') }}"></script>#}-->
+
+    <!--<script src="{{ url_for('static', filename='assets/js/page/transactions.js') }}"></script>-->
+     <script>
+        $(function() {
+        $("tr.parent").on("click", function() {
+         $(this).siblings('.child_'+this.id).toggle(1000, function() {
+             if ($(this).prev().find("i").text() == "+") {
+                 $(this).prev().find("i").text("-");
+             } else {
+                 $(this).prev().find("i").text("+");
+             }
+         });
+            {#  $("tr.parent").click(function() {
+        $(this).toggleClass("selected").siblings('.child_'+this.id).toggle();
+        #}
+        });
+        });
+         function fun() {
+            str = document.getElementById("sel_text").value;
+            obj = document.getElementById("test");
+            for (i = 0; i < obj.length; i++) {
+                if (obj[i].value == str)
+                    obj[i].selected = true;
+            }
+            sort = document.getElementById("seltext").value;
+            select = document.getElementById("ttest");
+            for (i = 0; i < select.length; i++) {
+                if (select[i].value == sort)
+                    select[i].selected = true;
+            }
+            }
+        window.onload=fun
+     </script>
+     <script>
+	function dateClick() {
+		WdatePicker({
+			dateFmt : 'yyyy-MM-dd HH:mm:ss',  //格式设置相对应界面可选择也变化
+			highLineWeekDay:true,  //周末的日期是否高亮
+			readOnly:true,  //是否允许键盘输入值，false为禁止输入，只能鼠标选
+		});
+	}
+	</script>
+    <script>
+
+    $(function() {
+        $("tr.parent").on("click", function() {
+         $(this).siblings('.child_'+this.id).toggle(1000, function() {
+             if ($(this).prev().find("i").text() == "+") {
+                 $(this).prev().find("i").text("-");
+             } else {
+                 $(this).prev().find("i").text("+");
+             }
+         });
+            {#  $("tr.parent").click(function() {
+        $(this).toggleClass("selected").siblings('.child_'+this.id).toggle();
+        #}
+        });
+      });
+    function add_tag(){
+    layui.use(['layer', 'form'], function(){
+        var layer = layui.layer
+         ,form = layui.form;
+       layer.open({
+            type:1,
+            skin:'layui-layer-molv',
+            area: ['370px', '35%'],
+            content:'<form class="layui-form" style="margin-top: 20px"> ' +
+            '<div class="layui-form-item" >' +
+            ' <label class="layui-form-label" style="color:black">集群ID</label>' +
+            '<div class="layui-input-inline"> ' +
+            '<input type="text" name="addr" autocomplete="off" class="layui-input" id="treeNodeName">' +
+            '</div>' +
+            '</div>' +
+            '<div class="layui-form-item" >' +
+            ' <label class="layui-form-label" style="color:black">标签</label>      <div class="layui-input-inline"> ' +
+            '<input type="text" name="tag" autocomplete="off" class="layui-input" id="memo" ></div> ' +
+            {# '<div class="layui-form-item" >' +
+            ' <label class="layui-form-label" style="color:black">来源</label>     ' +
+            ' <div class="layui-input-inline"> ' +
+            '<input type="text" name="source" autocomplete="off" class="layui-input" id="source" >' +
+            '</div>'+
+            '<div class="layui-form-item" >' +
+            ' <label class="layui-form-label" style="color:black">网站</label>'+'<div class="layui-input-inline"> ' +
+            '<input type="text" name="com" autocomplete="off" class="layui-input" id="com" ></div>'+ #}
+            '</form>',
+            btn: ['保存', '关闭'],
+            btnAlign: 'c',
+            yes: function(){
+                saveNode();
+            },
+            btn2: function(){
+                layer.closeAll();
+            },
+            success: function(layero, index){
+                layui.use(['form','element'],function () {
+                    var form = layui.form, element = layui.element;
+                    form.render();
+                });
+
+            }
+        });
+
+});}
+
+       function look_detail(single){
+       addr = JSON.parse(single.replace(/'/g,'"')).addr;
+       source = JSON.parse(single.replace(/'/g,'"')).source;
+       category = JSON.parse(single.replace(/'/g,'"')).category;
+       com = JSON.parse(single.replace(/'/g,'"')).com
+       alert('地址:'+addr+'\n'+'来源:'+source+'\n'+'标签:'+category+'\n'+'网站:'+com);
+            }
+
+      function saveNode() {
+        var addr = $('#treeNodeName').val();
+        var source = $('#source').val();
+        var tag = $('#memo').val();
+          {#  var com = $('#com').val();#}
+        var Udata= JSON.stringify({"addr":addr,"tag":tag,"source":source});
+        $.ajax({
+            url:'/btc/saveMyTag/' ,
+            type:'POST',
+            contentType: 'application/json; charset=UTF-8',
+            data:Udata,
+            success:function (res) {
+                if(res.code == '0000'){
+                    alert("添加成功!");
+                    layer.closeAll();
+                }else{
+                     alert("添加失败!请检查地址是否正确！");
+                }
+                location.reload(true);
+            }
+        })
+    }
+   </script>
+    <script>
+        var item = $('.item').html();
+        var fenge = parseFloat(item).toLocaleString();
+        $('.item').html(fenge);
+    </script>
+    <script>
+        var item = $('.item2').html();
+        var fenge = parseFloat(item).toLocaleString();
+        $('.item2').html(fenge);
+    </script>
+    <script>
+        var item = $('.item3').html();
+        var fenge = parseFloat(item).toLocaleString();
+        $('.item3').html(fenge);
+    </script>
+{% endblock %}

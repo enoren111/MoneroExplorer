@@ -1,0 +1,743 @@
+<!DOCTYPE>
+{% extends 'base3.html' %}
+{% block title %}{% endblock %}
+{% block head_style %}{% endblock %}
+{% block content %}
+    {% include '_btccrumb.html' %}
+     <meta http-equiv="Access-Control-Allow-Origin" content="*" />
+{#    <script src="https://unpkg.com/bluebird@3.5.1/js/browser/bluebird.js"></script>#}
+    <script src="/static/test/js/bluebird.js"></script>
+    {#<script src="https://unpkg.com/whatwg-fetch@2.0.3/fetch.js"></script>#}
+    <script src="/static/test/js/fetch.js"></script>
+    <script src="/static/test/cytoscape.min.js"></script>
+{#    <script src="http://cdn.bootcss.com/jquery/1.12.3/jquery.min.js"></script> <!-- 你必须先引入jQuery1.8或以上版本 -->#}
+    <script src="/static/test/js/jquery.min.js"></script>
+{#    <script src="/static/layer/layer.js"></script>#}
+{#    <script src="https://unpkg.com/klayjs@0.4.1/klay.js"></script>#}
+    <script src="/static/test/js/klay.js"></script>
+    <script src="/static/test/cytoscape-klay.js"></script>
+    <script src="/static/test/cytoscape-cxtmenu.js"></script>
+    <script src="/static/test/FileSaver.js"></script>
+    <link rel="stylesheet" href="/static/test/css/layui.css" media="all">
+    <script src="/static/test/layui.js"></script>
+    <script src="/static/test/html2canvas.js"></script>
+    <style>
+        body {
+            font-family: helvetica neue, helvetica, liberation sans, arial, sans-serif;
+            font-size: 14px;
+            background-color: white;
+        }
+        #cy {
+            position: absolute;
+            left: 210px;
+            top: 300px;
+            bottom: 0;
+            right: 215px;
+            z-index: 1;
+            background-color: white;
+            height: 800px;
+        }
+        h1 {
+            opacity: 0.5;
+            font-size: 1em;
+            font-weight: bold;
+        }
+        div
+        {
+            color: black;
+        }
+        table
+        {
+            color: black;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            nodeid=0;
+            edgeid=0;
+            var cy = window.cy = cytoscape({
+                container: document.getElementById('cy'),
+                style: [
+                    {
+                        selector: 'node',
+                        style: {
+                            'label': 'data(name)',
+                            'shape': 'ellipse',
+                            'font-size': '100pt',
+                            'width': '480pt',
+                            'height': '480pt',
+                            'border-color': '#c84e40',
+                            'border-width': "1px",
+                            'text-valign': 'multiline manual',
+                            'font-family': 'Georgia',
+                            'color': 'black',
+                        }
+                    },
+                    {
+                        selector: 'node[tag=0]',
+                        style: {
+                            'background-color':'rgb(45,96,224)',
+                        }
+                    },
+                    {
+                        selector: 'node[tag=1]',
+                        style: {
+                            'background-color':'orange',
+                        }
+                    },
+                    {
+                        selector: 'edge',
+                        style:
+                            {
+                            'label': 'data(value)',
+                            'target-arrow-shape': 'triangle-backcurve', /*箭头样式*/
+                            'target-arrow-size': '15px', /*箭头大小*/
+                            'target-arrow-color': '#999999', /*箭头颜色*/
+                            {#'curve-style': 'unbundled-bezier', /*线条样式曲线*/#}
+                            'line-color': '#999999', /*线条颜色*/
+                            'width': '4px', /*线条宽度*/
+                            'font-size': '100px', /*标签字体大小*/
+                            'color': '#000000', /*标签字体大小*/
+                            'text-outline-color': 'white', /*文本轮廓颜色*/
+                            'text-outline-width': '1px', /*文本轮廓宽度*/
+                            'text-rotation': 'autorotate', /*标签方向*/
+                            'length':50,
+                                'font-family': 'Georgia'
+                        }
+                    },
+                    {
+                        selector: 'edge[tag=1]',
+                        style:
+                            {
+                            'line-color': 'red', /*线条颜色*/
+                        }
+                    }
+                ],
+                elements: {
+                    nodes: [
+                    ],
+                    edges: []
+                },
+                layout: {
+                    name: 'klay'
+                }
+            });
+            var status={{ status}};
+            {#alert(status);#}
+            if (status==1)
+            {
+                var result={{ result|tojson }};
+                {#console.log(result);#}
+                loadData(result);
+            }
+            if(status==2)
+            {
+                search_txid={{ txid |tojson}};
+                {#alert(search_txid);#}
+                $.ajax({
+                url:'/btc/traceTx/'+search_txid+"?depth="+1 ,
+                success:function (res) {
+                    cytoscape.use
+                    console.log(res);
+                    edge=res["edge"];
+                    node=res["node"];
+                    nodeid=res["nodeid"];
+                    edgeid=res["edgeid"];
+                    for(i=0;i<node.length;i++)
+                    {
+                        {#console.log(node[i]);#}
+                        if(node[i]["tag"]!=null)
+                        {
+                            name=node[i]["tag"][0]["name"];
+                            len=node[i]["tag"].length;
+                            name=name+"("+node[i]["address"]+"["+len+"个标签"+"]"+")";
+                            tag=1;
+                        }
+                        else
+                        {
+                            {#name=node[i]["address"].substring(0,5);#}
+                            name=node[i]["address"]+"("+"U"+node[i]["cluster_id"]+")";
+                            if(node[i]["address"]=="源")
+                            {
+                                name="源";
+                            }
+                            tag=0;
+                        }
+                        cy.add({group: 'nodes', data: { id: node[i]["id"],"address":node[i]["address"],"name":name,"utxo":node[i]["utxo"],"n":node[i]["n"],"tag":tag}});
+                        {#addMenu(node[i]["id"]);#}
+                    }
+                    for(i=0;i<edge.length;i++)
+                    {
+                        cy.add({group: 'edges', data: { id: edge[i]["id"],"value":edge[i]["value"],"txid":edge[i]["txid"],source:edge[i]["source"],target:edge[i]["target"],tag:edge[i]["tag"] }});
+                    }
+                    addNode();
+                    addEdge();
+                    addLayout();
+                    {#console.log(cy.json());#}
+                    {#addAll();#}
+                }
+            });
+            }
+            {#var result=({{ result|tojson }});#}
+            {#console.log(result);#}
+            function addMenu(id)
+            {
+                cy.cxtmenu({
+					selector: 'node[id="'+id+'"]',
+					adaptativeNodeSpotlightRadius: false,
+					commands: [
+						{
+							content: '向后扩展',
+							select: function(ele){
+							    {#alert("kuozhan");#}
+							    						                    $.ajax({
+                    url:'/btc/txtrace/traceAfterTx?utxo='+ele.data()["utxo"]+"&n="+ele.data()["n"],
+                    success:function (res) {
+                    {#console.log(res);#}
+                    {#console.log(nodeid);#}
+                    {#console.log(edgeid);#}
+                    sourceid=ele.data()["id"];
+                    for(i=0;i<res.length;i++)
+                    {
+                        if(res[i]["tag"]!=null)
+                        {
+                            name=res[i]["tag"][0]["name"];
+                            len=res[i]["tag"].length;
+                            name=name+"("+res[i]["address"]+"["+len+"个标签"+"]"+")";
+                            tag=1;
+                        }
+                        else
+                        {
+                            console.log(res[i]["cluster_id"]);
+                            name=res[i]["address"]+"("+"U"+res[i]["cluster_id"]+")";
+                            {#name=res[i]["address"]#}
+                            tag=0;
+                        }
+                        cy.add({group: 'nodes', data: { id: ""+nodeid,"address":res[i]["address"],"name":name,"tag":tag,"utxo":res[i]["txid"],"n":node[i]["n"]}});
+                        cy.add({group: 'edges', data: { id: "e"+edgeid,"value":res[i]["value"],"txid":res[i]["txid"],source:sourceid,target:nodeid }});
+                        {#addMenu(""+nodeid);#}
+                        addLayout();
+                        edgeid=edgeid+1;
+                        nodeid=nodeid+1;
+                    }
+                    addNode();
+                    addEdge();
+                    addLayout();
+
+                    }
+                });
+							}
+						},
+                        {
+							content: '标签详情',
+							select: function(ele){
+                                address=ele.data().address;
+                                {#alert(address);#}
+							    layer.open({
+                    title:'标签信息',
+                    type: 1,
+                    area: ['800px', '200px'],
+                    offset:'lt',
+                    shadeClose: false,
+                    content:'<table class="layui-hide" id="test1"></table>',
+                    success:function () {
+                                layui.use('table', function(){
+  var table = layui.table;
+  table.render({
+    elem: '#test1'
+    ,url:'/btc/traceTag/'+address
+    ,cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+    ,cols: [[
+      {field:'name', title: '标签名',style: 'color:red;'}
+      ,{field:'category', title: '标签类型'} //width 支持：数字、百分比和不填写。你还可以通过 minWidth 参数局部定义当前单元格的最小宽度，layui 2.2.1 新增
+      ,{field:'source', title: '标签来源'}
+      ,{field:'createtime', title: '创建时间'},
+          {field:'currency', title: '货币类型'},
+          {field:'detail', title: '详情'}
+    ]]
+  });
+});
+                    }
+                });
+							}
+						},
+                        {
+							content: '收缩节点',
+							select: function(ele){
+							    edge_list=cy.filter('edge[source="'+ele.data().id+'"]');
+							    for(i=0;i<edge_list.length;i++)
+                                {
+                                        console.log(edge_list[i].data());
+                                        target=edge_list[i].data().target;
+                                        cy.remove('node[id="'+target+'"]');
+
+                                }
+							    addLayout();
+							}
+						}
+					]
+				});
+            }
+            function addEdgeMenu()
+            {
+                cy.cxtmenu({
+					selector: 'edge',
+					adaptativeNodeSpotlightRadius: false,
+					commands: [
+						{
+							content: '标记',
+							select: function(ele){
+							    console.log(ele.data());
+							    {#alert("kuozhan");#}
+                                ele.data().tag=1;
+							}
+						},
+                        {
+							content: '取消标记',
+							select: function(ele){
+							    {#alert("kuozhan");#}
+                                ele.data().tag=0;
+							}
+						}
+						]
+                });
+            }
+            function addAllMenu()
+            {
+                cy.cxtmenu({
+					selector: 'node',
+					adaptativeNodeSpotlightRadius: false,
+					commands: [
+						{
+							content: '向后扩展',
+							select: function(ele){
+							    console.log(ele.data())
+							    {#alert("kuozhan");#}
+							    						                    $.ajax({
+                    url:'/btc/txtrace/traceAfterTx?utxo='+ele.data()["utxo"]+"&n="+ele.data()["n"],
+                    success:function (res) {
+                    console.log(res);
+                    {#console.log(nodeid);#}
+                    {#console.log(edgeid);#}
+                    sourceid=ele.data()["id"];
+                    {#console.log(sourceid);#}
+                    for(i=0;i<res.length;i++)
+                    {
+                        if(res[i]["tag"]!=null)
+                        {
+                            name=res[i]["tag"][0]["name"];
+                            len=res[i]["tag"].length;
+                            name=name+"("+res[i]["address"]+"["+len+"个标签"+"]"+")";
+                            tag=1;
+                        }
+                        else
+                        {
+                            if(res[i]["cluster_id"]!=-1)
+                            {
+                                name=res[i]["address"]+"("+"U"+res[i]["cluster_id"]+")";
+                            }
+                            else
+                            {
+                                name=res[i]["address"]+"(无聚类信息)";
+                            }
+                            tag=0;
+                        }
+                        source_node=cy.filter('node[id="'+sourceid+'"]');
+                        console.log(source_node.data().cluster_id)
+                        console.log(res[i]["cluster_id"]);
+                        console.log(source_node.data().cluster_id!=-1)
+                        if(source_node.data().cluster_id==res[i]["cluster_id"]&&source_node.data().cluster_id!=-1)
+                        {
+                            res[i]["change_tag"]=1;
+                        }
+                        cy.add({group: 'nodes', data: { id: ""+nodeid,"address":res[i]["address"],"name":name,"tag":tag,"utxo":res[i]["txid"],"n":res[i]["n"],"cluster_id":res[i]["cluster_id"]}});
+                        cy.add({group: 'edges', data: { id: "e"+edgeid,"value":res[i]["value"],"txid":res[i]["txid"],source:sourceid,target:nodeid,tag:res[i]["change_tag"] }});
+                        {#addMenu(""+nodeid);#}
+                        addLayout();
+                        edgeid=edgeid+1;
+                        nodeid=nodeid+1;
+                    }
+                    addNode();
+                    addEdge();
+                    addLayout();
+
+                    }
+                });
+							}
+						},
+                        {
+							content: '标签详情',
+							select: function(ele){
+                                address=ele.data().address;
+                                {#alert(address);#}
+							    layer.open({
+                    title:'标签信息',
+                    type: 1,
+                    area: ['800px', '200px'],
+                    offset:'lt',
+                    shadeClose: false,
+                    content:'<table class="layui-hide" id="test1"></table>',
+                    success:function () {
+                                layui.use('table', function(){
+  var table = layui.table;
+  table.render({
+    elem: '#test1'
+    ,url:'/btc/traceTag/'+address
+    ,cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+    ,cols: [[
+      {field:'name', title: '标签名'}
+      ,{field:'category', title: '标签类型'} //width 支持：数字、百分比和不填写。你还可以通过 minWidth 参数局部定义当前单元格的最小宽度，layui 2.2.1 新增
+      ,{field:'source', title: '标签来源'}
+      ,{field:'createtime', title: '创建时间'},
+          {field:'currency', title: '货币类型'},
+          {field:'detail', title: '详情'}
+    ]]
+  });
+});
+                    }
+                });
+							}
+						},
+                        {
+							content: '收缩节点',
+							select: function(ele){
+							    edge_list=cy.filter('edge[source="'+ele.data().id+'"]');
+							    for(i=0;i<edge_list.length;i++)
+                                {
+                                        console.log(edge_list[i].data());
+                                        target=edge_list[i].data().target;
+                                        cy.remove('node[id="'+target+'"]');
+
+                                }
+							}
+						},
+                        {
+							content: '地址详情',
+							select: function(ele){
+							    address=ele.data().address;
+                $.ajax({
+                    url:'/btc/txtrace/addressDetail/'+address,
+                    success:function (res) {
+                    console.log(res);
+                    layer.open({
+                    title:'地址信息',
+                    type: 1,
+                    area: ['600px', '200px'],
+                    offset:'lt',
+                    shadeClose: false,
+                    content:'<div style="color: black;">地址:'+address+'</div>'+
+                        '<div style="color: black;">集群号:'+res["cluster_id"]+'</div>'+
+                        '<div style="color: black;">首次出现时间:'+res["first_seen"]+'</div>'+
+                        '<div style="color: black;">交易数:'+res["total"]+'</div>'+
+                        '<div style="color: black;">总发送数:'+res["recv_num"]+'</div>'+
+                        '<div style="color: black;">总接受数:'+res["sent_num"]+'</div>'+
+                        '<div style="color: black;">总发送金额:'+res["recv"]+'</div>'+
+                        '<div style="color: black;">总接受金额:'+res["sent"]+'</div>'+
+                        '<div style="color: black;">余额:'+res["balance"]+'</div>'
+                });
+                    }
+                });
+							}
+						}
+					]
+				});
+                addEdgeMenu();
+            }
+            function addLayout()
+            {
+                var options=
+                    {
+                        'name':'klay',
+                        klay:
+                            {
+                                spacing:1700
+                            }
+                    }
+
+                {#var layout = cy.layout({#}
+                {#        name: 'klay',#}
+                {#        edgeSpacingFactor:0.6,#}
+                {#        direction:'up'#}
+                {#    });#}
+                {#    layout.run();#}
+                cy.layout( options ).run();
+                {#cy.zoomingEnabled( false );#}
+            }
+            function addNode()
+            {
+                cy.nodes().removeAllListeners();
+                cy.nodes().on('click',(e)=>
+            {
+                address=e.target.data('address');
+                {#alert(address);#}
+                if(address!="源"){
+                    window.open("/btc/address/"+address);
+                }
+            })
+
+            }
+            function addEdge()
+            {
+                {#alert(edgeid);#}
+                cy.edges().removeAllListeners();
+                cy.edges().on('click',(e)=>
+                {
+                txid=e.target.data('txid');
+                {#alert(txid);#}
+                $.ajax({
+                    url:'/btc/txtrace/txDetail/'+txid,
+                    success:function (res) {
+                    console.log(res);
+                    layer.open({
+                    title:'交易信息',
+                    type: 1,
+                    area: ['600px', '200px'],
+                    offset:'lt',
+                    shadeClose: false,
+                    content:
+                        '<div style="color: black;">交易hash:'+txid+'</div>'+
+                        '<div style="color: black;">交易时间:'+res["tx_time"]+'</div>'+
+                        '<div style="color: black;">输入个数:'+res["input_num"]+'</div>'+
+                        '<div style="color: black;">输出个数:'+res["output_num"]+'</div>'+
+                        '<div style="color: black;">区块高度:'+res["height"]+'</div>'+
+                        '<div style="color: black;">交易额:'+res["volume"]+'</div>'
+                });
+                    }
+                });
+            })
+            }
+
+            $("#submit").click(function () {
+                cy.remove("node");
+                cy.remove("edge");
+                txid = document.getElementById("txid").value;
+                depth=document.getElementById("depth").value;
+                if(depth=="")
+                {
+                    depth=3;
+                }
+                $.ajax({
+                url:'/btc/traceTx/'+txid+"?depth="+depth ,
+                success:function (res) {
+                    cytoscape.use
+                    console.log(res);
+                    edge=res["edge"];
+                    node=res["node"];
+                    nodeid=res["nodeid"];
+                    edgeid=res["edgeid"];
+                    for(i=0;i<node.length;i++)
+                    {
+                        {#console.log(node[i]);#}
+                        if(node[i]["tag"]!=null)
+                        {
+                            name=node[i]["tag"][0]["name"];
+                            len=node[i]["tag"].length;
+                            name=name+"("+node[i]["address"]+"["+len+"个标签"+"]"+")";
+                            tag=1;
+                        }
+                        else
+                        {
+                            {#name=node[i]["address"].substring(0,5);#}
+                            if(node[i]["cluster_id"]!=-1) {
+                                name = node[i]["address"] + "("  + node[i]["cluster_id"] + ")";
+                            }
+                            else
+                            {
+                                name = node[i]["address"]+"(无聚类信息)"
+                            }
+                            if(node[i]["address"]=="源")
+                            {
+                                name="源";
+                            }
+                            tag=0;
+                        }
+                        cy.add({group: 'nodes', data: { id: node[i]["id"],"address":node[i]["address"],"name":name,"utxo":node[i]["utxo"],"n":node[i]["n"],"tag":tag,"cluster_id":node[i]["cluster_id"]}});
+                        {#addMenu(node[i]["id"]);#}
+                    }
+                    for(i=0;i<edge.length;i++)
+                    {
+                        source_node=cy.filter('node[id="'+edge[i]["source"]+'"]');
+                        {#console.log(source_node.data())#}
+                        target_node=cy.filter('node[id="'+edge[i]["target"]+'"]');
+                        {#console.log(target_node.data())#}
+                        if(source_node.data().cluster_id==target_node.data().cluster_id&&target_node.data().cluster_id!=-1)
+                        {
+                            edge[i]["tag"]=1;
+                        }
+                        {#edge_list=cy.filter('edge[source="'+ele.data().id+'"]');    #}
+                        cy.add({group: 'edges', data: { id: edge[i]["id"],"value":edge[i]["value"],"txid":edge[i]["txid"],source:edge[i]["source"],target:edge[i]["target"],tag:edge[i]["tag"] }});
+                    }
+                    addNode();
+                    addEdge();
+                    addLayout();
+                    {#console.log(cy.json());#}
+                    {#addAll();#}
+                }
+            });
+            });
+            $("#export").click(function () {
+  {#              let blob = cy.png({output: 'blob', bg: 'white',#}
+  {#  full: true, scale: 4, quality: 1});#}
+  {#let aLink = document.createElement('a');#}
+  {#let evt = document.createEvent("HTMLEvents");#}
+  {#evt.initEvent("click", true, true);#}
+  {#aLink.download = `${new Date().getTime()}.png`;#}
+  {#aLink.href = URL.createObjectURL(blob);#}
+  {#aLink.dispatchEvent(evt);#}
+  {#aLink.click();#}
+
+html2canvas(document.getElementById('cy')).then(
+  function(canvas) {
+    // 创建标签
+    var oA = document.createElement("a");
+    // 设置下载名称
+    oA.download = `${new Date().getTime()}.png`;
+    // 设置地址以及文件类型
+    oA.href = canvas.toDataURL("image/png");
+    document.body.appendChild(oA);
+    // 触发下载事件
+    oA.click();
+    // 移除标签
+    oA.remove();
+  }
+)
+            });
+            $("#json_export").click(function () {
+                data=cy.json();
+                console.log(data);
+                data1=data.elements;
+                data1.edgeid=edgeid;
+                data1.nodeid=nodeid;
+                var blob = new Blob([JSON.stringify(data1)], { type: "" });
+                saveAs(blob, `${new Date().getTime()}.json`);
+            });
+            var inputElement = document.getElementById("files");
+     inputElement.addEventListener("change", handleFiles, false);
+     function loadData(data)
+     {
+         console.log(data);
+         cy.remove("node");
+         cy.remove("edge");
+         {#cy.elements=data.elements;#}
+         node=data.nodes;
+         edge=data.edges;
+         nodeid=data.nodeid+1;
+         edgeid=data.edgeid+1;
+         for(i=0;i<node.length;i++)
+         {
+                        {#console.log(node[i]);#}
+                        cy.add({group:'nodes',data:node[i].data});
+                        {#addMenu(node[i].data["id"]);#}
+         }
+         for(i=0;i<edge.length;i++)
+         {
+             cy.add({group:'edges',data:edge[i].data});
+                        {#cy.add({group: 'edges', data: { id: edge[i]["id"],"value":edge[i]["value"],"txid":edge[i]["txid"],source:edge[i]["source"],target:edge[i]["target"] }});#}
+         }
+                    addNode();
+                    addEdge();
+                    addLayout();
+     }
+     function handleFiles() {
+        var selectedFile = document.getElementById("files").files[0];//获取读取的File对象
+        var reader = new FileReader();//这里是核心！！！读取操作就是由它完成的。
+         reader.readAsText(selectedFile);//读取文件的内容
+         reader.onload = function(){
+             {#console.log("读取结果：", this.result);//当读取完成之后会回调这个函数，然后此时文件的内容存储到了result中。直接操作即可。#}
+             let data = JSON.parse(this.result);
+             {#console.log(data);#}
+             loadData(data);
+         };
+
+     }
+     $("#magnify").click(function () {
+         {#alert(1);#}
+         cy.zoom(0.2);
+        {#cy.fit();#}
+     });
+     $("#reduce").click(function () {
+         {#alert(1);#}
+         cy.zoom(-0.05);
+        {#cy.fit();#}
+     });
+     $("#save").click(function () {
+         layui.use(
+    ['layer', 'form'], function(){
+  var layer = layui.layer
+  ,form = layui.form;
+       layer.open({
+            title:'保存可视化',
+            type:1,
+            skin:'layui-layer-molv',
+            area: ['770px', '40%'],
+            content:'<form class="layui-form" style="margin-top: 30px"> ' +
+            '<div class="layui-form-item" >' +
+            ' <label class="layui-form-label" style="color:black">备注</label>      <div class="layui-input-inline"> ' +
+            '<input type="text" name="remark" style="width:500px;" autocomplete="off" class="layui-input" id="beizhu" ></div> ' +
+            '</form>',
+            btn: ['保存', '关闭'],
+            btnAlign: 'c',
+            yes: function(){
+                var remark = $('#beizhu').val();
+                {#alert(remark);#}
+                data=cy.json();
+                {#console.log(data);#}
+                data1=data.elements;
+                data1.edgeid=edgeid;
+                data1.nodeid=nodeid;
+                console.log(data1);
+                var Udata= JSON.stringify({"data":data1,"beizhu":remark});
+                        $.ajax({
+                    url:'/btc/savetraceTx/' ,
+                    type:'POST',
+                    contentType: 'application/json; charset=UTF-8',
+                    data:Udata,
+            success:function (res) {
+                layer.closeAll();
+                alert("保存成功");
+                {#location.reload(true);#}
+            }
+        })
+            },
+            btn2: function(){
+                layer.closeAll();
+            },
+            success: function(layero, index){
+                layui.use(['form','element'],function () {
+                    var form = layui.form, element = layui.element;
+                    form.render();
+                });
+
+            }
+        });
+});
+     });
+     addAllMenu();
+        });
+    </script>
+<div class="form-group">
+		<label for="name">交易hash</label>
+		<input id="txid" type="text" class="form-control" id="name"
+			   placeholder="请输入名称">
+        <label for="name">追踪层数</label>
+		<input id="depth" type="text" class="form-control" id="name"
+			   placeholder="请输入层数">
+	</div>
+	<button id="submit" class="btn btn-primary">追踪</button>
+    <button id="export" class="btn btn-primary export">导出图片</button>
+    <button id="json_export" class="btn btn-primary">导出json</button>
+    <button id="save" class="btn btn-primary">保存可视化</button>
+{#    <button id="files" class="btn btn-primary">加载json</button>#}
+    <button id="magnify" class="btn btn-primary">放大</button>
+{#    <button id="reduce" class="btn btn-primary">缩小</button>#}
+    <input type="file" class="file-loading" id="files" value="加载json"/>
+    <div id="cy" ></div>
+
+
+{% endblock %}
+
+{% block body_script %}
+<script src="{{ url_for('static', filename='assets/js/page/btc_home.js') }}"></script>
+{% endblock %}
+
+

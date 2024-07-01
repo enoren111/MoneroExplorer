@@ -1,0 +1,294 @@
+/* global */
+.bee-page {
+    /*background: #232323;*/
+    background: black;
+}
+
+* {
+    color: white;
+}
+
+a {
+    color: white;
+}
+
+input {
+    color: black;  /* input 文字*/
+}
+
+input::-webkit-input-placeholder{
+    color: gainsboro;
+}    /* 使用webkit内核的浏览器 */
+input:-moz-placeholder{
+    color: gainsboro;
+}                  /* Firefox版本4-18 */
+input::-moz-placeholder{
+    color: gainsboro;
+}                  /* Firefox版本19+ */
+input:-ms-input-placeholder{
+    color: gainsboro;
+}           /* IE浏览器 */
+
+select, select option{
+    color: black;
+}
+
+
+/* bootstrap card */
+
+.card{
+    color: white;
+        border: 1px solid #696969; /* 原为透明 */
+
+
+}
+.card .card-header{
+background-color: #2e2e2e;
+
+}
+
+.card .card-body{
+    /*background-color: #232323;*/
+    background-color: black;
+}
+
+.card .card-header a{
+    cursor: pointer;
+    float: right;
+}
+
+
+
+/* border */
+.bee-border-r-b{
+    border-right: 1px solid #dee2e6;
+}
+
+.bee-border-b-b{
+border-bottom: 1px solid rgb(238, 238, 238);
+}
+
+/* table */
+.bee-table {
+    color: white;
+}
+
+.table {
+    color: white;
+}
+
+.table-hover tr, .table-hover td {
+    color: white;
+}
+
+/* autoplay banner */
+.slick-dots li button:before {
+    color: white;
+}
+
+/* windy check-box */
+#switch {
+    background: white;
+}
+
+/* pagination */
+.m-style .active {
+    background: #007bff;
+    border: 2px solid #2e2e2e;
+}
+
+.m-style a {
+    border: 2px solid #2e2e2e;
+
+}
+
+.m-style a:hover {
+    color: #fff;
+    background: #007bff;
+}
+
+
+/* datatable */
+/*.bee-db tbody tr{*/
+    /*background-color: #232323;*/
+/*}*/
+
+/*#232323*/
+
+table.dataTable.display th{
+    border-top: 1px solid #dee2e6;
+    border-bottom: 2px solid #dee2e6 ;
+}
+
+table.dataTable.display tbody td{
+    border-top: 1px solid #dee2e6;
+}
+
+
+table.dataTable.display tbody tr{
+    background-color: black;
+
+}
+
+
+
+table.dataTable.display tbody tr.odd{
+    background-color: black;
+
+}
+
+table.dataTable.display tbody tr:hover{
+    background-color: black;
+
+}
+
+table.dataTable.display tbody tr:hover>.sorting_1{
+    background-color: black;
+}
+
+table.dataTable.display tbody tr.odd>.sorting_1{
+    background-color: black;
+
+}
+table.dataTable.display tbody tr.even>.sorting_1{
+
+    background-color: black;
+}
+table.dataTable.display tbody tr>.sorting_1{
+    background-color: black;
+
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover{
+
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button{
+    color: white!important;
+}
+
+.dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter, .dataTables_wrapper .dataTables_info, .dataTables_wrapper .dataTables_processing, .dataTables_wrapper .dataTables_paginate{
+    color: white;
+}
+
+
+
+
+
+
+/* bee-tab */
+.bee-tab{
+        box-shadow: none;
+        border: 1px solid #696969;
+
+}
+
+.bee-tab .nav-tabs.nav-tabs-alt{
+    background: #2e2e2e
+    /*background: black;*/
+}
+
+/* swiperTab */
+.swiper-container table tr td{
+    /*color:black;*/
+}
+
+.my-pagination li{
+    background: transparent;
+
+}
+
+.user_zc_body{
+    background:transparent;
+}
+
+
+/* nodemap */
+#nodemap span{
+    color:black;
+}
+
+/* fields-filter-menu at eth_block*/
+.dropdown-item i{ /* #ffm */
+    color: black;
+}
+
+
+
+/* 面包屑导航 */
+.bee-ssnav .nav {
+    background: #4E4E4E ;
+}
+
+
+/* black nav */
+.blacknav .nav{
+    background: black;
+}
+
+.blacknav .nav li a{
+    border-left: none;
+}
+
+
+#search{
+    margin: 10px;
+}
+
+#search_text{
+    height: 40px;
+    background: #333333;
+    border-left: 1px solid #1E90FF;
+    border-bottom: 1px solid #1E90FF;
+    border-top: 1px solid #1E90FF;
+
+}
+
+#search_text:focus {
+    background: #333333;
+}
+
+#search_button{
+    border-right: 1px solid #1E90FF;
+    border-bottom: 1px solid #1E90FF;
+    border-top: 1px solid #1E90FF;
+    height: 40px;
+
+    background: #333333 url(/static/plugins/blacknav/css/search.png) center no-repeat;
+}
+
+
+
+/* start-t bsTab  */
+.bsTab > .nav-tabs > li > a.active, .dark-bs-tab > .nav-tabs > li > a.active:hover, .bsTab > .nav-tabs > li > a.active:focus {
+	/*background-color: #232323;*/
+	background-color: black;
+	box-shadow: inset 0 2px #fff;
+	color: white;
+}
+
+
+.bsTab > .nav-tabs > li > a {
+    color: #fff;
+}
+/* end-t bsTab  */
+
+
+/* start slick */
+
+
+.slick-dots li.slick-active button:before{
+    opacity: 1;
+    color: #7dc855;
+}
+
+.slick-dots{
+    bottom: -23px;
+}
+/* end slick */
+
+/* bootstrap modal */
+
+.modal-content{
+    background-color:#4E4E4E ;
+}

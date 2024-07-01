@@ -1,0 +1,558 @@
+{% extends 'baseETH.html' %}
+
+
+{% block head_style %}
+
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='muban/3527/app.css') }}"/> {# 原tab样式 #}
+    {#  amchart  #}
+    <link rel="stylesheet" href="{{ url_for('static', filename='plugins/amcharts/demo/index.css') }}"/>
+{# datatable   #}
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='plugins/jquery-datatable/css/jquery.dataTables.min.css') }}"/>
+
+
+    {#  start  slick #}
+
+
+    <!-- Link Swiper's CSS (autoplay banner) -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='plugins/swiper/css/swiper.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='plugins/swiper/demo.css') }}">
+
+    <style type="text/css">
+        .out-trans > span {
+            background: #7CCD7C;
+            padding: 2px 20px;
+            color: white;
+            border-radius: 5px;
+        }
+
+        .in-trans > span {
+            background: #EE2C2C;
+            padding: 2px 20px;
+            color: white;
+            border-radius: 5px;
+        }
+
+
+    </style>
+{% endblock %}
+
+{% block content %}
+    {% include '_ethcrumb.html' %}
+
+    <br>
+
+    {#    <h1>ADDRESS DETAIL</h1>#}
+    {#    <h3>概要信息</h3>#}
+
+    <div class=" card bg-dark bee-card">
+        <div class="card-header">概要信息</div>
+        <div class="card-body">
+            <div class="bee-row2" ​>
+                ​
+                <div style="flex: 1" class="bee-border-r-b">
+                    <table class="table table-sm table-hover bee-table">
+                        <tbody>
+                        <tr>
+                            <td>地址</td>
+                            <td>{{ address }} <i
+                                    class="fa fa-qrcode fa-lg qrcode-popover"
+                                    data-href="{{ url_for('eth.get_address_qrcode') }}"></i></td>
+                        </tr>
+                        <tr>
+                            <td>余额</td>
+                            <td>
+                                <span>{{ balance }} ETH</span>
+
+                                <!--          <select id="balance-select">
+                                              <option value="ETH">ETH</option>
+                                              <option value="USD">USD</option>
+                                              <option value="RMB">RMB</option>
+                                          </select>   -->
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td>交易数</td>
+                            <td>{{ trans_num }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+
+                ​
+                <div style="flex: 1">
+                    <table class="table table-sm table-hover bee-table">
+                        <tbody>
+                        <tr>
+                            <td>创建时间</td>
+                            <td>{{ create_time }}</td>
+                        </tr>
+                        <tr>
+                            <td>最后活跃时间</td>
+                            <td>{{ last_active_time }}</td>
+                        </tr>
+                        <tr>
+                            <td>爆块</td>
+                            <td>{{ blk_count['value'] }}个区块，0个叔块</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+
+
+    <br>
+
+    <!-- Card Tabs Alternative Style -->
+
+
+
+    {#    <div class="bee">#}
+    {#        <div class="tab-card">#}
+    <div class="bee-tab">
+        <ul class="nav nav-tabs nav-tabs-alt" data-toggle="tabs">
+            <li>
+                <a href="#btabs-alt-static-trans">交易</a>
+            </li>
+            <li>
+                <a href="#btabs-alt-static-statistics" class="active">统计</a>
+            </li>
+            <li>
+                <a href="#btabs-alt-static-explodeBlock">爆块</a>
+            </li>
+            <li class="pull-right">
+                <a href="#btabs-alt-static-settings" data-toggle="tooltip" title="Settings"><i
+                        class="ion-ios-gear-outline"></i></a>
+            </li>
+        </ul>
+        <div class="card-block tab-content">
+            <div class="tab-pane " id="btabs-alt-static-trans">
+                <table style="width:100%;" class="display" id="trans-of-address">
+                    <thead>
+                    <tr>
+                        <th>交易哈希</th>
+                        <th>所在区块</th>
+                        <th>时间</th>
+                        <th>发送方</th>
+                        <th>接收方</th>
+                        <th>类型</th>
+                        <th>交易额(ETH)</th>
+                    </tr>
+                    </thead>
+                </table>
+
+
+            </div>
+            <div class="tab-pane active" id="btabs-alt-static-statistics">
+                <h5>地址最近一年每日活跃情况一览</h5>
+                <div id="heatmap" style="margin-top: -20px"></div>
+                {#                <div id="liveness_bar" style=" height: 300px"></div>#}
+                <div id="active_month_bar" style="height: 250px;"></div>
+                <br>
+                <div class="card">
+                    <div class="card-header">其他统计信息</div>
+                    <div class="card-body">
+                        <div class="binary-body">
+                            <div class="middle-ele" style="border:1px solid #000000">
+                                <div id="inout" style="height: 250px"></div>
+                            </div>
+                            <div class="middle-ele" style="border:1px solid #000000">
+                                <table class="table table-sm table-hover bee-table">
+                                    <tbody>
+                                    <tr>
+                                        <td>转入交易数</td>
+                                        <td>{{ total_in }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>转出交易数</td>
+                                        <td>{{ total_out }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>总计</td>
+                                        <td>{{ trans_num }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>转入交易总额</td>
+                                        <td>{{ total_in_volume }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>转出交易总额</td>
+                                        <td>{{ total_out_volume }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>净收入</td>
+                                        <td>{{ total_in_volume-total_out_volume }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>平均交易额</td>
+                                        <td>{{ avg_volume }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>最大交易额</td>
+                                        <td>{{ max_volume }}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                            {#                            <div class="" style="width: 400px; height: 200px; border:1px solid #000000">#}
+                            {##}
+                            {#                                <div id="chart-group" class="middle-ele slider">#}
+                            {#                                    <div>#}
+                            {#                                        <canvas id="lineChartExample"></canvas>#}
+                            {#                                <div style="height: 200px">adfa</div>#}
+                            {#                                    </div>#}
+                            {#                                    <div>#}
+                            {#                                        <div style="height: 200px">adfa</div>#}
+                            {#                                    </div>#}
+                            {#                                    <div>#}
+                            {#                                        <div style="height: 200px">adfa</div>#}
+                            {##}
+                            {#                                    </div>#}
+                            {#                                </div>#}
+                            {#                            </div>#}
+
+                        </div>
+
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="tab-pane" id="btabs-alt-static-explodeBlock">
+
+                <table style="width: 100%;" class="display" id="explode-block">
+                    <thead>
+                    <tr>
+                        <th>高度</th>
+                        <th>哈希值</th>
+                        <th>出块时间</th>
+                        <th>交易数</th>
+                        <th>区块大小(字节)</th>
+                        <th>叔块</th>
+                        <th>出块奖励(ETH)</th>
+                        <th>总交易额(ETH)</th>
+                    </tr>
+                    </thead>
+                </table>
+
+            </div>
+            <div class="tab-pane" id="btabs-alt-static-settings">
+                <p>Etsy mixtape wayfarers, ethical wes anderson tofu before they sold out mcsweeney's organic lomo
+                    retro
+                    fanny pack lo-fi farm-to-table readymade. Messenger bag gentrify pitchfork tattooed craft beer,
+                    iphone skateboard
+                    locavore carles etsy salvia banksy hoodie helvetica. DIY synth PBR banksy irony. Leggings
+                    gentrify
+                    squid 8-bit cred pitchfork. Williamsburg banh mi whatever gluten-free, carles pitchfork
+                    biodiesel
+                    fixie
+                    etsy retro mlkshk vice blog. Scenester cred you probably haven't heard of them, vinyl craft beer
+                    blog stumptown. Pitchfork sustainable tofu synth chambray yr.</p>
+            </div>
+        </div>
+    </div>
+
+    </div>
+    <!-- End Card Tabs Alternative Style -->
+
+
+    <!-- Swiper -->
+    <!--<div style="width: 500px">
+
+        <div class="swiper-container">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide" style="height: 300px">
+
+                    <canvas id="lineChartExample"></canvas>
+                </div>
+
+                <div class="swiper-slide">Slide 1</div>
+                <div class="swiper-slide">Slide 2</div>
+                <div class="swiper-slide">Slide 3</div>
+            </div>
+
+            <div class="swiper-pagination"></div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+        </div>
+    </div>
+    -->
+
+{% endblock %}
+
+{% block body_script %}
+    <script type="text/javascript">
+        var total_in =
+        {{ total_in }}
+        var total_out =
+        {{ total_out }}
+        var heatmap_data =
+        {{ heatmap_data|tojson }}
+        var active_month =
+        {{ active_month|tojson }}
+        var tr_options =
+        {{ tr_options|tojson }}
+        var address =
+        {{ address|tojson }}
+    </script>
+
+    {#    地址爆块&交易datatable #}
+
+    <script src="{{ url_for('static', filename='plugins/jquery-datatable/js/jquery.dataTables.min.js') }}"></script>
+    {#    tab #}
+    <script src="{{ url_for('static', filename='muban/3527/app.js') }}"></script>
+
+    {# amcharts #}
+    <script src="{{ url_for('static', filename='plugins/amcharts/core.js') }}"></script>
+    <script src="{{ url_for('static', filename='plugins/amcharts/charts.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='plugins/amcharts/themes/dark.js') }}"></script>
+    <script src="{{ url_for('static', filename='plugins/amcharts/themes/animated.js') }}"></script>
+    <script src="{{ url_for('static', filename='assets/js/module/heatmap.js') }}"></script>
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#explode-block').DataTable({
+                {#"aaSorting": [[2, "desc"]],#}
+                "searching": false,
+                "language": {
+                    "url": "/static/data/chinese.txt"
+                },
+                {#"searchable":true,#}
+                "order": [], //asc desc
+                "serverSide": true,
+                "ajax": {
+                    url: "/data/explode_block",
+                    data: {address: "{{ address }}"},
+                    {#dataSrc: " ",#}
+
+                },
+                columns: [
+                    {data: "height","orderable":false},
+                    {data: "hash", "orderable": false},
+                    {data: "time", "orderable": false},
+                    {data: "not", "orderable": false},
+                    {data: "size", "orderable": false},
+                    {data: "nou", "orderable": false},  // no data
+                    {data: "award", "orderable": false},   //  no data
+                    {data: "sbt", "orderable": false}
+
+                ],
+                "columnDefs": [{
+                    "targets": 1,
+                    "render": function (data, type, full, meta) {
+                        return type === 'display' && data.length > 23 ?
+                            '<a href="' + '#' + '">' + data.substr(0, 20) + '...</a>' :
+                            data;
+                    }
+                }
+                ]
+            });
+
+            var atTable = $('#trans-of-address').DataTable({
+                {#"aaSorting": [[2, "desc"]],#}
+                "dom": "<'#toolbar1'<l><f>>rtip",
+                "searching": false,
+                {#"searchable": true,#}
+                "info":true,
+                {# 问题就出在这行的info具体怎么在查怎么解决#}
+                "pagingType": "full_numbers",
+                "order": [], //asc desc
+                "language": {
+                    "url": "/static/data/chinese.txt"
+                },
+                "serverSide": true,
+                "ajax": {
+                    url: "/data/address_trans",
+                    data: {address: "{{ address }}",tr_op: 4},
+                    {#dataSrc: " ",#}
+
+                },
+                columns: [
+                    {data: "hash", "orderable": false},
+                    {data: "blockNumber", "orderable": false},
+                    {data: "time", "orderable": false},
+                    {data: "from", "orderable": false},
+                    {data: "to", "orderable": false},
+                    {data: "trans_type", "orderable": false},  // no data
+                    {data: "value", "orderable": false},
+
+                ],
+                "createdRow": function (row, data, index) {
+                    if (data['from'] == {{ address }} && data['to'] != null) {
+                        $('td', row).eq(5).addClass('out-trans')
+                        {#console.log(data['from'])#}
+                    } else if (data['to'] =={{ address }}) {
+                        $('td', row).eq(5).addClass('in-trans')
+
+                    }
+                }
+                ,
+                "columnDefs": [{
+                    "targets": 0,
+                    "render": function (data, type, row, meta) {
+                        var tdv = type === 'display' && data.length > 20 ? data.substr(0, 10) + '...' : data;
+                        return '<a href="/eth/tsc_detail?hash=' + data + '">' + tdv + '</a>'
+
+                    }
+                }, {
+                    "targets": 1,
+                    "render": function (data, type, row, meta) {
+                        var tdv = type === 'display' && data.length > 20 ? data.substr(0, 10) + '...' : data;
+                        return '<a href="/eth/block_detail/' + data + '">' + tdv + '</a>'
+
+                    }
+                },
+                    {
+                        "targets": 3,
+                        "render": function (data, type, row, meta) {
+                            var tdv = type === 'display' && data.length > 20 ? data.substr(0, 12) + '...' : data;
+                            return '<a href="/eth/address/detail/' + data + '">' + tdv + '</a>'
+
+                        }
+                    },
+                    {
+                        "targets": 4,
+                        "render": function (data, type, row, meta) {
+                            if (data) {
+                                var tdv = type === 'display' && data.length > 20 ? data.substr(0, 12) + '...' : data;
+                                return '<a href="/eth/address/detail/' + data + '">' + tdv + '</a>'
+                            } else {
+                                return ''
+                            }
+
+                        }
+                    },
+                    {
+                        "targets": 5,
+                        "render": function (data, type, row, meta) {
+                            var direction = "<span style='color:#'></span>"
+                            {#var drcolor = ""#}
+                            if (row['from'] =={{ address }}) {
+                                if (row['to'] != null) {
+                                    direction = "转出";
+                                } else {
+                                    direction = "";
+                                }
+                                {#drcolor = "#7CCD7C"#}
+
+                            } else if (row['to'] =={{ address }}) {
+                                direction = "转入";
+                                {#drcolor = "#EE2C2C"#}
+
+                            }
+                            {#return data + " <span style='color:"+drcolor+"'>"+direction+"</span>"#}
+                            return data + "<span>" + direction + "</span>"
+                            {#return row['blockNumber']#}
+                        }
+                    }
+                ],
+                initComplete: function () {
+
+                    var tb = $("#toolbar1");
+                    tb.addClass('bee-row');
+                    tb.find('label').css({"margin-bottom": 0});
+                    tb.append("<div><a  " +
+                        "class='btn btn-primary btn-sm' type='button' aria-haspopup=\"true\" aria-expanded=\"false\" id='tr-filter' data-toggle='dropdown'>按时间筛选</a><div>");
+                    {#tb.append("<div><a  " +#}
+                    {#    "class='btn btn-primary btn-sm' type='button' aria-haspopup=\"true\" aria-expanded=\"false\" id='type-fields' data-toggle='dropdown'>按类型筛选</a><div>");#}
+
+                    // 选择字段
+
+                    // 时间范围筛选
+                    $('#tr-filter').after('<div class="dropdown-menu" aria-labelledby="tr-filter">');  // time range
+                    for (var i = 0; i < tr_options.length; i++) {
+
+                        $('#tr-filter').next().append('<a class="dropdown-item">' + tr_options[i] + '</a>');
+
+                    }
+
+                    $('#tr-filter').next().children('.dropdown-item').on('click', function (e) {
+
+
+                        var tr_option = $(this).index();
+                        param = {
+                            address: address,
+                            tr_op: tr_option
+                        }
+                        atTable.settings()[0].ajax.data = param;
+                        atTable.ajax.reload();
+                        // table.draw();
+                    });
+
+
+                }
+
+            });
+
+        });
+
+
+    </script>
+
+
+    {#    二维码弹窗 #}
+    <script src="{{ url_for('static', filename='assets/js/qrcode.js') }}"></script>
+
+    {# slick #}
+
+
+
+
+    <!-- Swiper JS -->
+    <script src="{{ url_for('static', filename='plugins/swiper/js/swiper.min.js') }}"></script>
+    <!-- Initialize Swiper -->
+    <script>
+        var swiper = new Swiper('.swiper-container', {
+            spaceBetween: 30,
+            effect: 'coverflow',
+            grabCursor: true,
+            loop: true,
+            centeredSlides: true,
+            autoplay: {
+                delay: 2500,
+                disableOnInteraction: false,
+            },
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+        });
+    </script>
+
+
+
+    {#    chartjs 3492 demo for test  #}
+    <script src="{{ url_for('static', filename='plugins/chart.js/Chart.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='plugins/chart.js/utils.js') }}"></script>
+    <script src="{{ url_for('static', filename='muban/3492/charts-custom.js') }}"></script>  {# 饼状图 折线图 #}
+
+
+    {#    echarts 移入base3  #}
+    {#    <script src="{{ url_for('static', filename='plugins/echarts/echarts.js') }}"></script>#}
+
+
+    {#   页面script 空文件 #}
+    {#    <script src="{{ url_for('static', filename='assets/js/bee-script.js') }}"></script>#}
+    <!-- 月活跃度 -->
+    <script src="{{ url_for('static', filename='assets/js/page/address_detail.js') }}"></script>
+
+
+
+{% endblock %}

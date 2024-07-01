@@ -1,0 +1,254 @@
+{#  三种dropdown button共存 #}
+
+{% extends 'base3.html' %}
+{% block title %}{% endblock %}
+
+{% block head_style %}
+
+    {#   open-iconic 双箭头 #}
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='vendor/css/open-iconic/font/css/open-iconic-bootstrap.css') }}">
+
+    {#    checkbox #}
+    {#    paginationjs #}
+
+    {#    theme #}
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/bee.theme.dark.css') }}"/>
+
+    <style>
+    #inputaddrs::placeholder {
+        color: #8a8f92;
+    }
+    #outputaddrs::placeholder {
+        color: #8a8f92;
+    }
+    #keyword::placeholder {
+        color: #4c5667;
+    }
+    #remark::placeholder {
+        color: #4c5667;
+    }
+        .item-checked {
+            background-color: #EEE5DE;
+
+        }
+
+        .dropdown-item:active {
+            background-color: #EEDFCC;
+            color: black;
+        }
+
+        .item-checked:hover {
+            background-color: #EEE5DE;
+        }
+
+        .item-checked:active {
+            background-color: #EEDFCC;
+
+        }
+    </style>
+
+{% endblock %}
+
+{% block content %}
+    {% include '_btccrumb.html' %}
+<br>
+
+    <div class="card">
+
+        <div class="card-header">所选条件<button type="submit" style="float: right;margin-right: 25px" class="btn btn-primary btn-sm" onclick="window.location.href='{{ url_for('bee.i2p_senior_query') }}'">新的查询</button></div>
+        <div class="card-body">
+
+                    <table class="table table-sm table-hover bee-table">
+                        <tbody>
+                         <div class="bee-row2">
+
+        <div class="bee-row">
+
+
+
+            <div>
+                <form action="{{ url_for('btc.get_i2p') }}" method="post">
+
+                {#                <input id="block-search" type="text">#}
+                <span style="margin-left: 30px;">地址:<span/>
+                <input  name="address" class="jump-ipt" style="width: 100px;" type="text" value="{{ addr }}" id="addrs">
+                <span style="margin-left: 30px;">域名:</span>
+                <input name="domain" style="width: 100px;"class="jump-ipt"  type="text" value="{{ domain }}" id="domains">
+                    <span style="margin-left: 30px;">币种:</span>
+                    <select id="coins" name="coin"  >
+                    <option  value=""></option>
+                    <option {% if coin=='btc' %}selected{% endif %}  value="btc">比特币</option>
+                    <option {% if coin=='eth' %}selected{% endif %}   value="eth">以太坊</option>
+{#                        <option {% if coin=='dashcoin' %}selected{% endif %}    value="dashcoin">达士币</option>#}
+                    <option {% if coin=='ltc' %}selected{% endif %} value="ltc">莱特币</option>
+                    <option {% if coin=='monero' %}selected{% endif %} value="monero">门罗币</option>
+</select>
+                <span style="margin-left: 30px;">起始时间:<span/>
+                <input id="sdates"  name="sdate" class="jump-ipt" style="width: 100px;" type="text" value="{{ sdate }}" onclick="dateClick()">
+                    <span style="margin-left: 30px;">截止时间:<span/>
+                <input id="edates" name="edate" class="jump-ipt" style="width: 100px;" type="text" value="{{ edate }}" onclick="dateClick()">
+
+                <button type="submit" style="margin-left: 25px;" class="btn btn-primary btn-sm">再次查询</button>
+                                    </span>
+
+                </form>
+            </div>
+
+
+
+
+
+        </div>
+    </div>
+                        </tbody>
+                    </table>
+
+
+        </div>
+    </div>
+     <div class="card" style="height: 300px">
+
+        <div class="card-header">查询介绍</div>
+        <div class="card-body">
+            <div>
+                <th><span>关键词：</span>{{ kw }}</th>
+                <br><br>
+                <th><span>备注：</span>{{ remark }}</th>
+            </div>
+
+        </div>
+    </div>
+    <div class="m-style M-box4"></div>
+
+
+{% endblock %}
+{% block body_script %}
+
+    <script type="text/javascript"
+            src="{{ url_for('static', filename='assets/js/page/eth_block.js') }}"></script>
+
+    {#    checkbox block_order_switch#}
+    <script type="text/javascript"
+            src="{{ url_for('static', filename='assets/js/table-filter.js') }}"></script>
+    <script src="{{ url_for('static', filename='layui/layui.js') }}"></script>
+     <script src="{{ url_for('static', filename='My97DatePicker/WdatePicker.js') }}"></script>
+    <script>
+     function add_tag(item){
+     {#hash=JSON.parse(item.replace(/'/g,'"')).time_bj#}
+    layui.use(['layer', 'form'], function(){
+        var layer = layui.layer
+         ,form = layui.form;
+       layer.open({
+            type:1,
+            skin:'layui-layer-molv',
+            area: ['300px', '20%'],
+            content:'<form  style="margin-top: 20px"> ' +
+            '<div align="center" >' +
+            ' <span class="layui-input-inline" style="color:black">关联事件：' +
+            '<input type="text" name="topic_save" autocomplete="off"  id="topic_save" >' +'</span>'+
+            '</div>' +
+            '</form>',
+            btn: ['保存', '关闭'],
+            btnAlign: 'c',
+            yes: function(){
+                saveTopic(item);
+            },
+            btn2: function(){
+                layer.closeAll();
+            },
+            success: function(layero, index){
+                layui.use(['form','element'],function () {
+                    var form = layui.form, element = layui.element;
+                    form.render();
+                });
+
+            }
+        });
+
+});
+ }
+
+function savequery() {
+    var r=confirm("是否记住本次查询？");
+    if (r==true){
+        layui.use(['layer', 'form'], function(){
+        var layer = layui.layer
+         ,form = layui.form;
+       layer.open({
+            type:1,
+            skin:'layui-layer-molv',
+            area: ['350px', '40%'],
+            content:'<form  style="margin-top: 20px"> ' +
+            '<div align="center" >' +
+            '<span class="layui-input-inline"><input type="text" name="topic_save" autocomplete="off"  class="layui-input"  id="keywords" placeholder="关键词" value=""></span><br>' +
++'</div>'+'<div align="center" >' +
+            '<span class="layui-input-inline"><input type="text" name="topic_save" autocomplete="off"  id="remarks" class="layui-input"   value="" placeholder="备注信息"></span>' +
+            '</div>' +
+            '</form>',
+            btn: ['保存', '关闭'],
+            btnAlign: 'c',
+            yes: function(){
+                remeber();
+            },
+            btn2: function(){
+                layer.closeAll();
+            },
+            success: function(layero, index){
+                layui.use(['form','element'],function () {
+                    var form = layui.form, element = layui.element;
+                    form.render();
+                });
+
+            }
+        });
+
+});
+    }
+    else
+    {
+        x="你按下了\"取消\"按钮!";
+    }
+}
+    </script>
+<script>
+
+	function dateClick() {
+		WdatePicker({
+			dateFmt : 'yyyy-MM-dd HH:mm:ss',  //格式设置相对应界面可选择也变化
+			highLineWeekDay:true,  //周末的日期是否高亮
+			readOnly:true,  //是否允许键盘输入值，false为禁止输入，只能鼠标选
+		});
+	}
+        function gen_query() {
+        var num=0;
+        var num_uncheck=0;
+        var check = new Array();
+        var uncheck = new Array();
+        var attr_ = document.getElementsByName("attr");
+        for ( var i = 0; i < attr_.length; i++) {
+            if (attr_[i].checked) {
+                check[num]=attr_[i].id;
+                num++;
+            }
+            else {
+                uncheck[num_uncheck]=attr_[i].id+'s';
+                num_uncheck++;
+            }
+
+        }
+        var Udata= JSON.stringify({"checked":check,"num":num});
+        if(num==0){
+            alert("未选条件!");
+        }
+        else{
+           gen_sql();
+            //alert(check);
+        for ( var i = 0; i < uncheck.length; i++) {
+               document.getElementById(uncheck[i]).hidden=true;
+        }
+        }
+    }
+   </script>
+{% endblock %}
+</html>

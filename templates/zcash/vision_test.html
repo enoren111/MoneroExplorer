@@ -1,0 +1,510 @@
+{% extends 'base_zcash.html' %}
+{% from 'macros.html' import reciver %}
+{% block title %}{% endblock %}
+
+{% block head_style %}
+    <style type="text/css">
+        #wrap {
+            word-break: break-all;
+            width: 800px;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+
+    {#    <h1>TRANSACTION DETAIL</h1>#}
+    {% include '_zcashcrumb.html' %}
+    <br>
+
+    <div class="card">
+        <div class="card-header">概要信息>>{{ tsc_info['_id']}}</div>
+        <div class="card-body">
+            <div class="bee-row2" ​>
+                ​
+                <div style="flex: 1" class="bee-border-r-b">
+                    <table class="table table-sm table-hover bee-table">
+                        <tbody>
+{#                        <tr>#}
+{#                            <td>交易哈希</td>#}
+{#                            <td>#}
+{#                                <a href="{{ url_for('btc.btc_tsc_detail', hash=tsc_info['_id']) }}">{{ tsc_info['_id']|truncate(30) }}</a>#}
+{#                            </td>#}
+{#                        </tr>#}
+  <tr>
+                            <td>所在区块</td>
+                            <td>
+                                <a href="{{ url_for('zcash.zcash_block_detail',hash = tsc_info['_source']['blockhash']) }}">{{ tsc_info['_source']['height'] }}</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>确认数</td>
+                            <td>{{ tsc_info['_source']['confirmations'] }}</td>
+                            {#                            <td>成功|失败</td>#}
+                        </tr>
+
+                        <tr>
+                            <td>时间</td>
+                            <td>{{ tsc_info['_time'] }}</td>
+                        </tr>
+                        <tr>
+                            <td>类型</td>
+                            <td>{{ tsc_info['trans_type']}}</td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+                <div style="flex: 1">
+                    <table class="table table-sm table-hover bee-table">
+                        <tbody>
+                        <tr>
+                            <td>输入(ZEC)</td>
+                            <td>{{ tsc_info['inputvalue'] }}</td>
+                        </tr>
+                        <tr>
+                            <td>输出(ZEC)</td>
+                            <td>{{ tsc_info['outputvalue']}}</td>
+                        </tr>
+                        <tr>
+                            <td>交易大小</td>
+                            <td>{{ tsc_info['_source']['size'] }} bytes</td>
+                        </tr>
+                         <tr>
+                            <td>Fees(ZEC)</td>
+                            <td>{{ tsc_info['fee']}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {% if tsc_info['iscarry'] %}
+                        <button id="showcarrybutton"
+                                style="background-color: black;border-color: black;color: #1d7db1;float: left">
+                            显示/收起夹带信息
+                        </button>
+                    {% endif %}
+
+            <table class="table table-sm table-hover bee-table" id="carryparttable">
+                <tbody>
+                {% for foo in tsc_info["carrypart"]["input"] %}
+                    <tr><td><div style="float: left">{{ foo["string"] }}</div></td></tr>
+                {% endfor %}
+                {% for foo in tsc_info["carrypart"]["output"] %}
+                    <tr><td><div style="float: left">{{ foo["string"] }}</div></td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+    <br>
+    <div class="card">
+        <div class="card-header">地址总览<button type="submit"  class="btn btn-primary btn-sm" onclick="add_tag()">添加标签</button></div>
+        <div class="card-body">
+            <div class="bee-row2" ​>
+                ​
+                <div style="flex: 1" class="bee-border-r-b">
+                    {% if tsc_info['vin']|length < 5 %}
+                        <table class="table table-sm table-hover bee-table">
+                            <tbody>
+                            <tr>
+                                <td><strong>发送方</strong></td>
+                                <td><strong>金额(ZEC)</strong></td>
+                            </tr>
+                            {% for i in range(0,tsc_info['vin'] | length) %}
+                                <tr>
+                                    <td>
+                                        <a href="{{ url_for('zcash.zcash_address_detail',address = tsc_info['vin'][i][0]) }}">{{ tsc_info['vin'][i][0]|truncate(45) }}</a>
+                                    </td>
+                                    <td>{{ tsc_info['vin'][i][1] }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <table class="table table-sm table-hover bee-table">
+                            <tbody>
+                            <tr>
+                                <td><strong>发送方</strong></td>
+                                <td><strong>金额(ZEC)</strong></td>
+                            </tr>
+                            {% for i in range(0,5) %}
+                                <tr>
+                                    <td>
+                                        <a href="{{ url_for('zcash.zcash_address_detail',address = tsc_info['vin'][i][0]) }}">{{ tsc_info['vin'][i][0]|truncate(45) }}</a>
+                                    </td>
+                                    <td>{{ tsc_info['vin'][i][1] }}</td>
+                                </tr>
+                            {% endfor %}
+
+                            </tbody>
+                        </table>
+                        <table class="table table-sm table-hover bee-table" id="intable">
+                            <tbody>
+                            {% for i in range(5,tsc_info['vin'] | length) %}
+                                <tr>
+                                    <td>
+                                        <a href="{{ url_for('zcash.zcash_address_detail',address = tsc_info['vin'][i][0]) }}">{{ tsc_info['vin'][i][0]|truncate(45) }}</a>
+                                    </td>
+                                    <td>{{ tsc_info['vin'][i][1] }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endif %}
+
+                    {% if tsc_info['vin']|length > 5 %}
+                        <button id="showinaddress"
+                                style="background-color: black;border-color: black;color: #1d7db1;float: right">展示所有地址
+                        </button>
+                    {% endif %}
+                </div>
+                <div style="flex: 1">
+                    {% if tsc_info['vout']|length < 5 %}
+                        <table class="table table-sm table-hover bee-table">
+                            <tbody>
+                            <tr>
+                                <td><strong>接收方</strong></td>
+                                <td><strong>金额(ZEC)</strong></td>
+                            </tr>
+                            {% for i in range(0,tsc_info['vout'] | length) %}
+                                <tr>
+                                    <td>
+                                        <a href="{{ url_for('zcash.zcash_address_detail',address = tsc_info['vout'][i][0]) }}">{{ tsc_info['vout'][i][0]|truncate(45) }}</a>
+                                    </td>
+                                    <td>{{ tsc_info['vout'][i][1] }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <table class="table table-sm table-hover bee-table">
+                            <tbody>
+                            <tr>
+                                <td><strong>接收方</strong></td>
+                                <td><strong>金额(ZEC)</strong></td>
+                            </tr>
+                            {% for i in range(0,5) %}
+                                <tr>
+                                    <td>
+                                        <a href="{{ url_for('zcash.zcash_address_detail',address = tsc_info['vout'][i][0]) }}">{{ tsc_info['vout'][i][0]|truncate(45) }}</a>
+                                    </td>
+                                    <td>{{ tsc_info['vout'][i][1] }}</td>
+                                </tr>
+                            {% endfor %}
+
+                            </tbody>
+                        </table>
+                        <table class="table table-sm table-hover bee-table" id="outtable">
+                            <tbody>
+                            {% for i in range(5,tsc_info['vout'] | length) %}
+                                <tr>
+                                    <td>
+                                        <a href="{{ url_for('zcash.zcash_address_detail',address = tsc_info['vout'][i][0]) }}">{{ tsc_info['vout'][i][0]|truncate(45) }}</a>
+                                    </td>
+                                    <td>{{ tsc_info['vout'][i][1] }}</td>
+                                </tr>
+                            {% endfor %}
+
+                            </tbody>
+                        </table>
+                    {% endif %}
+
+
+                    {% if tsc_info['vout']|length > 5 %}
+                        <button id="showoutaddress"
+                                style="background-color: black;border-color: black;color: #1d7db1;float: right">
+                            展示/收起所有地址
+                        </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+ <br>
+
+    <div class="card">
+        <div class="card-header">可视化-TEST</div>
+        <div class="card-body">
+{#                                  <section id="layout-graph" class="card-body">#}
+{#                                      <svg class="card-body" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" viewBox="-95.09696362033424 -60.48639336233285 1270.059016624429 517.9459427171499">#}
+{#                                          <defs><marker id="arrow1-black" markerWidth="7" markerHeight="7" refX="0" refY="3.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L0,7 L7,3.5 Z" style="fill: black;"></path></marker>#}
+{#                                              <marker id="arrow1-red" markerWidth="7" markerHeight="7" refX="0" refY="3.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L0,7 L7,3.5 Z" style="fill: red;"></path></marker>#}
+{#                                          </defs><g><g class="entityShadowsRoot"></g><g class="entityLinksRoot"></g><g class="entityRoot"><g transform="translate(240, -4.455271933335494)"><g class="entityNode"><rect class="entityNodeRect" width="190" height="126" style="stroke-dasharray: 4, 1; fill: rgb(242, 242, 242); stroke: black; stroke-width: 1px;"></rect><g class="label" transform="translate(10, 25)"><text transform="translate(0, 0)" style="font-size: 20px;"><tspan x="0" dy="0em">1</tspan></text></g><g class="label" transform="translate(180, 17)"><text text-anchor="end" style="font-size: 12px;">ZCASH</text></g><g class="expandHandles"><g class="expandHandle" transform="translate(190, 0) rotate(0 0 63 )"><path class="expandHandlePath" d="M0 0 C 15 0, 15 0, 15 15 L 15 111 C 15 126 15 126 0 126" style="stroke-dasharray: 4, 1; fill: rgb(242, 242, 242); stroke: black; stroke-width: 1px;"></path><text text-anchor="middle" font-size="12px" transform="translate(3, 63) rotate(90)">3</text></g><g class="expandHandle" transform="translate(0, 0) rotate(180 0 63 )"><path class="expandHandlePath" d="M0 0 C 15 0, 15 0, 15 15 L 15 111 C 15 126 15 126 0 126" style="stroke-dasharray: 4, 1; fill: rgb(242, 242, 242); stroke: black; stroke-width: 1px;"></path><text text-anchor="middle" font-size="12px" transform="translate(3, 63) rotate(90)">0</text></g></g></g><g class="addressExpand"><text text-anchor="middle" x="95" y="119" font-size="16" title="Show address table">num_of_address</text></g></g><g transform="translate(730, 121.49600436665477)"><g class="entityNode"><rect class="entityNodeRect" width="190" height="126" style="stroke-dasharray: 4, 1; fill: rgb(242, 242, 242); stroke: black; stroke-width: 1px;"></rect><g class="label" transform="translate(10, 25)"><text transform="translate(0, 0)" style="font-size: 20px;"><tspan x="0" dy="0em">3</tspan></text></g><g class="label" transform="translate(180, 17)"><text text-anchor="end" style="font-size: 12px;">ZCASH</text></g><g class="expandHandles"><g class="expandHandle" transform="translate(190, 0) rotate(0 0 63 )"><path class="expandHandlePath" d="M0 0 C 15 0, 15 0, 15 15 L 15 111 C 15 126 15 126 0 126" style="stroke-dasharray: 4, 1; fill: rgb(242, 242, 242); stroke: black; stroke-width: 1px;"></path><text text-anchor="middle" font-size="12px" transform="translate(3, 63) rotate(90)">0</text></g><g class="expandHandle" transform="translate(0, 0) rotate(180 0 63 )"><path class="expandHandlePath" d="M0 0 C 15 0, 15 0, 15 15 L 15 111 C 15 126 15 126 0 126" style="stroke-dasharray: 4, 1; fill: rgb(242, 242, 242); stroke: black; stroke-width: 1px;"></path><text text-anchor="middle" font-size="12px" transform="translate(3, 63) rotate(90)">1</text></g></g></g><g class="addressExpand"><text text-anchor="middle" x="95" y="119" font-size="16" title="Show address table">num_of_address</text></g></g></g><g class="addressShadowsRoot"></g><g class="addressRoot"><g><g transform="translate(265, 35.544728066664504)">#}
+{#                                          <g class="addressNode"><rect class="addressNodeRect" x="0" y="0" width="140" height="50" style="fill: rgb(230, 230, 230); stroke: black; stroke-width: 1px;"></rect><g class="label" transform="translate(10, 31.666666666666668)"><text transform="translate(0, 0)" style="font-size: 20px;"><tspan x="0" dy="0em">{{ tsc_info['vin'][0][0]|truncate(12) }}</tspan></text></g><g transform="translate(135, 5)" class="abuse"></g><g><g class="expandHandle" transform="translate(140, 0) rotate(0 0 25 )"><path class="expandHandlePath" d="M0 0 C 15 0, 15 0, 15 15 L 15 35 C 15 50 15 50 0 50" style="fill: rgb(230, 230, 230); stroke: black; stroke-width: 1px;"></path><text text-anchor="middle" font-size="12px" transform="translate(3, 25) rotate(90)">2</text></g><g class="expandHandle" transform="translate(0, 0) rotate(180 0 25 )"><path class="expandHandlePath" d="M0 0 C 15 0, 15 0, 15 15 L 15 35 C 15 50 15 50 0 50" style="fill: rgb(230, 230, 230); stroke: black; stroke-width: 1px;"></path><text text-anchor="middle" font-size="12px" transform="translate(3, 25) rotate(90)">0</text></g></g></g>#}
+{#                                      </g></g><g><g transform="translate(755, 161.49600436665477)"><g class="addressNode"><rect class="addressNodeRect" x="0" y="0" width="140" height="50" style="fill: rgb(230, 230, 230); stroke: black; stroke-width: 1px;"></rect><g class="label" transform="translate(10, 31.666666666666668)"><text transform="translate(0, 0)" style="font-size: 20px;"><tspan x="0" dy="0em">{{ tsc_info['vout'][0][0]|truncate(12) }}</tspan></text></g><g transform="translate(135, 5)" class="abuse"></g><g><g class="expandHandle" transform="translate(140, 0) rotate(0 0 25 )"><path class="expandHandlePath" d="M0 0 C 15 0, 15 0, 15 15 L 15 35 C 15 50 15 50 0 50" style="fill: rgb(230, 230, 230); stroke: black; stroke-width: 1px;"></path><text text-anchor="middle" font-size="12px" transform="translate(3, 25) rotate(90)">0</text></g><g class="expandHandle" transform="translate(0, 0) rotate(180 0 25 )"><path class="expandHandlePath" d="M0 0 C 15 0, 15 0, 15 15 L 15 35 C 15 50 15 50 0 50" style="fill: rgb(230, 230, 230); stroke: black; stroke-width: 1px;"></path><text text-anchor="middle" font-size="12px" transform="translate(3, 25) rotate(90)">4</text></g></g></g></g></g></g><g class="addressLinksRoot"><g class="link" data-target="14TDxS9NQhiu1tX4qeFwRkisXn1oDmTuKB,1,btc" data-source="16MJTT8q8YqxztL97DoA2ieYsCHs2fqUEZ,0,btc" data-label="1" data-scale="1"><path d="M420,60.544728066664504C576.5,60.544728066664504,576.5,186.49600436665477,733,186.49600436665477" class="linkPathFrame" style="stroke-width: 6px; opacity: 0;"></path><path d="M420,60.544728066664504C576.5,60.544728066664504,576.5,186.49600436665477,733,186.49600436665477" class="linkPath" style="stroke-width: 1px; fill: none; stroke: white; marker-end: url(&quot;#arrow1-black&quot;);"></path><g>#}
+{#                          <rect class="linkRect" rx="6" ry="6" x="572.796875" y="114.87661621665964" width="7.40625" height="14.875"></rect>#}
+{#                          <text class="linkText" text-anchor="middle" x="576.5" y="127.52036621665964" style="font-size: 12px;color: red;stroke: black">1</text>#}
+{#                      </g></g></g></g></svg>#}
+{#  </section>#}
+<svg class="w-full h-full graph" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" viewBox="-95.09696362033424 -60.48639336233285 1270.059016624429 517.9459427171499">
+
+</svg>
+<script src="https://d3js.org/d3.v5.min.js"></script>
+<script>
+    svg=d3.select(".graph");
+    const transactionsPixelRange = [1, 7];
+    const markerHeight = transactionsPixelRange[1]
+    arrowSummit = markerHeight;
+    svg.node().innerHTML = '<defs>' +
+        (['black', 'red'].map(color =>
+            `<marker id="arrow1-${color}" markerWidth="${this.arrowSummit}" markerHeight="${markerHeight}" refX="0" refY="${markerHeight / 2}" orient="auto" markerUnits="userSpaceOnUse">` +
+            `<path d="M0,0 L0,${markerHeight} L${this.arrowSummit},${markerHeight / 2} Z" style="fill: ${color};" />` +
+            '</marker>'
+        )).join('') +
+        '</defs>'
+    graphRoot = svg.append('g')
+    entityShadowsRoot = graphRoot.append('g').classed('entityShadowsRoot', true)
+    entityLinksRoot = graphRoot.append('g').classed('entityLinksRoot', true)
+    entityRoot = graphRoot.append('g').classed('entityRoot', true)
+    addressShadowsRoot = graphRoot.append('g').classed('addressShadowsRoot', true)
+    addressRoot = graphRoot.append('g').classed('addressRoot', true)
+    addressLinksRoot = graphRoot.append('g').classed('addressLinksRoot', true)
+    single_entity=entityRoot.append('g').attr('transform','translate(730, 121.49600436665477)')
+    entityNode=single_entity.append('g').classed('entityNode',true)
+    entityNode.append('rect')
+    .attr('width',190)
+    .attr('height',126)
+    .attr('stroke-dasharray','4,1')
+    .attr('fill','rgb(242,242,242)')
+    .attr('stroke','black')
+    .attr('stroke-width','1px')
+        .on('click',()=>
+        {
+            alert('entity node click');
+        });
+    expandHandles=entityNode.append('g');
+    expandHandle=expandHandles.append('g').attr('transform','translate(190, 0) rotate(0 0 63 )')
+    expandHandle1=expandHandles.append('g').attr('transform','translate(0, 0) rotate(180 0 63 )');
+    const expandHandleWidth = 15;
+    a = expandHandleWidth;
+    h=126;
+    c=h-a;
+    entityDash = '4 1'
+    expandHandle.append('path')
+        .classed('expandHandlePath', true)
+        .attr('d', `M0 0 C ${a} 0, ${a} 0, ${a} ${a} L ${a} ${c} C ${a} ${h} ${a} ${h} 0 ${h}`)
+        .style('stroke-dasharray', entityDash).attr('fill','rgb(242,242,242)').attr('stroke','black')
+        .attr('stroke-width','1px').on('click',()=>
+    {
+        alert('outgoing click')
+    });
+    expandHandle1.append('path')
+        .classed('expandHandlePath', true)
+        .attr('d', `M0 0 C ${a} 0, ${a} 0, ${a} ${a} L ${a} ${c} C ${a} ${h} ${a} ${h} 0 ${h}`)
+        .style('stroke-dasharray', entityDash).attr('fill','rgb(242,242,242)').attr('stroke','black')
+        .attr('stroke-width','1px').on('click',()=>
+    {
+        alert('ingoing click')
+    });
+
+    addressNode=addressRoot
+    .append('g')
+    .attr('transform','translate(755, 161.49600436665477)')
+    addressRect=addressNode
+    .append('rect').attr('width',140).attr('height',50)
+        .attr('stroke-dasharray','4,1')
+        .attr('fill','rgb(242,242,242)')
+        .attr('stroke','black')
+        .attr('stroke-width','1px');
+    label=addressNode.append('g').classed('label',true).attr('transform','translate(10, 31.666666666666668)');
+    t=label.append('text').style('font-size', 20 + 'px')
+        .attr('transform', `translate(0, 0em)`);
+    t.append('tspan')
+        .attr('x', 0)
+        .attr('dy',  '0em')
+        .text('14TDxS9N')
+    addressExpandHandles=addressNode.append('g');
+    addressexpandHandle=addressExpandHandles.append('g').attr('transform','translate(140, 0) rotate(0 0 25 )')
+    addressexpandHandle1=addressExpandHandles.append('g').attr('transform','translate(0, 0) rotate(180 0 25 )');
+    h1=50;
+    c1=h1-a;
+    addressexpandHandle.append('path')
+        .classed('expandHandlePath', true)
+        .attr('d', `M0 0 C ${a} 0, ${a} 0, ${a} ${a} L ${a} ${c1} C ${a} ${h1} ${a} ${h1} 0 ${h1}`)
+        .style('stroke-dasharray', ' ').attr('fill','rgb(242,242,242)').attr('stroke','black')
+        .attr('stroke-width','1px').on('click',()=>
+    {
+        alert('address outgoing click')
+    });
+    addressexpandHandle1.append('path')
+        .classed('expandHandlePath', true)
+        .attr('d', `M0 0 C ${a} 0, ${a} 0, ${a} ${a} L ${a} ${c1} C ${a} ${h1} ${a} ${h1} 0 ${h1}`)
+        .style('stroke-dasharray', ' ').attr('fill','rgb(242,242,242)').attr('stroke','black')
+        .attr('stroke-width','1px').on('click',()=>
+    {
+        alert('address ingoing click')
+    });
+
+
+    addressNode1=addressRoot
+        .append('g')
+        .attr('transform','translate(265, 35.544728066664504)')
+    addressRect1=addressNode1
+        .append('rect').attr('width',140).attr('height',50)
+        .attr('stroke-dasharray','4,1')
+        .attr('fill','rgb(242,242,242)')
+        .attr('stroke','black')
+        .attr('stroke-width','1px');
+    label1=addressNode1.append('g').classed('label',true).attr('transform','translate(10, 31.666666666666668)');
+    t1=label1.append('text').style('font-size', 20 + 'px')
+        .attr('transform', `translate(0, 0em)`);
+    t1.append('tspan')
+        .attr('x', 0)
+        .attr('dy',  '0em')
+        .text('16MJTT8q');
+    addressExpandHandles1=addressNode1.append('g');
+    addressexpandHandle2=addressExpandHandles1.append('g').attr('transform','translate(140, 0) rotate(0 0 25 )')
+    addressexpandHandle12=addressExpandHandles1.append('g').attr('transform','translate(0, 0) rotate(180 0 25 )');
+    h1=50;
+    c1=h1-a;
+    addressexpandHandle2.append('path')
+        .classed('expandHandlePath', true)
+        .attr('d', `M0 0 C ${a} 0, ${a} 0, ${a} ${a} L ${a} ${c1} C ${a} ${h1} ${a} ${h1} 0 ${h1}`)
+        .style('stroke-dasharray', ' ').attr('fill','rgb(242,242,242)').attr('stroke','black')
+        .attr('stroke-width','1px').on('click',()=>
+    {
+        alert('address outgoing click')
+    });
+    addressexpandHandle12.append('path')
+        .classed('expandHandlePath', true)
+        .attr('d', `M0 0 C ${a} 0, ${a} 0, ${a} ${a} L ${a} ${c1} C ${a} ${h1} ${a} ${h1} 0 ${h1}`)
+        .style('stroke-dasharray', ' ').attr('fill','rgb(242,242,242)').attr('stroke','black')
+        .attr('stroke-width','1px').on('click',()=>
+    {
+        alert('address ingoing click')
+    });
+    link=addressLinksRoot.append('g').classed('link',true);
+    linkPathFrame=link.append('path').attr('d','M420,60.544728066664504C576.5,60.544728066664504,576.5,186.49600436665477,733,186.49600436665477')
+    .attr('style','stroke-width: 6px; opacity: 0;').on('click',()=>
+        {
+            alert('transcaction click');
+        });
+    linkPath=link.append('path').attr('d','M420,60.544728066664504C576.5,60.544728066664504,576.5,186.49600436665477,733,186.49600436665477')
+        .attr('style','stroke-width: 1px; fill: none; stroke: white; marker-end: url("#arrow1-white");');
+
+
+
+</script>
+
+
+        </div>
+    </div>
+    <br>
+
+
+
+{% endblock %}
+
+{% block body_script %}
+    <script type="text/javascript">
+        $("#carryparttable tbody ").hide();
+        $("#intable tbody ").hide();
+        $("#outtable tbody").hide();
+        $("#btabs-alt-static-output table").eq(4).nextAll().hide();
+        $("#btabs-alt-static-input table").eq(4).nextAll().hide();
+
+        var outdetail = "<button id=\"outdetail\" style=\"background-color: black;border-color: black;color: #1d7db1;float: left\">展示/收起所有地址</button>"
+        var outdetaillength ={{ tsc_info['vout']|length }}
+        if (outdetaillength > 5) {
+            $("#btabs-alt-static-output").append(outdetail);
+        }
+
+        var indetail = "<button id=\"indetail\" style=\"background-color: black;border-color: black;color: #1d7db1;float: left\">展示/收起所有地址</button>"
+        var indetaillength ={{ tsc_info['vin']|length }}
+        if (indetaillength > 5) {
+            $("#btabs-alt-static-output").append(indetail);
+        }
+
+        $("#showoutaddress").click(function () {
+            $("#outtable tbody ").toggle(500);
+        });
+        $("#showinaddress").click(function () {
+            $("#intable tbody ").toggle(500);
+        });
+        $("#btabs-alt-static-output button").click(function () {
+            $("#btabs-alt-static-output table").eq(4).nextAll().toggle(500);
+        });
+        $("#btabs-alt-static-input button").click(function () {
+            $("#btabs-alt-static-input table").eq(4).nextAll().toggle(500);
+        });
+        $("#showcarrybutton").click(function () {
+            $("#carryparttable tbody").toggle(500);
+        });
+    </script>
+    <script src="{{ url_for('static', filename='muban/3527/app.js') }}"></script>
+
+
+    {#    <script src="{{ url_for('static', filename='assets/js/page/btc_tsc_detail.js') }}" charset="GB2312"></script>#}
+    {#    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>#}
+    {#    tab #}
+     <script src="{{ url_for('static', filename='layui/layui.js') }}"></script>
+    <script>
+    function add_tag(){
+layui.use(['layer', 'form'], function(){
+  var layer = layui.layer
+  ,form = layui.form;
+       layer.open({
+            type:1,
+            skin:'layui-layer-molv',
+            area: ['370px', '35%'],
+            content:'<form class="layui-form" style="margin-top: 20px"> ' +
+            '<div class="layui-form-item" >' +
+            ' <label class="layui-form-label" style="color:black">地址</label>' +
+            '<div class="layui-input-inline"> ' +
+            '<input type="text" name="addr" autocomplete="off" class="layui-input" id="treeNodeName">' +
+            '</div>' +
+            '</div>' +
+            '<div class="layui-form-item" >' +
+            ' <label class="layui-form-label" style="color:black">标签</label>      <div class="layui-input-inline"> ' +
+            '<input type="text" name="tag" autocomplete="off" class="layui-input" id="memo" ></div> ' +
+            '<div class="layui-form-item" >' +
+            ' <label class="layui-form-label" style="color:black">来源</label>     ' +
+            ' <div class="layui-input-inline"> ' +
+            '<input type="text" name="source" autocomplete="off" class="layui-input" id="source" >' +
+            '</div>'+
+            '</form>',
+            btn: ['保存', '关闭'],
+            btnAlign: 'c',
+            yes: function(){
+                saveNode();
+            },
+            btn2: function(){
+                layer.closeAll();
+            },
+            success: function(layero, index){
+                layui.use(['form','element'],function () {
+                    var form = layui.form, element = layui.element;
+                    form.render();
+                });
+
+            }
+        });
+
+});}
+      function saveNode() {
+        var addr = $('#treeNodeName').val();
+        var source = $('#source').val();
+        var tag = $('#memo').val();
+        var Udata= JSON.stringify({"addr":addr,"tag":tag,"source":source});
+        $.ajax({
+            url:'/btc/saveTag/' ,
+            type:'POST',
+            contentType: 'application/json; charset=UTF-8',
+            data:Udata,
+            success:function (res) {
+                if(res.code == '0000'){
+                    layer.closeAll();
+                }else{
+                    layer.msg(res.message,{time:2000})
+                }
+                location.reload(true);
+            }
+        })
+    }
+   </script>
+
+{% endblock %}

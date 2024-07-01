@@ -1,0 +1,5 @@
+{% macro reciver(to) %}
+    {% if to!=None %}
+        {{ url_for('eth.eth_address_detail',addr = to) }}
+    {% endif %}
+{% endmacro %}

@@ -1,0 +1,341 @@
+{% extends 'base3.html' %}
+{% block title %}{% endblock %}
+
+{% block head_style %}
+    <style type="text/css">
+        dd {
+            color: black;
+        }
+
+    </style>
+    {#    slick muban3527 #}
+
+ <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+<script src="{{ url_for('static', filename='My97DatePicker/WdatePicker.js') }}"></script>
+<script src="{{ url_for('static', filename='js/jquery-1.8.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/jquery-2.1.4.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='layui/layui.js') }}"></script>
+
+
+{% endblock %}
+
+{% block content %}
+
+    {% include '_btccrumb.html' %}
+
+
+    {#    <canvas id="trans_eg1"></canvas>#}
+    {#    <canvas id="trans_eg2"></canvas>#}
+
+<!--    <div class="blacknav">-->
+<!--        <ul class="nav" style="width: 100%">-->
+<!--        <li id="search" style="align-content: center">-->
+<!--                <form action="/btc/search" class="">-->
+<!--                    <input type="text" name="search_text" id="search_text" placeholder="请输入比特币地址">-->
+<!--                    <input type="submit" name="search_button" value="" id="search_button">-->
+<!--                </form>-->
+<!--        </li>-->
+<!--            </ul>-->
+<!--    </div>-->
+
+    <div class="bee-tab">
+
+        <form action="{{ url_for('btc.syc_cluster_search') }}" class="layui-form" style="margin-top: 20px " id="query_form" >
+
+                <div class="card-block tab-content">
+                    <div class="tab-pane active" id="attrs_input">
+
+                       <div class="layui-form-item" >
+                           <div>
+                               请输入比特币地址或集群标签查询集群信息：
+                           </div>
+                         <div style="margin-top: 10px;">
+                            <input type="text" name="address" class="layui-input" id="address" value="{{ reback.address }}" placeholder="请输入比特币地址或集群标签" >
+                        </div>
+                       </div>
+                        <center><button type="submit"  class="btn btn-primary btn-sm"  value="" >查询</button>
+                            <button type="button"  style="margin-left: 20px "class="btn btn-primary btn-sm" onclick="javascript:window.location.href='/btc/cluster'">返回</button>
+                        </center>
+                    </div>
+                </div>
+        </form>
+    </div>
+
+    <div class="card" style="margin-top:20px;">
+        <div class="card-header">
+            集群基本信息
+            <button type="submit" style="float: right;margin-right: 25px" class="btn btn-primary btn-sm" onclick="add_tag()">添加集群标签</button>
+
+        </div>
+        <div class="card-body">
+            <div class="bee-row2" ​>
+                ​
+                <div style="flex: 1" class="bee-border-r-b">
+                    <table class="table table-sm table-hover bee-table">
+                        <tbody>
+                        <tr>
+                            <td>集群ID</td>
+                            <td>{{ result_list[0]['cluster_id'] }}</td>
+                        </tr>
+                        <tr>
+                            <td>地址数</td>
+                            <td>{{ count }}</td>
+                        </tr>
+                        <tr>
+                            <td>集群标签数</td>
+                            <td> {{ tag_count }}</td>
+                        </tr>
+                        <tr>
+                            <td>集群合并历史</td>
+                            <td> {{ clu_history }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+   {% for label in labels %}
+    <br>
+    <div class="bee-card card bg-dark">
+        <div class="card-header tx_head">
+            <div>
+            集群标签名{{i}}: {{ label.name }}
+            </div>
+        </div>
+
+    <div class="card-body">
+        <div class="bee-row2" ​>
+
+            <div style="flex: 1" class="bee-border-r-b">
+                    <table class="table table-sm table-hover bee-table">
+                        <tbody>
+                        <tr>
+                            <td>标签类型</td>
+                            <td>{{ label.category }}</td>
+                        </tr>
+                        <tr>
+                            <td>标签来源</td>
+                            <td>{{ label.source }}</td>
+                        </tr>
+                        <tr>
+                            <td>创建时间</td>
+                            <td>{{ label.createtime}}</td>
+                        </tr>
+                        <tr>
+                            <td>货币类型</td>
+                            <td>{{ label.currency}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+<!--            <div >详细信息：{{ label.detail}} </div>-->
+            <div style="flex: 1" >
+                    <table class="table table-sm table-hover bee-table">
+
+                        <tbody>
+                        <tr>
+                            <td>详细信息</td>
+                        </tr>
+                        <tr>
+                            <td>{{ label.detail}} </td>
+                        </tr>
+                        </tbody>
+                    </table>
+            </div>
+        </div>
+    </div>
+    </div>
+    </br>
+    {% endfor %}
+
+    <div class="card" style="margin-top:20px;">
+        <div class="card-header">所有地址({{ count }})</div>
+        <div class="card-body">
+            <table id="transes-table" class="table bee-transes-table">
+                <thead>
+                    <tr>
+                        <th>集群ID</th>
+                        <th>地址</th>
+                        <th>种子标签</th>
+                        <th>聚类标签</th>
+                    </tr>
+                </thead>
+                <tbody id="tbodydata">
+                    {% for item in result_list %}
+                    <tr>
+                        <td>{{ item['cluster_id']}}</td>
+                        <td>
+                            <a href="{{ url_for('btc.btc_address_detail', address=item['addr']) }}">{{ item['addr']}}</a>
+                        </td>
+
+                        <td><a href="{{ url_for('btc.btc_tag_detail',address = item['addr'])}}"> {{ item['tags']}}</a></td>
+                        <td><a href="{{ url_for('btc.btc_tag_detail',address = item['addr'])}}">{{ item['clu_tags'] }}</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {{ pagination.links }}
+            <div class="m-style pagination"></div> <!-- pagination.js -->
+        </div>
+    </div>
+
+    <!-- start latestTransList-->
+    <!-- start latestTransList-->
+
+{% endblock %}
+
+{% block body_script %}
+
+    {#    chartjs 3492 demo #}
+<script type="text/javascript"
+        src="{{ url_for('static', filename='plugins/superslide/jquery.SuperSlide.2.1.3.js') }}"></script>
+    <script src="{{ url_for('static', filename='plugins/chart.js/Chart.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='plugins/chart.js/utils.js') }}"></script>
+{#    <script src="{{ url_for('static', filename='muban/3492/charts-custom.js') }}"></script>  {# 饼状图 #}
+    {#    <script src="{{ url_for('static', filename='assets/demo/big-deal.js') }}"></script>#} <!-- 大额异动 -->
+    {#    3527 banner slick #}
+
+
+    <!--{#    <script src="{{ url_for('static', filename='plugins/echarts/echarts.js') }}"></script>#}-->
+
+    <!--<script src="{{ url_for('static', filename='assets/js/page/transactions.js') }}"></script>-->
+     <script>
+        $(function() {
+        $("tr.parent").on("click", function() {
+         $(this).siblings('.child_'+this.id).toggle(1000, function() {
+             if ($(this).prev().find("i").text() == "+") {
+                 $(this).prev().find("i").text("-");
+             } else {
+                 $(this).prev().find("i").text("+");
+             }
+         });
+            {#  $("tr.parent").click(function() {
+        $(this).toggleClass("selected").siblings('.child_'+this.id).toggle();
+        #}
+        });
+        });
+         function fun() {
+            str = document.getElementById("sel_text").value;
+            obj = document.getElementById("test");
+            for (i = 0; i < obj.length; i++) {
+                if (obj[i].value == str)
+                    obj[i].selected = true;
+            }
+            sort = document.getElementById("seltext").value;
+            select = document.getElementById("ttest");
+            for (i = 0; i < select.length; i++) {
+                if (select[i].value == sort)
+                    select[i].selected = true;
+            }
+            }
+        window.onload=fun
+     </script>
+     <script>
+	function dateClick() {
+		WdatePicker({
+			dateFmt : 'yyyy-MM-dd HH:mm:ss',  //格式设置相对应界面可选择也变化
+			highLineWeekDay:true,  //周末的日期是否高亮
+			readOnly:true,  //是否允许键盘输入值，false为禁止输入，只能鼠标选
+		});
+	}
+	</script>
+    <script>
+
+    $(function() {
+        $("tr.parent").on("click", function() {
+         $(this).siblings('.child_'+this.id).toggle(1000, function() {
+             if ($(this).prev().find("i").text() == "+") {
+                 $(this).prev().find("i").text("-");
+             } else {
+                 $(this).prev().find("i").text("+");
+             }
+         });
+            {#  $("tr.parent").click(function() {
+        $(this).toggleClass("selected").siblings('.child_'+this.id).toggle();
+        #}
+        });
+      });
+    function add_tag(){
+    layui.use(['layer', 'form'], function(){
+        var layer = layui.layer
+         ,form = layui.form;
+       layer.open({
+            type:1,
+            skin:'layui-layer-molv',
+            area: ['400px', '50%'],
+            content:'<form class="layui-form" style="margin-top: 20px"> ' +
+            '<div class="layui-form-item" >' +
+            ' <label class="layui-form-label" style="color:black">集群ID</label>' +
+            '<div class="layui-input-inline"> ' +
+            '<input type="text" name="addr" autocomplete="off" class="layui-input" id="treeNodeName" value="{{ result_list[0]['cluster_id'] }}"  readonly="true">' +
+            '</div>' +
+            '</div>' +
+            '<div class="layui-form-item" >' +
+            ' <label class="layui-form-label" style="color:black">标签</label>      <div class="layui-input-inline"> ' +
+            '<input type="text" name="tag" autocomplete="off" class="layui-input" id="memo" ></div> ' +
+            '<div class="layui-form-item" >' +
+            ' <label class="layui-form-label" style="color:black">标签类型</label>     ' +
+            ' <div class="layui-input-inline"> ' +
+            '<select class="layui-form-select" name="type" id="type"  type="text" >   <option value="Services" selected style="color:black">Services(服务)</option>  <option value ="Exchanges" >Exchanges(交易平台)</option>  <option value ="user">User(社交网站用户)</option>  <option value="Gambling">Gambling(赌博)</option> > <option value="Scam" >Scam(诈骗地址)</option>   <option value="Pools" >Pools(矿池地址)</option> <option value="Ransomware" >Ransomware(勒索地址)</option> <option value="victim" >victim(被勒索的受害者)</option> <option value="Historic" >Historic(历史服务地址如silk road)</option> <option value="other" >other(其他地址)</option></select> </div> ' +
+            '</div>'+
+            '<div class="layui-form-item" >' +
+            ' <label class="layui-form-label" style="color:black">标签来源</label>      <div class="layui-input-inline"> ' +
+            '<input type="text" name="source" autocomplete="off" class="layui-input" id="source" value="user-defined" readonly="true" ></div> ' +
+            '<div class="layui-form-item" >' +
+            ' <label class="layui-form-label" style="color:black">备注</label>'+'<div class="layui-input-inline"> ' +
+            '<input type="text" name="com" autocomplete="off" class="layui-input" id="com" ></div>'+
+            '</form>',
+            btn: ['保存', '关闭'],
+            btnAlign: 'c',
+            yes: function(){
+                saveNode();
+            },
+            btn2: function(){
+                layer.closeAll();
+            },
+            success: function(layero, index){
+                layui.use(['form','element'],function () {
+                    var form = layui.form, element = layui.element;
+                    form.render();
+                });
+
+            }
+        });
+
+});}
+
+       function look_detail(single){
+       addr = JSON.parse(single.replace(/'/g,'"')).addr;
+       source = JSON.parse(single.replace(/'/g,'"')).source;
+       category = JSON.parse(single.replace(/'/g,'"')).category;
+       com = JSON.parse(single.replace(/'/g,'"')).com
+       alert('地址:'+addr+'\n'+'来源:'+source+'\n'+'标签:'+category+'\n'+'网站:'+com);
+            }
+
+      function saveNode() {
+        var addr = $('#treeNodeName').val();
+        var type = $('#type').val();
+        var tag = $('#memo').val();
+        var detail = $('#com').val();
+        var source = $('#source').val();
+        var Udata= JSON.stringify({"addr":addr,"tag":tag,"type":type,"detail":detail,"source":source});
+        $.ajax({
+            url:'/btc/saveClusTag/' ,
+            type:'POST',
+            contentType: 'application/json; charset=UTF-8',
+            data:Udata,
+            success:function (res) {
+                if(res.code == '0000'){
+                    alert("添加成功!");
+                    layer.closeAll();
+                }else{
+                     alert("添加失败!请检查地址是否正确！");
+                }
+                location.reload(true);
+            }
+        })
+    }
+   </script>
+{% endblock %}

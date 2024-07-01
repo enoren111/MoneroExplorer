@@ -1,0 +1,77 @@
+    <!--Default Bootstrap Modal base 034 Modals -->
+    <!--===================================================-->
+
+    <div class="modal fade" id="all-cv" role="dialog" tabindex="-1" aria-labelledby="demo-default-modal"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!--Modal header-->
+                <div class="modal-header">
+                    {#                    <button type="button" class="" data-dismiss="modal">关闭</button>#}
+                    <h4 class="modal-title">全球节点版本分布</h4>
+                </div>
+
+                <!--Modal body-->
+                <div class="modal-body">
+                    <ul>
+                        {% for item in node_dist['cv_dist'] %}
+                            <!-- float:left使li行内显示 -->
+                        <li style="float: left;width: 100%;text-align: left">{{ loop.index }}. {{ item['name'] }}: {{ item['value'] }}({{ item['p'] }})</li>
+{#                        <li style="float: left;text-align: left">{{ loop.index }}. {{ item[0] }} ({{ item[1] }})</li>#}
+                        {% endfor %}
+                    </ul>
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="all-country" role="dialog" tabindex="-1" aria-labelledby="demo-default-modal"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!--Modal header-->
+                <div class="modal-header">
+                    {#                    <button type="button" class="" data-dismiss="modal">关闭</button>#}
+                    <h4 class="modal-title">全球节点版本分布</h4>
+                </div>
+                <!--Modal body-->
+                <div class="modal-body">
+                    <ul>
+                        {% for item in node_dist['ct_dist'] %}
+                            <!-- float:left使li行内显示 -->
+                        <li style="float: left;width: 50%;text-align: left">{{ loop.index }}. {{ item['name'] }}: {{ item['value'] }}({{ item['p'] }})</li>
+{#                        <li style="float: left;text-align: left">{{ loop.index }}. {{ item[0] }} ({{ item[1] }})</li>#}
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="all-asn" role="dialog" tabindex="-1" aria-labelledby="demo-default-modal"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!--Modal header-->
+                <div class="modal-header">
+                    {#                    <button type="button" class="" data-dismiss="modal">关闭</button>#}
+                    <h4 class="modal-title">全球节点版本分布</h4>
+                </div>
+                <!--Modal body-->
+                <div class="modal-body">
+                    <ul>
+                        {% for item in node_dist['asn_dist'] %}
+                            <!-- float:left使li行内显示 -->
+                        <li style="float: left;width: 25%;text-align: left">{{ loop.index }}. {{ item['name'] }}: {{ item['value'] }}({{ item['p'] }})</li>
+{#                        <li style="float: left;text-align: left">{{ loop.index }}. {{ item[0] }} ({{ item[1] }})</li>#}
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--===================================================-->
+    <!--End Default Bootstrap Modal-->

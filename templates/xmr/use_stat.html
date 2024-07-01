@@ -1,0 +1,117 @@
+{% extends 'baseXMR.html' %}
+{% block title %}
+{% endblock %}
+
+{% block head_style %}
+
+<script src="https://cdn.staticfile.org/echarts/4.3.0/echarts.min.js"></script>
+{% endblock %}
+
+{% block content %}
+{% include '_xmrcrumb.html' %}
+
+<div class="container">
+  <h1 class="text-center">Address distribution</h1>
+  <h3 class="text-center">
+    {{title}} situation statistics
+  </h3>
+  <div class="row clearfix">
+    <div class="col-md-4 column">
+      <form action="/xmr/use_stat" method="get">
+        <div class="form-group">
+          <div class="col-sm-4">
+            <select class="form-control" name="t">
+              <option value="all" {% if t=='all' %} selected {% else %} {% endif %}>All</option>
+              <option value="day" {% if t=='day' %} selected {% else %} {% endif %}>Last day</option>
+              <option value="week" {% if t=='week' %} selected {% else %} {% endif %}>Last week</option>
+              <option value="month" {% if t=='month' %} selected {% else %} {% endif %}>Last month</option>
+              <option value="year" {% if t=='year' %} selected {% else %} {% endif %}>Last year</option>
+            </select>
+          </div>
+        </div>
+        
+        <button type="submit" class="btn btn-success" >Query</button>
+      </form>
+      
+    </div>
+
+
+    {# <div class="col-md-2 column">#}
+    {#  <a type="button" class="btn btn-success" href="/xmr/num_money?t={{t}}&d=true">Export</a>#}
+    {# </div>#}
+
+    <div class="col-md-6 column">
+      <a type="button" class="btn btn-success" href="/xmr/use_stat?t={{t}}&v=true">Visualization</a>
+    {#  <a type="button" class="btn btn-success" href="/xmr/use_stat?t={{t}}">Distribution of Addresses</a> #}
+    </div>
+
+
+  </div>
+  <div class="row clearfix">
+    <table class="table">
+      <thead >
+        <tr >
+          <th class="text-center">
+            addr
+          </th>
+          <th class="text-center">
+            domain
+          </th>
+          <th class="text-center">
+            url
+          </th>
+          <th class="text-center">
+            createtime
+          </th>
+          <th class="text-center">
+            docid
+          </th>
+          <th class="text-center">
+            addrtype
+          </th>
+          <th class="text-center">
+            title
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for block in blocks %}
+        <tr class="text-center">
+          <td>{{block[0]|truncate(20)}} </td>
+          <td>{{block[1]|truncate(20)}} </td>
+          <td>{{block[2]|truncate(20)}}</td>
+          
+          <td>{{block[3]}} </td>
+          <td>{{block[4]|truncate(20)}} </td>
+          <td>{{block[5]|truncate(20)}} </td>
+          <td>{{block[7]|truncate(20)}} </td>
+        </tr>
+        {% endfor%}
+
+      </tbody>
+    </table>
+
+
+
+  </div>
+  {{ pagination.links }}
+
+ 
+
+
+
+</div>
+
+
+
+
+
+
+{% endblock %}
+
+{% block body_script %}
+
+
+
+
+{% endblock %}

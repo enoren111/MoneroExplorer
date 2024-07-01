@@ -1,0 +1,97 @@
+{% extends 'base3.html' %}
+{% from 'macros.html' import reciver %}
+{% block title %}{% endblock %}
+
+{% block head_style %}{% endblock %}
+
+{% block content %}
+{#    <h1>TRANSACTION DETAIL</h1>#}
+{% include '_btccrumb.html' %}
+    <br>
+<div class="card" style="box-sizing: border-box">
+        <div class="card-header">概要信息</div>
+        <div class="card-body">
+            <div class="bee-row2" ​>
+                ​
+                <div style="flex: 1" class="bee-border-r-b">
+                    <table class="table table-sm table-hover bee-table">
+                        <tbody>
+                        <tr>
+                            <td>交易hash</td>
+                            <td><a href="{{ url_for('btc.my_btc_tran_detail', hash=hash) }}">{{ hash|truncate(30) }}</a></td>
+                        </tr>
+                        <tr>
+                            <td>交易结果</td>
+                            <td>成功</td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+                <div style="flex: 1">
+                    <table class="table table-sm table-hover bee-table">
+                        <tbody>
+                        <tr>
+                            <td>涉及交易</td>
+                            <td>{{ count }} 起</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    </br>
+
+    {% for tran in trans %}
+    <br>
+    <div class="card" style="box-sizing: border-box">
+        <div class="card-header">
+            <div>交易ID：{{ tran['id'] }}</div>
+            <div>交易时间：{{ tran['time'] }}</div>
+            <div>交易金额：{{ tran['amount'] }}</div>
+        </div>
+        <div class="card-body">
+            <div class="bee-row2" ​>
+                ​
+                <div style="flex: 1" class="bee-border-r-b">
+                    <table class="table table-sm table-hover bee-table">
+                        <tbody>
+                        <tr>
+                            <td>发送方</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><a href="{{ url_for('btc.btc_tag_detail', address=tran['input']['addr']) }}">{{ tran['input']['addr'] }}</a></td>
+                            <td></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div style="flex: 1">
+                    <table class="table table-sm table-hover bee-table">
+                        <tbody>
+                        <tr>
+                            <td>接收方</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><a href="{{ url_for('btc.btc_tag_detail', address=tran['output']['addr']) }}">{{ tran['output']['addr'] }}</a></td>
+                            <td></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    </br>
+    {% endfor %}
+{% endblock %}
+{% block body_script %}
+    <script src="{{ url_for('static', filename='') }}"></script>
+    <script type="text/javascript"></script>
+    <script type="text/javascript">
+
+</script>
+{% endblock %}

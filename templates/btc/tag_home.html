@@ -1,0 +1,500 @@
+<!DOCTYPE html><html lang="en">
+
+{% extends 'base3.html' %}
+{% block title %}
+{% endblock %}
+
+{% block head_style %}
+    <style>
+        #container_1 {
+            width: 550px;
+            height: 400px;
+            float: left;
+        }
+        #container_2 {
+            float: right;
+            width: 550px;
+            height: 400px;
+        }
+        #container_3 {
+            float: left;
+            width: 550px;
+            height: 400px;
+        }
+        #container_4 {
+            float: right;
+            width: 550px;
+            height: 400px;
+        }
+        dl dd {
+            color:"#FF0000";
+        }
+
+    </style>
+{#    <style type="text/css"></style>#}
+
+{% endblock %}
+
+{% block content %}
+ {% include '_btccrumb.html' %}
+
+
+<head>
+  <script src="/cdn-cgi/apps/head/s6ejVajzLYIh907Cww3-Q820Ym8.js"></script>
+  <link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon.png" />
+  <link rel="icon" href="/favicon.ico" sizes="32x32" />
+  <link rel="icon" type="image/png" href="/static/favicon-32x32.png" sizes="32x32" />
+  <link rel="icon" type="image/png" href="/static/favicon-16x16.png" sizes="16x16" />
+  <link rel="manifest" href="/static/manifest.json" />
+  <meta name="theme-color" content="#ffffff" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="description" content="Zchain: Zcash Block Explorer, Analytics Platform &amp;amp; API. Browse and search blocks, transactions, accounts, statistics and more." />
+  <meta name="author" content="bitfly gmbh" />
+  <meta name="og:image" content="/static/logo.png" />
+  <meta name="og:sitename" content="Zchain Explorer" />
+  <meta name="og:type" content="website" />
+  <meta name="og:description" content="Zchain: Zcash Block Explorer, Analytics Platform &amp;amp; API. Browse and search blocks, transactions, accounts, statistics and more." />
+  <meta name="keywords" content="Zcash, Zchain, explorer, block explorer, Zcash explorer, Zcash block explorer, blockchain, cryptocurrency, bitcoin, digital currency" />
+  <meta name="og:title" content="Zchain - Zcash Blockchain Explorer" />
+  <meta name="url" content="https://explorer.zcha.in/" />
+  <link rel="canonical" href="undefined" />
+  <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1" class="next-head" />
+  <meta charSet="utf-8" class="next-head" />
+  <title></title>
+  <link rel="preload" href="/_next/static/ByydgbunPgZtS9tKUukfN/pages/index.js" as="script" />
+  <link rel="preload" href="/_next/static/ByydgbunPgZtS9tKUukfN/pages/_app.js" as="script" />
+  <link rel="preload" href="/_next/static/chunks/commons.8bb91c1b0343821a02f0.js" as="script" />
+  <link rel="preload" href="/_next/static/chunks/25.3a76b25edfa37b946486.js" as="script" />
+  <link rel="preload" href="/_next/static/chunks/24.ae79a283e49e50ed8d54.js" as="script" />
+  <link rel="preload" href="/_next/static/chunks/27.365196d002251b798169.js" as="script" />
+  <link rel="preload" href="/_next/static/chunks/26.eaafd9e8fa677c204337.js" as="script" />
+  <link rel="preload" href="/_next/static/chunks/23.3507afa106181ac7e32b.js" as="script" />
+  <link rel="preload" href="/_next/static/runtime/webpack-d911c9046de412e3d276.js" as="script" />
+  <link rel="preload" href="/_next/static/chunks/commons.8bb91c1b0343821a02f0.js" as="script" />
+  <link rel="preload" href="/_next/static/runtime/main-4d2177c56a8ef7eed54e.js" as="script" />
+  <link rel="preload" href="/_next/static/chunks/styles.4c8a6b7600aef8857ccd.js" as="script" />
+  <link rel="stylesheet" href="/_next/static/css/styles.3b626c16.chunk.css" />
+  <style id="__jsx-3954331054">.section-stats.jsx-3954331054{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-box-pack:center;-webkit-justify-content:center;-ms-flex-pack:center;justify-content:center;background:#222;}.stats-container-content.jsx-3954331054{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-flex-wrap:nowrap;-ms-flex-wrap:nowrap;flex-wrap:nowrap;}.image-container.jsx-3954331054{background-image:url('/static/moon2.jpg?height=300&width=2000'),linear-gradient(#2f2f2f,#2f2f2f);background-size:cover;background-repeat:no-repeat;background-position:48%;position:relative;height:300px;}@media screen and (max-width:1500px) and (min-width:1000px){.image-container.jsx-3954331054{background-image:url('/static/moon2.jpg?height=300&width=1500'),linear-gradient(#2f2f2f,#2f2f2f);background-size:cover;background-repeat:no-repeat;background-position:48%;position:relative;height:300px;}}@media (min-width:1000px){.mobile-search.jsx-3954331054{display:none;}}@media screen and (max-width:1000px) and (min-width:614px){.stats-container-content.jsx-3954331054::before{content:'';-webkit-flex:0 0 3vw;-ms-flex:0 0 3vw;flex:0 0 3vw;}.stats-container-content.jsx-3954331054::after{content:'';-webkit-flex:0 0 3vw;-ms-flex:0 0 3vw;flex:0 0 3vw;}.stats-container.jsx-3954331054{margin:0 1rem;-webkit-mask-image:linear-gradient(to right,transparent,black 10%,black 90%,transparent);mask-image:linear-gradient(to right,transparent,black 10%,black 90%,transparent);cursor:-webkit-grab;cursor:-moz-grab;cursor:grab;padding:0 1rem;overflow-x:auto;overflow-y:hidden;-ms-overflow-style:-ms-autohiding-scrollbar;-webkit-overflow-scrolling:touch;-webkit-box-orient:horizontal;-webkit-box-direction:normal;}.image-container.jsx-3954331054{background-image:url('/static/moon2.jpg?height=300&width=1000'),linear-gradient(#2f2f2f,#2f2f2f);}}@media screen and (max-width:614px){.stats-container.jsx-3954331054{margin:0 1rem;-webkit-mask-image:linear-gradient(to right,transparent,black 10%,black 90%,transparent);mask-image:linear-gradient(to right,transparent,black 10%,black 90%,transparent);cursor:-webkit-grab;cursor:-moz-grab;cursor:grab;padding:0 1rem;overflow-x:auto;overflow-y:hidden;-ms-overflow-style:-ms-autohiding-scrollbar;-webkit-overflow-scrolling:touch;-webkit-box-orient:horizontal;-webkit-box-direction:normal;}.image-container.jsx-3954331054{background-image:url('/static/moon2.jpg?height=300&width=614'),linear-gradient(#2f2f2f,#2f2f2f);}}.stats-container.jsx-3954331054::-webkit-scrollbar{display:none;}.stats-card.jsx-3954331054{padding:1rem;-webkit-flex:0 0 auto;-ms-flex:0 0 auto;flex:0 0 auto;}.stats-header.jsx-3954331054{font-size:0.8rem;color:#aaa;}.stats-content.jsx-3954331054{color:#fff;font-size:1rem;}#stats.jsx-3954331054{border-radius:10px;background-color:#dfd6bc66;-webkit-transition-timing-function:cubic-bezier(0.25,0.46,0.45,0.94);transition-timing-function:cubic-bezier(0.25,0.46,0.45,0.94);-webkit-transition-property:all;transition-property:all;-webkit-transition-delay:0s;transition-delay:0s;-webkit-transition-duration:0.3s;transition-duration:0.3s;box-shadow:0 2px 3px rgba(10,10,10,0.1),0 0 0 1px rgba(10,10,10,0.1);}#stats.jsx-3954331054:hover{box-shadow:0 5px 10px 0 rgba(182,191,210,0.6);}.hero-text.jsx-3954331054{pointer-events:none;background-color:white;color:black;font-size:calc(2vw + 2rem);font-weight:bold;margin:0 auto;padding:10px;text-align:center;position:absolute;width:50%;top:50%;left:50%;-webkit-transform:translate(-50%,-50%);-ms-transform:translate(-50%,-50%);transform:translate(-50%,-50%);mix-blend-mode:screen;}.search.jsx-3954331054{padding:10px;position:absolute;margin:0 auto;width:80%;top:95%;left:50%;-webkit-transform:translate(-50%,-50%);-ms-transform:translate(-50%,-50%);transform:translate(-50%,-50%);}</style>
+  <style id="__jsx-263509302">a.jsx-263509302{width:-webkit-fit-content;width:-moz-fit-content;width:fit-content;}.link-content.jsx-263509302>a.jsx-263509302{padding:0.15rem 0;font-size:0.9rem;}</style></head>
+<body >
+  <section class="jsx-3954331054 section-stats">
+              <div style="scrollbar-width:none" class="jsx-3954331054 stats-container">
+                <div class="jsx-3954331054 stats-container-content">
+                <div class="jsx-3954331054 stats-card">
+                    <div class="jsx-3954331054 stats-header">
+                      <span>全部地址总数</span></div>
+                    <div class="jsx-3954331054 stats-content">
+                        <span>{{ tag_types_count.tag_all }}</span>
+                    </div>
+                  </div>
+                  <div class="jsx-3954331054 stats-card">
+                    <div class="jsx-3954331054 stats-header">
+                      <span>标注地址总数</span></div>
+                    <div class="jsx-3954331054 stats-content">
+                        <span>{{ result_info.all_total }}</span>
+                    </div>
+                  </div>
+                  <div class="jsx-3954331054 stats-card">
+                    <div class="jsx-3954331054 stats-header">
+                      <span>标注实体总数</span></div>
+                    <div class="jsx-3954331054 stats-content">
+                      <span>{{identi_total}}</span></div>
+                  </div>
+
+                  <div class="jsx-3954331054 stats-card">
+                    <div class="jsx-3954331054 stats-header">
+                      <span>今日更新标签</span></div>
+                    <div class="jsx-3954331054 stats-content">
+                      <span>{{result_info.today_total}}</span></div>
+                  </div>
+
+                  <div class="jsx-3954331054 stats-card">
+                    <div class="jsx-3954331054 stats-header">
+                      <span>标签冲突个数</span></div>
+                    <div class="jsx-3954331054 stats-content">
+                      <span>{{ result_info.label_clash}}</span></div>
+                  </div>
+
+                  <div class="jsx-3954331054 stats-card">
+                    <div class="jsx-3954331054 stats-header">
+                      <span>原始（爬取）标签数</span></div>
+                    <div class="jsx-3954331054 stats-content">
+                      <span>{{ result_info.tag_total}}</span></div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+  <div id="__next">
+    <div>
+      <div></div>
+      <div style="height:100%;min-height:calc(100vh - 50px)">
+        <div style="width:100%">
+          <div style="margin:1rem auto" class="container">
+            <div class="row">
+                <div id="container_1"></div>
+                <div id="container_2"></div>
+            </div>
+            <div class="row">
+                <div id="container_4"></div>
+                <div id="container_3"></div>
+            </div>
+            <div class="row">
+
+              <div class="stats-border col-md-6 col-12">
+                <div style="margin-top:10px">
+                <h1 style="text-align:center;width:100%;line-height:40px;font-size:20px">标签类型实体分布</h1>
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>标签类型</th>
+                          <th>实体数量</th>
+                          <th>说明</th>
+
+
+                      </thead>
+                      <tbody class="loading-rows">
+                      {% for item in identi_info %}
+                        <tr>
+                            <td>
+                            <a style="color: white" href="{{ url_for('btc.syc_identi_info',identi = item['source'])}}">{{ item['source'] }}</a>
+                            </td>
+                            <td>
+                              {{ item['count'] }}
+                            </td>
+                            <td>
+                                {{ item['info'] }}
+                            </td>
+
+                        </tr>
+                    {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <div class="stats-border col-md-6 col-12">
+                <div style="margin-top:10px">
+                  <h1 style="text-align:center;width:100%;line-height:40px;font-size:20px">最近更新标签</h1>
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th style="min-width:70px">地址</th>
+                          <th style="min-width:70px">标签名</th>
+                          <th style="min-width:70px">标签来源</th></tr>
+                      </thead>
+                      <tbody class="loading-rows" style="height: 440px;">
+                      {% for item in today_tag %}
+                          <tr>
+                              <td>
+<!--                                {{ item['_id'] | truncate(20) }}-->
+                                  <a href="{{ url_for('btc.btc_tag_detail', address=item['_id']) }}">{{ item['_id']|truncate(20) }}</a>
+
+                              </td>
+                              <td>
+                                {{ item['_source']['labels'][0]['name']}}
+                              </td>
+                              <td>
+                                {{ item['_source']['labels'][0]['source']}}
+                              </td>
+                          </tr>
+                      {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script id="__NEXT_DATA__" type="application/json">{
+      "dataManager": "[]",
+      "props": {
+        "pageProps": {}
+      },
+      "page": "/",
+      "query": {},
+      "buildId": "ByydgbunPgZtS9tKUukfN",
+      "dynamicBuildId": false,
+      "nextExport": true,
+      "dynamicIds": ["+/DO", "+3UC", "+Kb/", "+MEZ", "+SFK", "+iuc", "+plK", "+qE3", "/8IX", "/ab2", "/ayr", "/eQG", "/h46", "0Bsm", "0XuU", "0cit", "0iUn", "0px3", "0tVQ", "15fo", "16Al", "17x9", "1CSz", "1IWx", "1gqn", "1w4i", "29s/", "2GTP", "2Nb0", "2faE", "2j6C", "3/cp", "33eD", "3BRs", "3GJH", "3JuP", "43KI", "49sm", "4Hv8", "4JlD", "4Vye", "4dMO", "4hZ1", "4jyI", "5K7Z", "5T2Y", "5Uuq", "5iLT", "5pKv", "5vMV", "6/1s", "6BQ9", "6F8h", "6lN/", "6tYh", "6zPY", "7LES", "7NPr", "7Vg5", "7ckf", "7zrB", "86MQ", "8gHz", "8iia", "8oxB", "9/mV", "93I4", "9BDd", "9EOK", "9GDS", "9Jkg", "9XZ3", "9lTW", "9ntz", "A1Ra", "A5Xg", "ANxK", "AT/M", "AUX7", "AUvm", "AYSA", "AhHn", "ApPD", "B+OT", "B/J0", "B3Rj", "B9jh", "Bhuq", "Bu4q", "BumV", "BwZh", "C+gy", "C2SN", "CH9F", "CWBI", "CfXC", "CjOr", "CxY0", "D8kY", "DLvh", "DaRl", "DyzK", "E+IA", "E0BK", "EW2V", "EWBf", "EXMj", "Edxu", "FUXG", "FlQf", "FpHa", "FxS5", "G0pN", "G1R0", "G8Mo", "GKSc", "GP3i", "Giow", "GvbO", "H+yo", "H7XF", "HEbw", "HVTr", "HaYV", "Hfiw", "Hjy1", "Hsns", "IClC", "IG1u", "IP1Z", "IPZY", "ITfd", "IcXX", "IzB8", "J78i", "JB68", "JMW+", "JONm", "JQMT", "JbBM", "Jes0", "Jo+v", "Jq65", "KA3u", "KAEN", "KI45", "KTcg", "KUxP", "Ku4m", "KzSJ", "LGOv", 0, 2, "LIl/", 3, 1, "LJcD", "LX0d", "M1xp", "MCLT", "MCSJ", "MI3g", "MPFp", "MgzW", "Mqbl", "MvwC", "MwBp", "MzeL", "N2jm", "N3m6", "ND7S", "NIfo", "NQVK", "NV0k", "NegM", "Nehr", "NsO/", "NwJ3", "O40h", "OA+I", "OIU0", "OVG1", "OZ/i", "OfWw", "Ojgd", "Onz0", "Oomr", "OykE", "P2KE", "P7XM", "PBE1", "PJ1Y", "PQDn", "Pa+m", "Pe0I", "Q/yX", "QA0p", "QJsb", "QMMT", "QRH4", "QTa/", "QXhf", "Qd/k", "QgiU", "QihY", "QpuX", "QqcV", "R+7+", "RAs/", "RDmV", "RKMU", "RRc/", "RU/L", "RfKB", "RoFp", "Rp86", "Rqdy", "S8m4", "SBuE", "SDgO", "SqZg", "Stbo", "T9HO", "TJWN", "TRZx", "TSYQ", "TdD3", "Tit0", "Titl", "TuGD", "U+KD", "UDep", "UO39", "UWVS", "UWiX", "UXZV", "UbbE", "Ujlg", "UpF+", "V+O7", "V7Et", "VDaT", "VJsP", "VKFn", "VLay", "VTst", "VVlx", "Vh22", "VrUr", "W070", "WEpk", "WKKt", "WRkp", "WbBG", "Wgwc", "WnY+", "WoEk", "Wu5q", "Wvul", "Wziy", "X747", "XJU/", "XLbu", "XP70", "XVgq", "XWtR", "XXOK", "Xhqo", "Xudb", "Y7ZC", "YFqc", "YG7K", "YMcf", "YoN+", "YqAc", "YskG", "YuTi", "Z2+3", "Z7t5", "ZDAU", "ZEK9", "ZW5q", "Zk/X", "Zxgi", "a0xu", "a7VT", "aPfg", "aW7e", "adOz", "afKu", "aqI/", "ar/p", "at63", "b+dc", "b3gk", "b7Uv", "bBy9", "bu2F", "cHUd", "cTJO", "ccE7", "cqoG", "czwh", "d+zW", "d04V", "dEVD", "dL40", "dVTT", "dcwN", "dfwq", "dl0q", "dlgc", "doui", "dxZY", "e9OF", "eA/Y", "eKop", "eUtF", "eVuF", "eaoh", "ehAg", "enkJ", "f3pb", "fNZA", "fSpj", "fXKp", "fXsU", "fZJM", "faLJ", "fnjI", "fpC5", "g2Dh", "g33z", "g9U9", "gTdQ", "gUXn", "gvAe", "h/Tq", "hDam", "hOwL", "hVfy", "hbMA", "hfKm", "htGi", "hwdV", "i3FT", "i5UE", "i8i4", "iUdu", "igYq", "io/2", "iq4v", "isQN", "j2DC", "jFE9", "jIre", "jfd1", "jmDH", "k+aG", "kAMH", "kTiW", "kVK+", "kcOw", "kd2E", "kiME", "kwZ1", "lCc8", "lF1L", "lWpZ", "ldVq", "lm0R", "ln6h", "m/Gl", "m/Pd", "mAz1", "mObS", "mgRA", "mqlF", "n3ko", "n53Y", "nOHt", "nR36", "nU2i", "nYho", "o8MO", "o8NH", "oJl4", "oVml", "oc46", "oh+g", "oioR", "olUY", "osGR", "p0XB", "pLtp", "pQ88", "pbKT", "q1tI", "q6LJ", "qUpA", "qVij", "qijr", "qlaj", "rSVQ", "rXFu", "raTm", "roQf", "rr1i", "s4NR", "sLSF", "sNwI", "sZro", "t4R1", "t9FE", "tEej", "tOiH", "tSWc", "tcrS", "tjlA", "tnIz", "tpL1", "ttDY", "tz+M", "u0Sq", "uDfV", "uOPS", "uYtQ", "uagp", "uekQ", "usKN", "uzSA", "v5Dd", "v6xn", "vBP9", "vYYK", "vZ2G", "viRO", "vokF", "vwuL", "vyt/", "w2d+", "w6GO", "w8CP", "wL/y", "wRn4", "wYmx", "wgeU", "wk3p", "wq4j", "xvv9", "yLpj", "yLu3", "yTlV", "yX9u", "yl30", "z71Z", "zLkG", "zRCy", "zXhZ", "zZGF", "zgjP", "zn7N", "4+rR", "RMMp", "6ara", "OrO5", "DKRJ", "3niX", "96Do", "9kyW", "MX0m", "SevZ", "bVZc"]
+    }</script>
+  <script async="" id="__NEXT_PAGE__/" src="/_next/static/ByydgbunPgZtS9tKUukfN/pages/index.js"></script>
+  <script async="" id="__NEXT_PAGE__/_app" src="/_next/static/ByydgbunPgZtS9tKUukfN/pages/_app.js"></script>
+  <script async="" src="/_next/static/chunks/commons.8bb91c1b0343821a02f0.js"></script>
+  <script async="" src="/_next/static/chunks/25.3a76b25edfa37b946486.js"></script>
+  <script async="" src="/_next/static/chunks/24.ae79a283e49e50ed8d54.js"></script>
+  <script async="" src="/_next/static/chunks/27.365196d002251b798169.js"></script>
+  <script async="" src="/_next/static/chunks/26.eaafd9e8fa677c204337.js"></script>
+  <script async="" src="/_next/static/chunks/23.3507afa106181ac7e32b.js"></script>
+  <script src="/_next/static/runtime/webpack-d911c9046de412e3d276.js" async=""></script>
+  <script src="/_next/static/chunks/commons.8bb91c1b0343821a02f0.js" async=""></script>
+  <script src="/_next/static/runtime/main-4d2177c56a8ef7eed54e.js" async=""></script>
+  <script src="/_next/static/chunks/styles.4c8a6b7600aef8857ccd.js" async=""></script>
+<script>
+   // function price() {
+    const pricesWs = new WebSocket('wss://ws.coincap.io/prices?assets=bitcoin')
+    pricesWs.onmessage = function (msg) {
+        var price=msg.data.toString()
+        var p=JSON.parse(price).bitcoin
+        console.log(p)
+        document.getElementById("priceusd").innerText=p
+        {#alert(price['bitcoin'])#}
+
+//    }
+
+    }
+</script>
+    <script type="text/javascript" src="{{ url_for('static', filename='assets/js/echarts.min.js') }}"></script>
+
+  <script type="text/javascript">
+            var myChart_1 = echarts.init(document.getElementById("container_4"));
+            var option_1;
+            option_1 = {
+                title: {
+                    text: '标签类型地址数分布',
+                    left: 'center',
+                    textStyle:{
+                        color:'#ccc'
+                       }
+                },
+                grid:{
+                    left: '20%'
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'shadow'
+                    }
+                },
+                xAxis: {
+                    type: 'value',
+                    boundaryGap: [0, 0.01],
+                    axisLabel: {
+                        fontsize:15,
+                        interval:0,//横轴信息全部显示
+                        rotate:-15,//-15度角倾斜显示
+                    }
+                },
+                yAxis: {
+                    type: 'category',
+                    data: {{  bar_datas["labels"]|safe  }},
+                    axisLabel: {
+                        fontsize:20,
+                        color: '#ffffff'
+                    }
+                },
+                series: [{
+                    name: '地址数量',
+                    data: {{  bar_datas["counts"]|safe  }},
+                    type: 'bar',
+                    itemStyle:{
+                        normal:{
+                            color:'#C13531'
+                            }
+                    },
+                }]
+            };
+            if (option_1 && typeof option_1 === 'object') {
+                myChart_1.setOption(option_1);
+            }
+            </script>
+
+
+    <script type="text/javascript">
+
+            var myChart_2 = echarts.init(document.getElementById("container_1"));
+            var option_2;
+            option_2 = {
+                title: {
+                    text: '种子标签来源分布（归并）',
+                    left: 'center',
+                    textStyle:{
+                        color:'#ccc'
+                       }
+                },
+                tooltip: {
+                    trigger: 'item',
+                    formatter: '{a} <br/>{b} : {c}'
+                },
+                legend: {
+                    type: 'scroll',
+                    orient: 'vertical',
+                    right: 10,
+                    top: 20,
+                    bottom: 20,
+                    data: {{ pie1_datas['sources']|safe }},
+                    textStyle: {
+                        color: '#ffffff'
+                    }
+                },
+                 series: [{
+                        name: '实体数量',
+                        type: 'pie',
+                        radius: '55%',
+                        center: ['40%', '60%'],
+                        data: {{ pie1_datas['datas']|safe }},
+                        emphasis: {
+                            itemStyle: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        }
+                    }]
+            };
+
+            if (option_2 && typeof option_2 === 'object') {
+                myChart_2.setOption(option_2);
+            }
+
+    </script>
+    <script type="text/javascript">
+
+            var myChart_3 = echarts.init(document.getElementById("container_2"));
+            var option_3;
+            option_3 = {
+                title: {
+                    text: '地址标注情况分布',
+                    left: 'center',
+                    textStyle:{
+                        color:'#ccc'
+                       }
+                },
+                tooltip: {
+                    trigger: 'item',
+                    formatter: '{a} <br/>{b} : {c}'
+                },
+                legend: {
+                    type: 'scroll',
+                    orient: 'vertical',
+                    right: 10,
+                    top: 20,
+                    bottom: 20,
+                    data: ['具有1个标签的地址','具有2个标签地址','具有3个及以上标签地址','未标记地址'],
+                    textStyle: {
+                        color: '#ffffff'
+                    }
+                },
+                 series: [{
+                        name: '标签类型',
+                        type: 'pie',
+                        radius: '55%',
+                        center: ['40%', '60%'],
+                        data: [ { value: {{result_info.one_total}}, name:"具有1个标签的地址"},
+                                { value:  {{ result_info.two_total }}, name:"具有2个标签地址"},
+                                { value: {{result_info.three_more_total}},name:"具有3个及以上标签地址"},
+                                { value: {{ tag_types_count.unmarked }}, name:"未标记地址"} ],
+                        emphasis: {
+                            itemStyle: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        }
+                    }
+                        ]
+            };
+
+            if (option_3 && typeof option_3 === 'object') {
+                myChart_3.setOption(option_3);
+            }
+
+    </script>
+
+    <script type="text/javascript">
+
+            var myChart_4 = echarts.init(document.getElementById("container_3"));
+            var option_4;
+            option_4 = {
+                    title: {
+                    text: '标签地址数量top10',
+                    left: 'center',
+                    textStyle:{
+                        color:'#ccc'
+                       }
+                },
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {            // Use axis to trigger tooltip
+                            type: 'shadow'        // 'shadow' as default; can also be 'line' or 'shadow'
+                        }
+                    },
+                    legend: {
+                    type: 'scroll',
+                    right: 10,
+                    top: 20,
+                    bottom: 20,
+                    data: ['原始标签','聚类标签'],
+                    textStyle: {
+                        color: '#ffffff'
+                    }
+                },
+                    grid: {
+                        left: '3%',
+                        right: '4%',
+                        bottom: '3%',
+                        containLabel: true
+                    },
+                    xAxis: {
+                        type: 'value'
+                    },
+                    yAxis: {
+                        type: 'category',
+                        axisLabel: {
+                            fontsize:20,
+                            color: '#ffffff'
+                        },
+                        data:{{  bar_datas3["labels3"]|safe  }}
+                    },
+                    series: [
+                        {
+                            name: '原始标签',
+                            type: 'bar',
+                            stack: 'total',
+                            emphasis: {
+                                focus: 'series'
+                            },
+                            data:{{  bar_datas5["counts5"]|safe  }}
+                        },
+                        {
+                            name: '聚类标签',
+                            type: 'bar',
+                            stack: 'total',
+                            emphasis: {
+                                focus: 'series'
+                            },
+                            data:{{  bar_datas4["counts4"]|safe  }}
+                        }
+                    ]
+                };
+
+            if (option_4 && typeof option_4 === 'object') {
+                myChart_4.setOption(option_4);
+            }
+
+    </script>
+
+
+
+</body>
+
+</html>
+
+
+{#  <div id="active_month_bar" style="height: 500px;"></div> #}
+{% endblock %}
+
+{% block body_script %}
+{# <script src="{{ url_for('static', filename='assets/js/page/btc_trans_static.js') }}"></script> #}
+{#    <script type="text/javascript"></script>#}
+{% endblock %}
+
+

@@ -1,0 +1,143 @@
+{#  三种dropdown button共存 #}
+
+{% extends 'baseXMR.html' %}
+{% block title %}{% endblock %}
+
+{% block head_style %}
+
+
+
+    {#   open-iconic 双箭头 #}
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='vendor/css/open-iconic/font/css/open-iconic-bootstrap.css') }}">
+
+    {#    checkbox #}
+    {#    paginationjs #}
+
+    {#    theme #}
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/bee.theme.dark.css') }}"/>
+
+    <style>
+        .item-checked {
+            background-color: #EEE5DE;
+
+        }
+
+        .dropdown-item:active {
+            background-color: #EEDFCC;
+            color: black;
+        }
+
+        .item-checked:hover {
+            background-color: #EEE5DE;
+        }
+
+        .item-checked:active {
+            background-color: #EEDFCC;
+
+        }
+    </style>
+
+{% endblock %}
+
+{% block content %}
+    {% include '_xmrcrumb.html' %}
+{#    <h1>BTC BLOCK </h1>#}
+
+    <div class="bee-row2">
+
+        <div class="bee-row">
+
+            {#    <div><span>Total 7,300,440 results</span></div>#}
+            {#        <div>{{ pagination.info }}</div>#}
+
+            <div>Total <span id="block_total">{{ block_total }}</span> results(default day)，Used time {{ took }}ms</div>
+            <form action="{{ url_for('xmr.xmr_block_search') }}" class="">
+                    ##Display Rule：
+                    <input name="name1" class="btn btn-primary btn-sm" id="seltext" type="hidden" value="{{ sortname }}">
+                    <select id="ttest" name="sortname">
+                        <option value="desc">desc</option>
+                        <option value="asc">asc</option>
+                    </select>
+                     Start Time:
+                    <input class="jump-ipt" style="width:90px;" type="text" onclick="dateClick()" value="" name="starttime">
+                    Deadline:
+                    <input class="jump-ipt" style="width:90px;" type="text" onclick="dateClick()" value=""  name="endtime">
+                    <button type="submit" style="margin-left: 30px;" class="btn btn-primary btn-sm">Search</button>
+                </form>
+        </div>
+    </div>
+
+    <table id="block_table" class="table">
+        <thead>
+        <tr>
+            <th>Transaction Hash</th>
+            <th>Key Mirroring</th>
+            <th>Address</th>
+            <th>Label1</th>
+            <th>Label2</th>
+            <th>Label3</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        {% for ring in rings %}
+            <tr>
+                <td>
+                    <a  href="{{ url_for('xmr.xmr_block_detail',hash = ring["txhash"]) }}">{{ ring["txhash"] |truncate(40)}}</a>
+                </td>
+                <td>
+                    <a  >{{ ring["keyimg"] |truncate(40)}}</a>
+                </td>
+                <td>{{ ring["pubk"] |truncate(40)}}</td>
+                <td>{{ ring["matched"] }}</td>
+                <td>{{ ring["matched_flood"] }}</td>
+                <td>{{ ring["0mix_closet_flood"] }}</td>
+            </tr>
+        {% endfor %}
+
+
+        </tbody>
+    </table>
+    {{ pagination.links }}
+    <div class="m-style M-box4"></div>
+
+
+
+{% endblock %}
+
+{% block body_script %}
+     <script src="{{ url_for('static', filename='My97DatePicker/WdatePicker.js') }}"></script>
+     <script type="text/javascript">
+         function sclick(){
+         alert("ceshi");
+         }
+     </script>
+    <script>
+         function fun() {
+            sort = document.getElementById("seltext").value;
+            select = document.getElementById("ttest");
+            for (i = 0; i < select.length; i++) {
+                if (select[i].value == sort)
+                    select[i].selected = true;
+            }
+            }
+
+        window.onload=fun;
+     </script>
+      <script>
+	function dateClick() {
+		WdatePicker({
+			dateFmt : 'yyyy/MM/dd HH:mm:ss',  //格式设置相对应界面可选择也变化
+			highLineWeekDay:true,  //周末的日期是否高亮
+			readOnly:true,  //是否允许键盘输入值，false为禁止输入，只能鼠标选
+		});
+	}
+	</script>
+    {#    checkbox 排序开关#}
+
+    {#    page #}
+    <script type="text/javascript"
+            src="{{ url_for('static', filename='assets/js/page/eth_block.js') }}"></script>
+    {#    checkbox block_order_switch#}
+{% endblock %}

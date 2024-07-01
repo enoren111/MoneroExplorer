@@ -1,0 +1,65 @@
+.bee-c-p{
+    cursor: pointer;
+}
+
+
+
+.bee-transes-table tr td:nth-child(5){
+    position: relative;
+}
+
+.bee-transes-table tr td:nth-child(5) span{
+    position: absolute;
+    left: 175px;
+}
+
+/* node 查看版本，国家，网络全部信息  查看全部*/
+.bee-node-all{
+    text-align: center;
+    margin-top: 5px;
+    font-size: 0.5rem;
+}
+.bee-node-all a{
+    cursor: pointer;
+}
+
+
+/* 节点分布tab组件 */
+
+.node-dist-tb tr td:nth-child(2){
+        text-align: center;
+    }
+
+.node-dist-tb tr td:nth-child(3){
+        text-align: right;
+    }
+
+
+/* 在线检测 */
+#check-node-status{
+    padding: 15px;
+    border-radius: 4px;
+    border: 2px solid transparent;
+    text-align: center;
+}
+
+#check-node-status.online{
+    color: #3c763d;
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+}
+
+#check-node-status.online i{
+    color: #3c763d;
+}
+
+
+#check-node-status.offline{
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1;
+}
+
+#check-node-status.offline i{
+    color: #a94442;
+}

@@ -1,0 +1,400 @@
+{% extends 'base3.html' %}
+{% block title %}{% endblock %}
+{% block head_style %}
+    {#    slick muban3527 #}
+    <style type="text/css">
+    </style>
+<script src="{{ url_for('static', filename='js/jquery-2.1.4.min.js') }}"></script>
+{% endblock %}
+{% block content %}
+    {% include '_btccrumb.html' %}
+    {#    <h1>BTC TRANSACTIONS</h1>#}
+<div class="btn-group">
+  <button type="button" class="btn {% if type=='monitor' %} btn-primary{% else %}btn-secondary{% endif %}"><a href="/btc/sepcialAddr?type=monitor">监控</a></button>
+  <button type="button" class="btn {% if type=='monitor_list' %} btn-primary{% else %}btn-secondary{% endif %}"><a href="/btc/sepcialAddr?type=monitor_list">监控结果</a></button>
+</div>
+    <div class="bee-row2">
+        <div class="bee-row">
+        {% if type=='monitor_list' %}
+            <div>共<span class="transes_total">{{ count }}</span>个结果，用时{{ usetime }}ms</div>
+            {% endif %}
+            <div class="dropdown"></div>
+            {% if type=='monitor_list' %}
+            <div>
+                <form action="/btc/sepcialAddr" class="">
+                    地址：
+                    <input name="address" style="width: 350px;" type="text" value="{{ search_address }}">
+                    <input name="type" style="width: 350px;" type="hidden" value="monitor_list">
+                    <button type="submit" style="margin-left: 30px;" class="btn btn-info btn-sm">搜索</button>
+                </form>
+            </div>
+            {% endif %}
+            {% if type=='monitor' %}
+            <div>
+                <button type="submit"  class="btn btn-info btn-sm" onclick="add_tag()">添加监控</button>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    <!-- start latestTransList-->
+    {% if type=='monitor_list' %}
+{#    <table id="transes-table" class="table bee-transes-table">#}
+{#        <thead>#}
+{#        <tr>#}
+{#            <th>地址</th>#}
+{#            <th>交易hash</th>#}
+{#            <th>交易时间</th>#}
+{#            <th>交易金额(BTC)</th>#}
+{#            <th></th>#}
+{#        </tr>#}
+{#        </thead>#}
+{#        <tbody>#}
+{##}
+{#        {% for single in list %}#}
+{#            <tr>#}
+{#                <td><a href="{{ url_for('btc.btc_address_detail',address = single['addr']) }}">{{ single['addr'] }}</a></td>#}
+{#                <td>{{ single['last_tx'] }}</td>#}
+{#                <td>{{ single['last_time'] }}</td>#}
+{#                 <td>{{ single['list_id'] }}</td>#}
+{#                <td>{{ single['amount'] }}</td>#}
+{#                <td class="address_trace" style="color: #1E90FF">交易追踪</td>#}
+{#                <td   style="color: #1E90FF" onclick="monitor_delete({{ single["list_id"] }})">删除</td>#}
+{#            <button type="submit" style="margin-left: 30px;" class="btn btn-primary btn-sm">搜索</button>#}
+{#            </tr>#}
+{#        {% endfor %}#}
+{#        </tbody>#}
+{#    </table>#}
+        {% for tx in list %}
+    <br>
+    <div class="bee-card card bg-dark">
+    <div class="card-header tx_head">
+        <div>
+        <a style="float: left" href="/btc/tsc_detail/{{ tx.txid }}" >交易hash: {{ tx.txid }}</a>
+        <div style="text-align: right">{{ tx.tx_time }}</div>
+        <div><a style="" href="/btc/address/{{ tx.address }}" >监控地址: {{ tx.address }}</a>
+        </div>
+        </div>
+{#            <div style="color: #1E90FF;text-align:right" class="tx_button">查看交易列表</div>#}
+    </div>
+    <div class="tx_content">
+    <div class="card-body">
+
+        <div class="card-body">
+            <div class="bee-row2" ​>
+                ​
+                <div style="flex: 1" class="bee-border-r-b">
+                    <table class="table table-sm table-hover bee-table">
+                        <tbody>
+                        <tr>
+                            <td>发送方</td>
+                        </tr>
+                        {% for single_vin in tx.tx.vin %}
+                        <tr>
+                            <td><a style="{% if tx.address == single_vin.address  %}color: #1E90FF{% endif %}" href="/btc/address/{{ single_vin.address }}">{{ single_vin.address }}</a></td>
+                            <td>{{ single_vin.value }} BTC</td>
+                        </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div style="flex: 1">
+                    <table class="table table-sm table-hover bee-table">
+                        <tbody>
+                        <tr>
+                            <td>接收方</td>
+                        </tr>
+                        {% for single_vout in tx.tx.vout %}
+                        <tr>
+                            <td><a style="{% if tx.address == single_vout.address  %}color: #1E90FF{% endif %}" href="/btc/address/{{ single_vout.address }}">{{ single_vout.address }}</a></td>
+                            <td>{{ single_vout.value }} BTC</td>
+                        </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+            <div class="card-header">
+            <div>
+{#            <div style="float: right;">交易额：{{ tx.volume }} BTC</div>#}
+{#                <div></div>#}
+                <button  style="float: right" class="btn btn-info btn-sm" onclick="monitor_delete({{ tx["list_id"] }})">删除</button>
+            </div>
+            </div>
+    </div>
+
+    </br>
+    {% endfor %}
+         <nav>
+    <ul class="pagination">
+        {%if pagination.has_prev%}
+        <li class="page-item active"><a class="page-link" href="/btc/sepcialAddr?type=monitor_list&&page={{ pagination.page-1 }}&&address={{ search_address }}">上一页</a></li>
+        {%else%}
+        <li class="page-item disabled"><a class="page-link" href="#">上一页</a></li>
+        {%endif%}
+        {%for page in pagination.pages.__iter__()%}
+            {%if page%}
+                <li class="page-item {%if page==pagination.page%}active{%endif%}"><a class="page-link" href="/btc/sepcialAddr?type=monitor_list&&page={{ page }}&&address={{ search_address }}">{{page}}</a></li>
+            {%else%}
+                <li class="page-item disabled"><a class="page-link" href="#">&hellip;</a></li>
+            {%endif%}
+
+        {%endfor%}
+
+        {%if pagination.has_next%}
+        <li class="page-item active"><a class="page-link" href="/btc/sepcialAddr?type=monitor_list&&page={{ pagination.page+1 }}&&address={{ search_address }}">下一页</a></li>
+        {%else%}
+        <li class="page-item disabled"><a class="page-link" href="#">下一页</a></li>
+        {%endif%}
+
+    </ul>
+    </nav>
+    {% endif %}
+        {% if type=='monitor' %}
+    <table id="transes-table" class="table bee-transes-table">
+        <thead>
+        <tr>
+            <th>地址</th>
+            <th>最小交易额(BTC)</th>
+            <th>最大交易额(BTC)</th>
+            <th>备注</th>
+            <th></th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for single in list %}
+            <tr>
+                <td><a href="{{ url_for('btc.btc_address_detail',address = single['addr']) }}">{{ single['addr'] }}</a></td>
+                <td>{{ single['min_value'] }}</td>
+                <td>{{ single['max_value'] }}</td>
+                <td>{{ single['detail'] }}</td>
+                <td class="modify" style="color: #1E90FF" onclick='modify_tag({{single["monitor_id"]}})'>修改</td>
+                <td class="delete" style="color: #1E90FF" onclick="monitor_delete2({{ single["monitor_id"] }})">删除 </td>
+
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+             <nav>
+    <ul class="pagination">
+        {%if pagination.has_prev%}
+        <li class="page-item active"><a class="page-link" href="/btc/sepcialAddr?type=monitor&&page={{ pagination.page-1 }}">上一页</a></li>
+        {%else%}
+        <li class="page-item disabled"><a class="page-link" href="#">上一页</a></li>
+        {%endif%}
+        {%for page in pagination.pages.__iter__()%}
+            {%if page%}
+                <li class="page-item {%if page==pagination.page%}active{%endif%}"><a class="page-link" href="/btc/sepcialAddr?type=monitor&&page={{ page }}">{{page}}</a></li>
+            {%else%}
+                <li class="page-item disabled"><a class="page-link" href="#">&hellip;</a></li>
+            {%endif%}
+
+        {%endfor%}
+
+        {%if pagination.has_next%}
+        <li class="page-item active"><a class="page-link" href="/btc/sepcialAddr?type=monitor&&page={{ pagination.page+1 }}">下一页</a></li>
+        {%else%}
+        <li class="page-item disabled"><a class="page-link" href="#">下一页</a></li>
+        {%endif%}
+
+    </ul>
+    </nav>
+    {% endif %}
+    <div class="m-style pagination"></div> <!-- pagination.js -->
+    <!-- start latestTransList-->
+
+{% endblock %}
+
+{% block body_script %}
+
+    {#    chartjs 3492 demo #}
+    <script src="{{ url_for('static', filename='plugins/chart.js/Chart.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='plugins/chart.js/utils.js') }}"></script>
+    {#    <script src="{{ url_for('static', filename='muban/3492/charts-custom.js') }}"></script>  {# 饼状图 #}
+    {#    <script src="{{ url_for('static', filename='assets/demo/big-deal.js') }}"></script>#} <!-- 大额异动 -->
+    {#    3527 banner slick #}
+    <script>
+    $(".address_trace").click(function () {
+        var address=$(this).parent().children().first().text();
+        var txid=$(this).parent().children().first().next().text();
+        {#alert(txid);#}
+        {#alert(address);#}
+        alert("开始分析....");
+        request_url='/btc/trace/'+txid;
+        {#alert(request_url)#}
+        $.get(request_url, function (data) {
+                   alert("分析完成");
+        window.location.href="http://192.168.247.135:8080/#!btc/address/"+address;
+        });
+    });
+    </script>
+
+    {#    echarts #}
+    {#    <script src="{{ url_for('static', filename='plugins/echarts/echarts.js') }}"></script>#}
+
+
+    <script src="{{ url_for('static', filename='layui/layui.js') }}"></script>      <script>
+    function monitor_delete(list_id)
+    {
+        var Udata= JSON.stringify({"list_id":list_id});
+        $.ajax({
+            url:'/btc/delete_monitor_list' ,
+            type:'POST',
+            data:Udata,
+            contentType: 'application/json; charset=UTF-8',
+            success:function (res) {
+                alert("删除成功");
+                location.reload(true);
+            }
+        })
+    }
+    function monitor_delete2(monitor_id)
+    {
+        var Udata= JSON.stringify({"monitor_id":monitor_id});
+        $.ajax({
+            url:'/btc/delete_monitor_id' ,
+            type:'POST',
+            data:Udata,
+            contentType: 'application/json; charset=UTF-8',
+            success:function (res) {
+                alert("删除成功");
+                location.reload(true);
+            }
+        })
+    }
+    function add_tag(){
+layui.use(['layer', 'form'], function(){
+  var layer = layui.layer
+  ,form = layui.form;
+       layer.open({
+            title:'添加监控',
+            type:1,
+            skin:'layui-layer-molv',
+            area: ['770px', '70%'],
+            content:'<form class="layui-form" style="margin-top: 30px"> ' +
+            '<div class="layui-form-item" >' +
+            ' <label class="layui-form-label" style="color:black">地址</label>' +
+            '<div class="layui-input-inline"> ' +
+            '<input type="text" name="addr" style="width:500px;" autocomplete="off" class="layui-input" id="dizhi">' +
+            '</div>' +
+            '</div>' +
+            '<div class="layui-form-item" >' +
+            ' <label class="layui-form-label" style="color:black">备注</label>      <div class="layui-input-inline"> ' +
+            '<input type="text" name="remark" style="width:500px;" autocomplete="off" class="layui-input" id="beizhu" ></div> ' +
+            '<div class="layui-form-item" >' +
+            ' <label class="layui-form-label" style="color:black">最小交易值(BTC)</label>     ' +
+            ' <div class="layui-input-inline"> ' +
+            '<input type="text" style="width:500px;" name="minvalue" autocomplete="off" class="layui-input" id="treeMin" >' +
+            '</div>'+
+            '<div class="layui-form-item" >' +
+            ' <label class="layui-form-label" style="color:black">最大交易值(BTC)</label>     ' +
+            ' <div class="layui-input-inline"> ' +
+            '<input type="text" style="width:500px;" name="maxvalue" autocomplete="off" class="layui-input" id="treeMax" >' +
+            '</div>'+
+            '</form>',
+            btn: ['保存', '关闭'],
+            btnAlign: 'c',
+            yes: function(){
+                saveNode();
+            },
+            btn2: function(){
+                layer.closeAll();
+            },
+            success: function(layero, index){
+                layui.use(['form','element'],function () {
+                    var form = layui.form, element = layui.element;
+                    form.render();
+                });
+
+            }
+        });
+});}
+    function modify_tag(monitor_id){
+
+layui.use(
+    ['layer', 'form'], function(){
+  var layer = layui.layer
+  ,form = layui.form;
+       layer.open({
+            title:'修改监控',
+            type:1,
+            skin:'layui-layer-molv',
+            area: ['770px', '70%'],
+            content:'<form class="layui-form" style="margin-top: 30px"> ' +
+            '<div class="layui-form-item" >' +
+            ' <label class="layui-form-label" style="color:black">备注</label>      <div class="layui-input-inline"> ' +
+            '<input type="text" name="remark" style="width:500px;" autocomplete="off" class="layui-input" id="beizhu" ></div> ' +
+            '<div class="layui-form-item" >' +
+            ' <label class="layui-form-label" style="color:black">最小交易值(BTC)</label>     ' +
+            ' <div class="layui-input-inline"> ' +
+            '<input type="text" style="width:500px;" name="minvalue" autocomplete="off" class="layui-input" id="treeMin" >' +
+            '</div>'+
+            '<div class="layui-form-item" >' +
+            ' <label class="layui-form-label" style="color:black">最大交易值(BTC)</label>     ' +
+            ' <div class="layui-input-inline"> ' +
+            '<input type="text" style="width:500px;" name="maxvalue" autocomplete="off" class="layui-input" id="treeMax" >' +
+            '</div>'+
+            '</form>',
+            btn: ['保存', '关闭'],
+            btnAlign: 'c',
+            yes: function(){
+                modifyNode(monitor_id);
+            },
+            btn2: function(){
+                layer.closeAll();
+            },
+            success: function(layero, index){
+                layui.use(['form','element'],function () {
+                    var form = layui.form, element = layui.element;
+                    form.render();
+                });
+
+            }
+        });
+});}
+      function saveNode() {
+        var addr = $('#dizhi').val();
+        var remark = $('#beizhu').val();
+        var minvalue = $('#treeMin').val();
+        var maxvalue = $('#treeMax').val();
+        var Udata= JSON.stringify({"addr":addr,"remark":remark,"minvalue":minvalue,"maxvalue":maxvalue});
+        $.ajax({
+            url:'/btc/saveAddr/' ,
+            type:'POST',
+            contentType: 'application/json; charset=UTF-8',
+            data:Udata,
+            success:function (res) {
+                if(res.code == '0000'){
+                    layer.closeAll();
+                }else{
+                    layer.msg(res.message,{time:2000})
+                }
+                location.reload(true);
+            }
+        })
+    }
+          function modifyNode(monitor_id) {
+        var remark = $('#beizhu').val();
+        var minvalue = $('#treeMin').val();
+        var maxvalue = $('#treeMax').val();
+        var Udata= JSON.stringify({"monitor_id":monitor_id,"remark":remark,"minvalue":minvalue,"maxvalue":maxvalue});
+        $.ajax({
+            url:'/btc/modifyAddr/' ,
+            type:'POST',
+            contentType: 'application/json; charset=UTF-8',
+            data:Udata,
+            success:function (res) {
+                if(res.code == '0000'){
+                    layer.closeAll();
+                }else{
+                    layer.msg(res.message,{time:2000})
+                }
+                location.reload(true);
+            }
+        })
+    }
+   </script>
+{% endblock %}

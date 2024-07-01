@@ -1,0 +1,56 @@
+{% extends 'base3.html' %}
+{% block title %}pool{% endblock %}
+
+{% block head_style %}
+
+
+{% endblock %}
+
+{% block content %}
+    <h1>ETH POOL</h1>
+
+        {% include '_ethcrumb.html' %}
+
+    <ul class="bee-inline-ul">
+        <li>全部</li>
+        <li>一年</li>
+        <li>三个月</li>
+        <li>一个月</li>
+        <li>一周</li>
+    </ul>
+
+
+    <div class="binary-body">
+        <div class="middle-ele" style="line-height: 200px; border:1px solid #000000">pie1</div>
+        <div class="middle-ele" style="line-height: 200px; border:1px solid #000000">pie1</div>
+        <div class="middle-ele" style="line-height: 200px; border:1px solid #000000">pie1</div>
+    </div>
+
+    <br>
+    <!-- start poolList-->
+    <table class="table">
+        <thead>
+        <tr>
+            <th>排名</th>
+            <th>矿池</th>
+            <th>区块数</th>
+            <th>区块份额</th>
+            <th>叔块率</th>
+            <th>空块率</th>
+            <th>实时算力</th>
+
+        </tr>
+        </thead>
+        <tbody>
+
+
+        </tbody>
+    </table>
+    {#    {{ pagination.links }}#}
+    <!-- end poolList-->
+{% endblock %}
+
+{% block body_script %}
+    <script src="{{ url_for('static', filename='') }}"></script>
+    <script type="text/javascript"></script>
+{% endblock %}

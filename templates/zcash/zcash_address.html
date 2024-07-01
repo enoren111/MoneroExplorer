@@ -1,0 +1,133 @@
+{# 删除日统计信息 20190523 #}
+
+{% extends 'base_zcash.html' %}
+{% block title %}{% endblock %}
+
+{% block head_style %}
+    {#    slick muban3527 #}
+
+ <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+<script src="{{ url_for('static', filename='My97DatePicker/WdatePicker.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+
+    {% include '_zcashcrumb.html' %}
+
+
+
+    <div class="bee-row2">
+
+
+        <div class="bee-row">
+            {#    <div><span>共 7,300,440 个结果</span></div>#}
+           <!--
+            <div>共<span class="transes_total">{{ trans_total }}</span>个结果，用时{{ took }}ms</div>
+            <form action="{{ url_for('btc.btc_transaction_search') }}" class="">
+                    显示规则：
+                    <input name="name1" id="seltext" type="hidden" value="{{ sortname }}">
+                    <select id="ttest" name="sortname">
+                        <option value="desc">desc</option>
+                        <option value="asc">asc</option>
+                    </select>
+                    开始时间:
+                    <input class="jump-ipt" style="width:90px;" type="text" onclick="dateClick()" value="" name="starttime">
+                    截至时间:
+                    <input class="jump-ipt" style="width:90px;" type="text" onclick="dateClick()" value=""  name="endtime">
+                    最小值:
+                    <input class="jump-ipt" style="width:40px;" type="text" value="" name="minvalue">
+                    最大值:
+                    <input class="jump-ipt" style="width:40px;" type="text" value="" name="maxvalue">
+                     类别:
+                    <input name="name2" class ="dropdown" id="sel_text" type="hidden" value="{{ servicename }}">
+                    <select id="test" name="servicename">
+                        <option value="ZEC">ZEC</option>
+                        <option value="USD">USD</option>
+                    </select>
+                    <button type="submit" style="margin-left: 30px;" class="btn btn-primary btn-sm">搜索</button>
+                </form>
+                -->
+        </div>
+    </div>
+
+    <!-- start latestTransList-->
+    <table id="transes-table" class="table bee-transes-table">
+        <thead>
+        <tr>
+            <th>地址</th>
+            <th>首次出现</th>
+            <th>最后出现</th>
+            <th>发送金额</th>
+            <th>接收金额</th>
+
+        </tr>
+        </thead>
+        <tbody id="tbodydata">
+        {% for item in latestTransList %}
+            <tr>
+                <!--<td><a href="{{ url_for('btc.btc_tsc_detail', hash=item['_id']) }}">{{ item['_id']|truncate(20) }}</a>
+                </td>
+                <td>
+                    <a href="{{ url_for('btc.btc_block_detail',hash = item['_source']['blockhash']) }}">{{ item['_source']['blockheight'] }}</a>
+                </td>
+
+                <td>{{ item['_source']['blocktime'] }}</td>
+                -->
+                 <td>{{ item['address'] }}</td>
+                 <td>{{ item['first_seen'] }}</td>
+                 <td>{{ item['last_seen'] }}</td>
+                 <td>{{ item['vin_amount'] }}</td>
+                 <td>{{ item['vout_amount'] }}</td>
+
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+     {{ pagination.links }}
+    <div class="m-style pagination"></div> <!-- pagination.js -->
+    <!-- start latestTransList-->
+
+{% endblock %}
+
+{% block body_script %}
+
+    {#    chartjs 3492 demo #}
+<script type="text/javascript"
+        src="{{ url_for('static', filename='plugins/superslide/jquery.SuperSlide.2.1.3.js') }}"></script>
+    <script src="{{ url_for('static', filename='plugins/chart.js/Chart.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='plugins/chart.js/utils.js') }}"></script>
+{#    <script src="{{ url_for('static', filename='muban/3492/charts-custom.js') }}"></script>  {# 饼状图 #}
+    {#    <script src="{{ url_for('static', filename='assets/demo/big-deal.js') }}"></script>#} <!-- 大额异动 -->
+    {#    3527 banner slick #}
+
+
+    <!--{#    <script src="{{ url_for('static', filename='plugins/echarts/echarts.js') }}"></script>#}-->
+
+    <!--<script src="{{ url_for('static', filename='assets/js/page/transactions.js') }}"></script>-->
+     <script>
+         function fun() {
+            str = document.getElementById("sel_text").value;
+            obj = document.getElementById("test");
+            for (i = 0; i < obj.length; i++) {
+                if (obj[i].value == str)
+                    obj[i].selected = true;
+            }
+            sort = document.getElementById("seltext").value;
+            select = document.getElementById("ttest");
+            for (i = 0; i < select.length; i++) {
+                if (select[i].value == sort)
+                    select[i].selected = true;
+            }
+            }
+        window.onload=fun
+     </script>
+     <script>
+	function dateClick() {
+		WdatePicker({
+			dateFmt : 'yyyy-MM-dd HH:mm:ss',  //格式设置相对应界面可选择也变化
+			highLineWeekDay:true,  //周末的日期是否高亮
+			readOnly:true,  //是否允许键盘输入值，false为禁止输入，只能鼠标选
+		});
+	}
+	</script>
+{% endblock %}

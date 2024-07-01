@@ -1,0 +1,28 @@
+
+{# suitable for base3 #}
+
+{% extends 'base3.html' %}
+{% block title %}{% endblock %}
+
+{% block head_style %}
+{#    <style type="text/css"></style>#}
+
+{% endblock %}
+
+{% block content %}
+
+
+    {% include '_btccrumb.html' %}
+    <div id="active_month_bar" style="height: 500px;"></div>
+
+
+
+
+{% endblock %}
+
+{% block body_script %}
+<script src="{{ url_for('static', filename='assets/js/page/btc_trans_static.js') }}"></script>
+{#    <script type="text/javascript"></script>#}
+{% endblock %}
+
+

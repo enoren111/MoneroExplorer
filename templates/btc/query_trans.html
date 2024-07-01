@@ -1,0 +1,98 @@
+{# 删除日统计信息 20190523 #}
+
+{% extends 'base3.html' %}
+{% block title %}{% endblock %}
+
+{% block head_style %}
+    {#    slick muban3527 #}
+
+
+    <style type="text/css">
+  textarea::-webkit-input-placeholder {
+  /* WebKit browsers */
+  color: #9c9c9c;
+}
+textarea:-moz-placeholder {
+  /* Mozilla Firefox 4 to 18 */
+  color: #9c9c9c;
+}
+textarea::-moz-placeholder {
+  /* Mozilla Firefox 19+ */
+  color: #9c9c9c;
+}
+textarea::-ms-input-placeholder {
+  /* Internet Explorer 10+ */
+  color: #9c9c9c;
+
+}
+    </style>
+ <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+<script src="{{ url_for('static', filename='My97DatePicker/WdatePicker.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+
+    {% include '_btccrumb.html' %}
+    <br>
+<div class="card">
+            <div class="card-header">查询结果({{ pagination.total }})<button type="submit" style="float: right;margin-right: 25px" class="btn btn-primary btn-sm" onclick="window.location.href='{{ url_for('bee.query_history') }}'">我的查询</button><button type="submit" style="float: right;margin-right: 25px" class="btn btn-primary btn-sm" onclick="window.location.href='{{ url_for('bee.trans_senior_query') }}'">高级查询</button><button type="submit" style="float: right;margin-right: 25px" class="btn btn-primary btn-sm" onclick="window.location.href='{{ url_for('btc.query_pro') }}'">专业查询</button></div>
+        <div class="card-body">
+                    <table id="transes-table" class="table bee-transes-table">
+        <thead>
+        <tr>
+            <th>交易哈希</th>
+            <th>所在区块</th>
+            <th>时间(北京)</th>
+            <th>输入地址数量</th>
+            <th>输出地址数量</th>
+            <th>交易额(BTC)</th>
+        </tr>
+        </thead>
+        <tbody id="tbodydata">
+        {% for item in latestTransList %}
+            <tr>
+                <td><a href="{{ url_for('btc.btc_tsc_detail', hash=item['_id']) }}">{{ item['_id']|truncate(20) }}</a>
+                </td>
+                <td>
+                    <a href="{{ url_for('btc.btc_block_detail',hash = item['_source']['blockhash']) }}">{{ item['_source']['blockheight'] }}</a>
+                </td>
+                <td title="UTC时间：{{ item['_source']['blocktime'] }}">{{ item['time_bj'] }}</td>
+                 <td>{{ item['vin_times'] }}</td>
+                 <td>{{ item['vout_times'] }}</td>
+                <td>{{ item['value'] }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+                     {{ pagination.links }}
+
+        </div>
+    </div>
+    <div class="m-style M-box4"></div>
+
+{% endblock %}
+
+{% block body_script %}
+
+    {#    chartjs 3492 demo #}
+    <script src="{{ url_for('static', filename='plugins/chart.js/Chart.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='plugins/chart.js/utils.js') }}"></script>
+{#    <script src="{{ url_for('static', filename='muban/3492/charts-custom.js') }}"></script>  {# 饼状图 #}
+    {#    <script src="{{ url_for('static', filename='assets/demo/big-deal.js') }}"></script>#} <!-- 大额异动 -->
+    {#    3527 banner slick #}
+
+
+    {#    echarts #}
+    {#    <script src="{{ url_for('static', filename='plugins/echarts/echarts.js') }}"></script>#}
+
+    <script src="{{ url_for('static', filename='assets/js/page/transactions.js') }}"></script>
+     <script>
+	function dateClick() {
+		WdatePicker({
+			dateFmt : 'yyyy-MM-dd HH:mm:ss',  //格式设置相对应界面可选择也变化
+			highLineWeekDay:true,  //周末的日期是否高亮
+			readOnly:true,  //是否允许键盘输入值，false为禁止输入，只能鼠标选
+		});
+	}
+	</script>
+{% endblock %}

@@ -1,0 +1,173 @@
+{# 删除日统计信息 20190523 #}
+
+{% extends 'base3.html' %}
+{% block title %}{% endblock %}
+
+{% block head_style %}
+    {#    slick muban3527 #}
+
+
+    <style type="text/css">
+
+
+
+    </style>
+
+{% endblock %}
+
+{% block content %}
+
+
+    {% include '_btccrumb.html' %}
+{#    <h1>BTC TRANSACTIONS</h1>#}
+
+    <br>
+
+
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="bee-card card bg-dark">
+                <div class="card-header">大额异动<a href="{{ url_for('eth.eth_big_deal') }}">查看详情</a></div>
+                <div class="card-body">
+                    <div id="big-deal" style="width: 100%;height: 300px"></div>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="bee-card card bg-dark">
+                <div class="card-header">统计信息</div>
+                <div class="card-body">
+                    <div id="trans-statistical-info" class="slider">
+                        <div>
+                            <div id="daily_trans_sum" style="height: 300px"></div>
+                        </div>
+                        <div>
+                            <div id="daily_trans_num" style="width: 100%;height: 300px"></div>
+                        </div>
+                        <div>
+                            <div id="daily_trans_type" style="width: 100%;height: 300px"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <br>
+
+    {#    <canvas id="trans_eg1"></canvas>#}
+    {#    <canvas id="trans_eg2"></canvas>#}
+
+    <br>
+
+
+    <div class="bee-row2">
+
+
+        <div class="bee-row">
+            {#    <div><span>共 7,300,440 个结果</span></div>#}
+            <div>共<span class="transes_total">{{ trans_total }}</span>个结果(默认当天)，用时{{ took }}ms</div>
+
+            <div><span>新块在前</span></div>
+            <div>
+                <div id="switch">
+                    <div id="circle"></div>
+                </div>
+            </div>
+
+
+            <div class="dropdown">
+                <button class="btn btn-primary btn-sm" type="button" id="time-filter" data-toggle="dropdown">按时间筛选
+                    <i class="fa fa-caret-down"></i>
+                </button>
+                <div class="dropdown-menu" aria-labelledby="time-filter">
+                    {#                {% for item in  date_map %}#}
+                    <a class="dropdown-item">今天</a>
+                    <a class="dropdown-item">本周</a>
+                    <a class="dropdown-item">本月</a>
+                    <a class="dropdown-item">今年</a>
+                    <a class="dropdown-item">全部</a>
+                    {#                {% endfor %}#}
+
+                </div>
+            </div>
+            <div class="dropdown">
+                <button class="btn btn-primary btn-sm" type="button" id="fields-filter" data-toggle="dropdown">选择字段
+                    <i class="fa fa-caret-down"></i>
+                </button>
+                <div class="dropdown-menu" aria-labelledby="fields-filter">
+                    {% for item in  trans_fields %}
+                        <a class="dropdown-item" data-stopPropagation="true"><i
+                                class="fa fa-square-o fa-fw"></i> {{ item }}</a>
+                    {% endfor %}
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="bee-row2 bee-pagination f-ai-c" style="width: 275px">
+            <button class="btn btn-primary btn-sm
+             prev">上一页</button>
+            <input class="jump-ipt" style="width: 50px;" type="text" value="1">/ <span
+                class="transes_pages">{{ pages }}</span>
+            <button class="btn btn-primary btn-sm next">下一页</button>
+        </div>
+
+
+    </div>
+    <!-- start latestTransList-->
+    <table id="transes-table" class="table bee-transes-table">
+        <thead>
+        <tr>
+            <th>交易哈希</th>
+            <th>所在区块</th>
+            <th>时间</th>
+            <th>输入地址数</th>
+            <th>输出地址数</th>
+            <th>交易额(BTC)</th>
+        </tr>
+        </thead>
+        <tbody>
+
+
+        {% for item in latestTransList %}
+            <tr>
+                <td><a href="{{ url_for('btc.btc_tsc_detail', hash=item['_id']) }}">{{ item['_id']|truncate(20) }}</a>
+                </td>
+                <td>
+                    <a href="{{ url_for('btc.btc_block_detail',blockheight = item['_source']['blockheight']) }}">{{ item['_source']['blockheight'] }}</a>
+                </td>
+                <td>{{ item['time'] }}</td>
+                 <td>{{ item['vin_times'] }}</td>
+                 <td>{{ item['vout_times'] }}</td>
+                <td>{{ item['_source']['volume'] }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+     {{ pagination.links }}
+    <div class="m-style pagination"></div> <!-- pagination.js -->
+    <!-- start latestTransList-->
+
+{% endblock %}
+
+{% block body_script %}
+
+    {#    chartjs 3492 demo #}
+    <script src="{{ url_for('static', filename='plugins/chart.js/Chart.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='plugins/chart.js/utils.js') }}"></script>
+{#    <script src="{{ url_for('static', filename='muban/3492/charts-custom.js') }}"></script>  {# 饼状图 #}
+    {#    <script src="{{ url_for('static', filename='assets/demo/big-deal.js') }}"></script>#} <!-- 大额异动 -->
+    {#    3527 banner slick #}
+
+
+    {#    echarts #}
+    {#    <script src="{{ url_for('static', filename='plugins/echarts/echarts.js') }}"></script>#}
+
+    <script src="{{ url_for('static', filename='assets/js/page/transactions.js') }}"></script>
+{% endblock %}

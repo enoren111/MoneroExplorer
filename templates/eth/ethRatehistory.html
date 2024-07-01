@@ -1,0 +1,219 @@
+{#  三种dropdown button共存 #}
+
+{% extends 'baseETH.html' %}
+{% block title %}{% endblock %}
+
+{% block head_style %}
+
+    {#   open-iconic 双箭头 #}
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='vendor/css/open-iconic/font/css/open-iconic-bootstrap.css') }}">
+
+    {#    checkbox #}
+    {#    paginationjs #}
+
+    {#    theme #}
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/bee.theme.dark.css') }}"/>
+
+    <style>
+        .item-checked {
+            background-color: #EEE5DE;
+
+        }
+
+        .dropdown-item:active {
+            background-color: #EEDFCC;
+            color: black;
+        }
+
+        .item-checked:hover {
+            background-color: #EEE5DE;
+        }
+
+        .item-checked:active {
+            background-color: #EEDFCC;
+
+        }
+    </style>
+
+{% endblock %}
+
+{% block content %}
+    {% include '_ethcrumb.html' %}
+{#    <h1>BTC BLOCK </h1>#}
+<br>
+    <div class="card">
+            <div class="card-header">历史汇率<button type="submit" style="float: right;margin-right: 25px" class="btn btn-primary btn-sm" onclick="window.location.href='{{ url_for('btc.btc_home') }}'">返回首页</button><button  id="{{ results_all }}" type="submit" style="float: right;margin-right: 25px" class="btn btn-primary btn-sm"  onclick="gen_sheet1(this.id)">下载历史汇率</button>
+{#                <button  id="{{ result }}" type="submit" style="float: right;margin-right: 25px" class="btn btn-primary btn-sm"  onclick="gen_sheet1(this.id)">图表</button>#}
+</div>
+        <div class="card-body">
+                    <table id="block_table" class="table">
+        <thead>
+        <tr>
+            <th>日期</th>
+            <th>USD/BTC</th>
+            <th>CNY/BTC</th>
+
+
+        </tr>
+        </thead>
+        <tbody >
+            {% for single_result in result %}
+            <tr>
+
+                <td  >{{ single_result.date}}</td>
+                <td ><a >{{ single_result.USD }}</a></td>
+                <td>{{ single_result.CNY }} </td>
+            </tr>
+            {% endfor %}
+
+        </tbody>
+    </table>
+                     {{ pagination.links }}
+
+        </div>
+    </div>
+    <div class="m-style M-box4"></div>
+
+
+{% endblock %}
+{% block body_script %}
+
+
+    {#    checkbox 排序开关#}
+
+    {#    page #}
+    <script type="text/javascript"
+            src="{{ url_for('static', filename='assets/js/page/eth_block.js') }}"></script>
+
+    {#    checkbox block_order_switch#}
+    <script type="text/javascript"
+            src="{{ url_for('static', filename='assets/js/table-filter.js') }}">
+
+    </script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/xlsx/0.16.5/xlsx.mini.min.js"></script>
+    <script src="{{ url_for('static', filename='layui/layui.js') }}"></script>
+<script>
+    function gen_sheet1(item){
+        let head = ['日期', 'USD/BTC', 'CNY/BTC']
+        let data = [];
+        test=JSON.parse(item.replace(/'/g,'"'));
+        for(i =0;i<test.length;i++){
+             console.log(test[i]);
+             data.push([test[i]['date'],test[i]['USD'],test[i]['CNY']])
+        }
+        console.log(data);
+          //将一个sheet转成最终的excel文件的blob对象
+        const sheetname1 = '历史汇率'
+        let workbook1 = {
+          SheetNames: [sheetname1],
+          Sheets: {}
+        }
+        let sheet1 = XLSX.utils.json_to_sheet(data)
+        sheet1.A1.v = head[0]
+        sheet1.B1.v = head[1]
+        sheet1.C1.v = head[2]
+        workbook1.Sheets[sheetname1] = sheet1
+        // 生成excel的配置项
+        const wopts = {
+          bookType: 'xlsx', // 要生成的文件类型
+          bookSST: false, // 是否生成Shared String Table，官方解释是，如果开启生成速度会下降，但在低版本IOS设备上有更好的兼容性
+          type: 'binary'
+        };
+        const wbout = XLSX.write(workbook1, wopts);
+        const blob = new Blob([s2ab(wbout)], {
+          type: "application/octet-stream"
+        });
+        r=window.prompt("请输入文件名：")
+        if (r!=='.' && r){
+            title=r+'.xlsx';
+            download(blob, title);
+            {#console.log(title);#}
+        }
+        else {
+            alert("请输入正确的文件名!")
+        }
+
+    }
+    // 字符串转ArrayBuffer
+    function s2ab(s) {
+        var buf = new ArrayBuffer(s.length);
+        var view = new Uint8Array(buf);
+        for (var i = 0; i !== s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
+        return buf;
+      }
+
+    function download(blob, name) {
+        // 用URL.createObjectURL下载
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url;
+        a.download = name;
+        let event;
+        if (window.MouseEvent) {
+          event = new MouseEvent('click');
+        } else {
+          event = document.createEvent('MouseEvents');
+          event.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+        }
+        a.dispatchEvent(event);
+      }
+	function dateClick() {
+		WdatePicker({
+			dateFmt : 'yyyy-MM-dd HH:mm:ss',  //格式设置相对应界面可选择也变化
+			highLineWeekDay:true,  //周末的日期是否高亮
+			readOnly:true,  //是否允许键盘输入值，false为禁止输入，只能鼠标选
+		});
+	}
+        function gen_query() {
+        var num=0;
+        var num_uncheck=0;
+        var check = new Array();
+        var uncheck = new Array();
+        var attr_ = document.getElementsByName("attr");
+        for ( var i = 0; i < attr_.length; i++) {
+            if (attr_[i].checked) {
+                check[num]=attr_[i].id;
+                num++;
+            }
+            else {
+                uncheck[num_uncheck]=attr_[i].id+'s';
+                num_uncheck++;
+            }
+
+        }
+        var Udata= JSON.stringify({"checked":check,"num":num});
+        if(num==0){
+            alert("未选参数!");
+        }
+        else{
+           gen_sql();
+            //alert(check);
+        for ( var i = 0; i < uncheck.length; i++) {
+               document.getElementById(uncheck[i]).hidden=true;
+        }
+        }
+       /* $.ajax({
+            url:'/darknet/query/' ,
+            type:'POST',
+            contentType: 'application/json; charset=UTF-8',
+            data:Udata,
+            success:function () {
+                if(res.code[0] == 'addr'){
+                    layer.closeAll();
+
+
+                }else{
+                    layer.msg(res.message,{time:2000})
+                }
+                location.reload(true);
+            }
+        })*/
+
+        {#prompt("ss","sad");#}
+        //window.alert(check[0]+num);
+
+    }
+   </script>
+{% endblock %}
+</html>

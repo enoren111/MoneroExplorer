@@ -1,0 +1,144 @@
+{% extends 'base_zcash.html' %}
+{% block title %}{% endblock %}
+{% block head_style %}
+    {#    slick muban3527 #}
+    <style type="text/css">
+    </style>
+<script src="{{ url_for('static', filename='js/jquery-2.1.4.min.js') }}"></script>
+{% endblock %}
+{% block content %}
+    {% include '_zcashcrumb.html' %}
+    <div class="bee-row2">
+        <div class="bee-row">
+            <div>共<span class="transes_total">{{ count }}</span>笔RTT交易，用时{{ usetime }}ms</div>
+            <div class="dropdown"></div>
+            <div>
+                <form action="{{ url_for('zcash.zcash_search_rtt_txs') }}" class="">
+                    最大时间间隔(sec):
+                    <input name="differ_text" style="width: 350px;" type="text" value="">
+                    <button type="submit" style="margin-left: 30px;" class="btn btn-primary btn-sm">搜索</button>
+{#                       <button type=""  style="margin-right: 10px;" class="btn btn-primary btn-sm" onclick="add_tag()">更多查询</button>#}
+                </form>
+
+            </div>
+{#            <div align="right">#}
+{#                <button type="submit" style="margin-left: 30px;" class="btn btn-primary btn-sm" onclick="querry_spec()">更多查询</button>#}
+{#            </div>#}
+        </div>
+    </div>
+    <!-- start latestTransList-->
+    <table id="transes-table" class="table bee-transes-table">
+        <thead>
+        <tr>
+            <th>交易金额(ZEC)</th>
+            <th>源头交易(t-to-z)</th>
+            <th>源头交易高度</th>
+            <th>目的交易(z-to-t)</th>
+            <th>目的交易高度</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        {% for single in list %}
+            <tr>
+                <td>{{ single['amount']|truncate(20) }}</td>
+                <td><a href="{{ url_for('zcash.zcash_tsc_detail', hash=single['s_tx']) }}">{{ single['s_tx']|truncate(20)  }}</a></td>
+                <td>{{ single['s_height'] }}</td>
+{#                <td><a href="{{ url_for('zcash.zcash_block_detail',hash = single['s_height']) }}">{{ single['s_height'] }}</a></td>#}
+                <td><a href="{{ url_for('zcash.zcash_tsc_detail', hash=single['d_tx']) }}">{{ single['d_tx']|truncate(20)  }}</a></td>
+{#                <td><a href="{{ url_for('zcash.zcash_block_detail',hash = single['d_height']) }}">{{ single['d_height'] }}</a></td>#}
+            <td>{{ single['d_height'] }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {{ pagination.links }}
+    <div class="m-style pagination"></div> <!-- pagination.js -->
+    <!-- start latestTransList-->
+
+{% endblock %}
+
+{% block body_script %}
+
+    {#    chartjs 3492 demo #}
+    <script src="{{ url_for('static', filename='plugins/chart.js/Chart.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='plugins/chart.js/utils.js') }}"></script>
+    {#    <script src="{{ url_for('static', filename='muban/3492/charts-custom.js') }}"></script>  {# 饼状图 #}
+    {#    <script src="{{ url_for('static', filename='assets/demo/big-deal.js') }}"></script>#} <!-- 大额异动 -->
+    {#    3527 banner slick #}
+
+
+    {#    echarts #}
+    {#    <script src="{{ url_for('static', filename='plugins/echarts/echarts.js') }}"></script>#}
+      <script src="{{ url_for('static', filename='layui/layui.js') }}"></script>
+    <script>
+    function querry_spec(){
+layui.use(['layer', 'form'], function(){
+  var layer = layui.layer
+  ,form = layui.form;
+       layer.open({
+            type:1,
+            skin:'layui-layer-molv',
+            area: ['370px', '35%'],
+            content:'<form class="layui-form" style="margin-top: 20px"> ' +
+            '<div class="layui-form-item" >' +
+            ' <label class="layui-form-label" style="color:black">全选</label>' +
+            '<div class="layui-input-inline"> ' +
+            '<input type="checkbox" name="allSel" autocomplete="off" class="layui-input" id="treeNodeName">' +
+            '</div>' +
+            '</div>' +
+            '<div class="layui-form-item" >' +
+            ' <label class="layui-form-label" style="color:black">最大时间间隔</label>     ' +
+            ' <div class="layui-input-inline"> ' +
+            '<input type="checkbox" name="allSel" autocomplete="off" class="layui-input" id="source" >' +
+            '</div>'+
+                    '</div>'+
+                    '<div class="layui-form-item" >' +
+            ' <label class="layui-form-label" style="color:black">最小时间间隔</label>     ' +
+            ' <div class="layui-input-inline"> ' +
+            '<input type="checkbox" name="allSel" autocomplete="off" class="layui-input" id="source" >' +
+            '</div>'+
+                    '</div>'+
+            '</form>',
+            btn: ['生成查询', '取消查询'],
+            btnAlign: 'c',
+            yes: function(){
+                saveNode();
+            },
+            btn2: function(){
+                layer.closeAll();
+            },
+            success: function(layero, index){
+                layui.use(['form','element'],function () {
+                    var form = layui.form, element = layui.element;
+                    form.render();
+                });
+
+            }
+        });
+
+});}
+      function saveNode() {
+        var addr = $('#treeNodeName').val();
+        var source = $('#source').val();
+        var tag = $('#memo').val();
+        var Udata= JSON.stringify({"addr":addr,"tag":tag,"source":source});
+        $.ajax({
+            url:'/btc/saveTag/' ,
+            type:'POST',
+            contentType: 'application/json; charset=UTF-8',
+            data:Udata,
+            success:function (res) {
+                if(res.code == '0000'){
+                    layer.closeAll();
+                }else{
+                    layer.msg(res.message,{time:2000})
+                }
+                location.reload(true);
+            }
+        })
+    }
+   </script>
+
+
+{% endblock %}

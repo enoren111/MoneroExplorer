@@ -1,0 +1,110 @@
+/*
+* ==========================================================
+*     DASHBOARD COUNTS SECTION
+* ==========================================================
+*/
+
+
+/* Card with nav tabs */
+
+
+
+.bsTab > .nav-tabs {
+	border-bottom: none;
+}
+
+.bsTab > .nav-tabs:not(.nav-stacked) {
+	background-color: rgba(0, 20, 35, 0.038);
+}
+
+/*.bsTab > .nav-tabs:first-child {*/
+	/*border-top-right-radius: 3px;*/
+	/*border-top-left-radius: 3px;*/
+/*}*/
+
+.bsTab > .nav-tabs.nav-tabs-right > li {
+	float: right;
+}
+
+.bsTab > .nav-tabs > li {
+	margin-bottom: 0;
+}
+
+.bsTab > .nav-tabs > li > a {
+	margin-right: 0;
+	/*border: 1px solid transparent !important;*/
+    border: none;
+    text-decoration:none;
+    color: rgba(67, 67, 67, 0.7);
+}
+
+.bsTab > .nav-tabs > li > a:hover {
+	color: #7dc855;
+	/*background-color: transparent;*/
+	border-color: transparent;
+}
+
+
+/* 改变background颜色 */
+/*.bsTab > .nav-tabs > li > a.active, .bsTab > .nav-tabs > li > a.active:hover, .bsTab > .nav-tabs > li > a.active:focus {*/
+	/*background-color: #fff;*/
+	/*box-shadow: inset 0 2px #7dc855;*/
+/*}*/
+
+
+
+.bsTab > .nav-tabs > li> a.active:hover, .bsTab > .nav-tabs > li > a.active:focus {
+	color: inherit;   /* 注意！！！ */
+}
+
+.bsTab > .nav-tabs > li:not(.active) > a.inactive {
+	color: #333333;
+}
+
+.bsTab > .nav-tabs > li:not(.active) > a.inactive:hover, .bsTab > .nav-tabs > li:not(.active) > a.inactive:focus {
+	box-shadow: none;
+}
+
+.bsTab > .nav-tabs:first-child > li > a {
+	border-radius: 0;
+}
+
+/*.bsTab > .nav-tabs:first-child > li:first-child > a {*/
+	/*border-top-left-radius: 3px;*/
+/*}*/
+
+/*.bsTab > .nav-tabs:first-child > li:last-child > a {*/
+	/*border-top-right-radius: 3px;*/
+/*}*/
+
+.bsTab > .nav-tabs.nav-tabs-alt {
+	background-color: transparent;
+	border-bottom: 1px solid rgba(0, 20, 35, 0.038);
+}
+
+.bsTab > .nav-tabs.nav-tabs-alt > li > a {
+	margin-bottom: -1px;
+	-webkit-transition: all 0.15s ease-out;
+	transition: all 0.15s ease-out;
+}
+
+.bsTab > .nav-tabs.nav-tabs-alt > li > a:hover {
+	box-shadow: inset 0 -2px #7dc855;
+}
+
+.bsTab > .nav-tabs.nav-tabs-alt > li.active > a, .bsTab > .nav-tabs.nav-tabs-alt > li.active > a:hover, .bsTab > .nav-tabs.nav-tabs-alt > li.active > a:focus {
+	box-shadow: inset 0 -2px #7dc855;
+}
+
+.bsTab > .nav-tabs.nav-stacked > li.active > a, .bsTab > .nav-tabs.nav-stacked > li.active > a:hover, .bsTab > .nav-tabs.nav-stacked > li.active > a:focus {
+	box-shadow: inset -2px 0 #7dc855;
+}
+
+.bsTab .card-block.tab-content {
+	overflow: hidden;
+}
+
+
+
+
+

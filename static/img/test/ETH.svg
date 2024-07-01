@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="30px" height="30px" viewBox="0 0 30 30" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.1 (57501) - http://www.bohemiancoding.com/sketch -->
+    <title>ETH</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard" transform="translate(-669.000000, -309.000000)">
+            <g id="ETH" transform="translate(669.000000, 309.000000)">
+                <path d="M29.9869851,15.0740896 C29.9869851,23.3172239 23.3047463,29.9994627 15.0616119,29.9994627 C6.81862687,29.9994627 0.136238806,23.3172239 0.136238806,15.0740896 C0.136238806,6.83095522 6.81862687,0.148716418 15.0616119,0.148716418 C23.3047463,0.148716418 29.9869851,6.83095522 29.9869851,15.0740896" id="Fill-506" fill="#497391"></path>
+                <polygon id="Fill-507" fill="#FFFFFF" points="8.4530597 16.9234328 14.8548507 3.73641791 14.8548507 20.2932836"></polygon>
+                <polygon id="Fill-508" fill="#FFFFFF" points="21.670403 16.9234328 15.2459254 20.2932836 15.2459254 3.7319403"></polygon>
+                <polygon id="Fill-509" fill="#FFFFFF" points="8.4530597 17.4058209 14.8548507 20.611194 14.8548507 25.7655224"></polygon>
+                <polygon id="Fill-510" fill="#FFFFFF" points="21.670403 17.4058209 15.2459254 25.7655224 15.2459254 20.611194"></polygon>
+            </g>
+        </g>
+    </g>
+</svg>

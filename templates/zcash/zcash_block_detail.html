@@ -1,0 +1,185 @@
+{% extends 'base_zcash.html' %}
+
+
+{% block head_style %}
+{#    datatable #}
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='plugins/jquery-datatable/css/jquery.dataTables.min.css') }}"/>
+<style>
+#miner{display: none;}
+</style>
+
+{% endblock %}
+{# <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/bee.theme.dark.css') }}"/>#}
+<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="{{ url_for('static', filename='vendor/js/jquery-3.3.1.min.js') }}"></script>
+<script src="{{ url_for('static', filename='vendor/js/popper.min.js') }}"></script>
+<script src="{{ url_for('static', filename='vendor/js/bootstrap.min.js') }}"></script>
+{#    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>#} {# 302 #}
+
+
+{% block content %}
+        {% include '_zcashcrumb.html' %}
+
+{#    <h1>BTC BLOCK DETAIL</h1>#}
+    <br>
+<div class="bee-card card bg-dark">
+    <div class="card-header">概要信息>>{{ blockInfo['hash']}}</div>
+    <div class="card-body">
+        <div class="bee-row2">
+        <div style="flex:1"class="bee-border-r-b">
+            <table class="table table-sm table-hover bee-table">
+                <tbody>
+                <tr>
+                    <td>高度</td>
+                    <td>{{ blockInfo['height'] }}</td>
+                </tr>
+{#                <tr>#}
+{#                    <td>区块哈希</td>#}
+{#                    <td><a href="{{ url_for('zcash.zcash_block_detail',hash= blockInfo['hash']) }}">{{ blockInfo['hash']|truncate(30) }}</a></td>#}
+{#                </tr>#}
+                <tr>
+                    <td>出块时间</td>
+                    <td>{{ blockInfo['time'] }}</td>
+                </tr>
+                <tr>
+                    <td>交易数量</td>
+                    <td>{{ blockInfo['trans_num']}}</td>
+                </tr>
+                <tr>
+                    <td>区块大小(byte)</td>
+                    <td>{{ blockInfo['size'] }}</td>
+                </tr>
+                <tr>
+                    <td>挖矿难度(difficulty)</td>
+                    <td>{{ blockInfo['difficulty'] }}</td>
+                </tr>
+
+{#                <tr>#}
+{#                    <td>出块奖励</td>#}
+{#                    <td>{{ blockInfo['block_reward'] }}</td>#}
+{#                </tr>#}
+                </tbody>
+            </table>
+        </div>
+        <div style="flex: 1">
+            <table class="table table-sm table-hover bee-table">
+                <tr>
+                    <td>父块哈希</td>
+                    <td><a href="{{ url_for('zcash.zcash_block_detail',hash= blockInfo['previousblockhash']) }}">{{ blockInfo['previousblockhash']|truncate(30) }}</a></td>
+                </tr>
+                <tr>
+                    <td>子块哈希</td>
+                    <td><a href="{{ url_for('zcash.zcash_block_detail',hash= blockInfo['nextblockhash']) }}">{{ blockInfo['nextblockhash']|truncate(30) }}</a></td>
+                </tr>
+                <tr>
+                    <td>Nonce值</td>
+                    <td>{{ blockInfo['nonce']|truncate(50) }}</td>
+                </tr>
+                <tr>
+                    <td>确认数</td>
+                    <td>{{ blockInfo['confirm_num'] }}</td>
+                </tr>
+                <tr>
+                    <td>版本</td>
+                    <td>{{ blockInfo['version'] }}</td>
+                </tr>
+{#                <tr>#}
+{#                    <td>矿工#}
+{#                    </td>#}
+{#                    <td>{{ blockInfo['mineres'] }}</td>#}
+{#                </tr>#}
+{#                <tr>    #}
+{#                    <td> <input class="btn btn-primary btn-sm" id="button1" type="button" value="显示" /></td>#}
+{#                    <td> <input class="btn btn-primary btn-sm" id="button2" type="button" value="隐藏" /></td>#}
+{#           </tr>    #}
+ </table>
+        </div>
+        </div>
+    </div>
+    <br>
+    <div class="bee-card card bg-dark">
+    <div class="card-header">交易信息</div>
+    <div class="card-body">
+
+        <table class="display bee-db" id="trans-in-block1" >
+
+            <thead>
+            <tr>
+                 <th>交易哈希</th>
+            <th>所在区块</th>
+            <th>时间</th>
+{#            <th>发送方</th>#}
+{#            <th>接收方</th>#}
+            <th>屏蔽交易额(ZEC)</th>
+            <th>透明交易额(ZEC)</th>
+            <th>交易类型</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for block in blocktrans %}
+                <tr>
+                 <td>
+                    <a href="{{ url_for('zcash.zcash_tsc_detail', hash=block['_id']) }}">{{ block['_id']|truncate(20) }}</a>
+                </td>
+                <td>
+                    <a href="{{ url_for('zcash.zcash_block_detail',hash = block['_source']['blockhash']) }}">{{ blockInfo['height']}}</a>
+                </td>
+                <td>{{ block['_time'] }}</td>
+                <td>{{ block['value_shield'] }}</td>
+                <td>{{ block['value_transparent'] }}</td>
+                <td>{{ block['trans_type'] }}</td>
+                </tr>
+            {% endfor %}
+
+{#        {% for block in blocktrans %}#}
+{#            <tr>#}
+{#                <td>#}
+{#                    <a href="{{ url_for('btc.btc_tsc_detail', hash=block['_id']) }}">{{ block['_id']|truncate(15) }}</a>#}
+{#                </td>#}
+{#                <td>#}
+{#                    <a href="{{ url_for('btc.btc_block_detail',hash = block['_source']['blockhash']) }}">{{ blockInfo['height']}}</a>#}
+{#                </td>#}
+{#                <td>{{ blockInfo['time'] }}</td>#}
+{#                <td>{{ block['vin'] }}</td>#}
+{#                <td>{{ block['vout'] }}</td>#}
+{#                <td>{{ block['value'] }}</td>#}
+{#            </tr>#}
+{#        {% endfor %}#}
+        </tbody>
+        </table>
+        {{ pagination.links }}
+    </div>
+    </div>
+</div>
+    <br>
+
+{% endblock %}
+
+{% block body_script %}
+    <script src="{{ url_for('static', filename='plugins/jquery-datatable/js/jquery.dataTables.min.js') }}"></script>
+    <script type="text/javascript">
+
+        var bid = {{ blockInfo['height'] }};
+        var col_names = {{ col_names|tojson }}
+
+    </script>
+    <script src="{{ url_for('static', filename='assets/js/page/block_detail.js') }}"></script>
+<script type="text/javascript">
+
+ window.onload = function(){
+
+document.getElementById("button1").onclick = function(){
+
+ document.getElementById("miner").style.display = "block";
+
+}
+ document.getElementById("button2").onclick = function(){
+
+ document.getElementById("miner").style.display = "none";
+
+}
+ }
+</script>
+
+{% endblock %}

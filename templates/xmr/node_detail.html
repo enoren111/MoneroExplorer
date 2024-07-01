@@ -1,0 +1,219 @@
+{% extends 'baseXMR.html' %}
+
+
+{% block head_style %}
+{#    datatable #}
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='plugins/jquery-datatable/css/jquery.dataTables.min.css') }}"/>
+<style>
+#miner{display: none;}
+</style>
+
+{% endblock %}
+{# <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/bee.theme.dark.css') }}"/>#}
+<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="{{ url_for('static', filename='vendor/js/jquery-3.3.1.min.js') }}"></script>
+<script src="{{ url_for('static', filename='vendor/js/popper.min.js') }}"></script>
+<script src="{{ url_for('static', filename='vendor/js/bootstrap.min.js') }}"></script>
+{#    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>#} {# 302 #}
+
+
+{% block content %}
+        {% include '_xmrcrumb.html' %}
+
+{#    <h1>BTC BLOCK DETAIL</h1>#}
+    <br>
+<div class="bee-card card bg-dark">
+    <div class="card-header">Information Summary>>{{ nodeInfo['address']}}:{{ nodeInfo['port']}}</div>
+    <div class="card-body">
+        <div class="bee-row2">
+        <div style="flex:1"class="bee-border-r-b">
+            <table class="table table-sm table-hover bee-table">
+                <tbody>
+                <tr>
+                    <td>Address</td>
+                    <td>{{ nodeInfo['address'] }}</td>
+                </tr>
+                <tr>
+                    <td>Port</td>
+                    <td >{{ nodeInfo['port'] }}</td>
+                </tr>
+                <tr>
+                    <td>Autonomous organization name</td>
+                    <td>{{ nodeInfo['aso']}}</td>
+                </tr>
+                <tr>
+                    <td>Autonomous System Number</td>
+                    <td>{{ nodeInfo['asn'] }}</td>
+                </tr>
+                <tr>
+                    <td>Nation</td>
+                    <td>{{ nodeInfo['country'] }}</td>
+                </tr>
+                <tr>
+                    <td>City</td>
+                    <td>{{ nodeInfo['city'] }}</td>
+                </tr>
+                <tr>
+                    <td>Operation System</td>
+                    <td>{{ nodeInfo['os'] }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div style="flex: 1">
+            <table class="table table-sm table-hover bee-table">
+                <tr>
+                    <td>last seen</td>
+                    <td><a>{{ nodeInfo["last_seen"] }}</a></td>
+                </tr>
+                <tr>
+                    <td>Height</td>
+                    <td><a >{{ nodeInfo['last_height'] }}</a></td>
+                </tr>
+                <tr>
+                    <td>CPU Name</td>
+                    <td>{{ nodeInfo['hostname'] }}</td>
+                </tr>
+                <tr>
+                    <td>Latitude and Longitude</td>
+                    <td>{{ nodeInfo['longitude'] }},{{ nodeInfo['latitude'] }}</td>
+                </tr>
+                <tr>
+                    <td>Time Zone
+                    </td>
+                    <td>{{ nodeInfo['timezone']}}</td>
+                </tr>
+                                <tr>
+                    <td>rpcPort
+                    </td>
+                    <td>{{ nodeInfo['rpc_port'] }}</td>
+
+                </tr>
+                <tr>
+                    <td>Whether to relay compact blocks for relay
+                    </td>
+                    {% if nodeInfo['support_flags']=="0" %}
+                    <td>No</td>
+                    {% else %}
+                    <td>Yes</td>
+                    {% endif %}
+
+
+                </tr>
+                <tr>
+                    <td>Whether to store the entire blockchain
+                    </td>
+                    {% if nodeInfo['pruning_seed']=="0" %}
+                    <td>No</td>
+                    {% else %}
+                    <td>Yes</td>
+                    {% endif %}
+
+                </tr>
+
+                <tr>
+
+           </tr>
+ </table>
+                  
+
+        </div>
+        </div>
+    </div>
+    <br>
+{#    <div class="bee-card card bg-dark">#}
+{#    <div class="card-header">Transaction Information</div>#}
+{#    <div class="card-body">#}
+{##}
+{#        <table class="display bee-db" id="trans-in-block1" >#}
+{#            <thead>#}
+{#            <tr>#}
+{#                <th>Transaction Hash</th>#}
+{#                <th>Block</th>#}
+{#                <th>Time</th>#}
+{#                <th>Number of senders</th>#}
+{#                <th>Number of receivers</th>#}
+{#                <th>Transaction volume(XMR)</th>#}
+{#            </tr>#}
+{#            </thead>#}
+{#            <tbody>#}
+{##}
+{#        {% for block in blocktrans %}#}
+{#            <tr>#}
+{#                <td>#}
+{#                    <a href="{{ url_for('xmr.xmr_tsc_detail', hash=block['_id']) }}">{{ block['_id']|truncate(15) }}</a>#}
+{#                </td>#}
+{#                <td>#}
+{#                    <a href="{{ url_for('xmr.xmr_block_detail',hash = block['_source']["block_hash"]) }}">{{ blockInfo['height']}}</a>#}
+{#                </td>#}
+{#                <td title="UTC时间：{{ blockInfo['time1'] }}">{{ blockInfo['time_bj'] }}</td>#}
+{#                <td>{{ block['vin'] }}</td>#}
+{#                <td>{{ block['vout'] }}</td>#}
+{#                <td>{{ block['value'] }}</td>#}
+{#            </tr>#}
+{#        {% endfor %}#}
+{##}
+{##}
+{#        </tbody>#}
+{#        </table>#}
+{#        {{ pagination.links }}#}
+{#    </div>#}
+{#    </div>#}
+{#</div>#}
+{#    <br>#}
+
+{% endblock %}
+
+{#{% block body_script %}#}
+{#    <script src="{{ url_for('static', filename='plugins/jquery-datatable/js/jquery.dataTables.min.js') }}"></script>#}
+{#    <script type="text/javascript">#}
+{##}
+{#        var bid = {{ nodeInfo['last_height'] }};#}
+{#        var col_names = {{ col_names|tojson }}#}
+{##}
+{#    </script>#}
+{#    <script src="{{ url_for('static', filename='assets/js/page/block_detail.js') }}"></script>#}
+{#<script type="text/javascript">#}
+{##}
+{# window.onload = function(){#}
+{##}
+{#document.getElementById("button1").onclick = function(){#}
+{##}
+{# document.getElementById("miner").style.display = "block";#}
+{##}
+{#}#}
+{# document.getElementById("button2").onclick = function(){#}
+{##}
+{# document.getElementById("miner").style.display = "none";#}
+{##}
+{#}#}
+{# }#}
+{#</script>#}
+{##}
+{#<script type="text/javascript">#}
+{#function show (event) {#}
+{#    //取消冒泡#}
+{#    let oevent = event || window.event#}
+{#    if (document.all) {#}
+{#        oevent.cancelBubble = true#}
+{#    } else {#}
+{#        oevent.stopPropagation()#}
+{#    }#}
+{#    if (document.getElementById('miner').style.display === 'none' || document.getElementById('miner').style.display === '') {#}
+{#        document.getElementById('miner').style.display = 'block'#}
+{#    } else {#}
+{#        document.getElementById('miner').style.display = 'none'#}
+{#    }#}
+{#}#}
+{#document.onclick = function () {#}
+{#    document.getElementById('miner').style.display = 'none'#}
+{#}#}
+{#document.getElementById('miner').onclick = function (event) {#}
+{#    let oevent = event || window.event#}
+{#    oevent.stopPropagation()#}
+{#}#}
+{##}
+{#</script>#}
+{##}
+{#{% endblock %}#}

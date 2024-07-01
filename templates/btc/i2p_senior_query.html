@@ -1,0 +1,327 @@
+{% extends 'base3.html' %}
+{% from 'macros.html' import reciver %}
+{% block title %}{% endblock %}
+
+{% block head_style %}
+    <style type="text/css">
+        #wrap {
+            word-break: break-all;
+            width: 800px;
+        }
+    #addrs::placeholder {
+        color: #4c5667;
+    }
+    #domains::placeholder {
+        color: #4c5667;
+    }
+    #coins::placeholder {
+        color: #4c5667;
+    }
+    #sdates::placeholder {
+        color: #4c5667;
+    }
+    #edates::placeholder {
+        color: #4c5667;
+    }
+    </style>
+
+{% endblock %}
+
+{% block content %}
+
+    {#    <h1>TRANSACTION DETAIL</h1>#}
+    {% include '_btccrumb.html' %}
+    <br>
+
+    <div class="card">
+
+        <div class="card-header">选择条件<button type="submit" style="float: right" class="btn btn-primary btn-sm" onclick="gen_query()">开始查询</button><button type="submit" style="float: right;margin-right: 25px" class="btn btn-primary btn-sm" onclick="location.reload()">重置条件</button></div>
+        <div class="card-body">
+
+                    <table class="table table-sm table-hover bee-table">
+                        <tbody>
+
+            <span class="colorful-lable">
+                <label class="sign">
+                    <input type="checkbox" name="attr"  id="addr" value="">交易地址
+                </label>
+                <label class="sign">
+                    <input type="checkbox" name="attr"  id="domain" value="">域名
+                </label>
+                 <label class="sign">
+                    <input type="checkbox" name="attr"  id="coin" value="">币种
+                </label >
+                 <label class="sign">
+                    <input type="checkbox" name="attr"  id="sdate">起始时间
+                </label>
+                <label class="sign">
+                    <input type="checkbox" name="attr"  id="edate">截止时间
+                </label>
+            </span>
+                        </tbody>
+                    </table>
+
+        </div>
+    </div>
+       <br>
+    <div class="bee-tab">
+        <ul class="nav nav-tabs nav-tabs-alt" data-toggle="tabs">
+            <li>
+                <a href="#attrs_input" class="active">输入条件</a>
+            </li>
+            <li>
+                <a href="#query_hitory">我的查询</a>
+            </li>
+        </ul>
+        <div class="card-block tab-content">
+
+            <div class="tab-pane active" id="attrs_input">
+           <form action="{{ url_for('btc.get_i2p') }}" method="post" class="layui-form" style="margin-top: 20px " id="query_form" >
+               <div style="display: none"  >
+            <div  >
+            <input type="text" name="keyword" autocomplete="off" class="layui-input" id="kws" value="" placeholder="关键词"  />
+            </div>
+            </div>
+                <div style="display: none"  >
+            <div  >
+            <input type="text" name="remark" autocomplete="off" class="layui-input" id="remarks" value="" placeholder="备注"  />
+            </div>
+            </div>
+            <div  class="layui-form-item"  >
+            <div  >
+            <input type="text" name="address" autocomplete="off" class="layui-input" id="addrs" value="" placeholder="交易地址"  />
+            </div>
+            </div>
+            <div class="layui-form-item">
+                <div >
+            <input type="text" name="domain" autocomplete="off" class="layui-input" id="domains" value="" placeholder="域名" /></div></div>
+            <div class="layui-form-item" >
+            <div >
+            <input type="text" name="coin" autocomplete="off" class="layui-input" id="coins" value="" placeholder="btc/eth/monero/ltc"/>
+            </div></div><div class="layui-form-item" >
+            <div >
+                <input type="text" name="sdate" autocomplete="off" class="layui-input" id="sdates" value="" placeholder="起始时间" onclick="dateClick()" >
+            </div></div>
+                <div class="layui-form-item" >
+            <div >
+                    <input type="text" name="edate" class="layui-input" id="edates" value="" placeholder="截止时间" onclick="dateClick()" >
+            </div></div>
+               <center><button type="submit"  class="btn btn-primary btn-sm"  value="" >查询</button><button type="reset"  style="margin-left: 20px "class="btn btn-primary btn-sm" onclick="layer.closeAll()">取消</button></center>
+            </form>
+            </div>
+            <div class="tab-pane " id="query_hitory">
+                   <table class="table " >
+                        <thead>
+               <tr>
+                 <th>序号</th>
+                <th>关键词</th>
+                <th>备注信息</th>
+{#                <th>域名</th>#}
+{#                <th>币种</th>#}
+{#                <th>起始时间</th>#}
+{#                <th>截止时间</th>#}
+                   <th></th>
+                 <th></th>
+            </tr>
+            </thead>
+            <tbody>
+       {% for single in list %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>
+                    <a >{{ single['kw']}}</a>
+
+                </td>
+                <td>  <a>{{ single['remark'] }}</a></td>
+                 <td><a style="color: cornflowerblue" id="{{ single }}" href="javascript:void(0);" onclick="querydetail(this.id)">查看详情</a></td>
+                <td><button  class="btn btn-primary btn-sm" style="color: white" id="{{ single }}" onclick="query_again(this.id)">再次查询</button></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+                    </table>
+                     {{ pagination.links }}
+                <br>
+            </div>
+        </div>
+    </div>
+
+
+
+    <br>
+{% endblock %}
+
+{% block body_script %}
+    <script src="{{ url_for('static', filename='muban/3527/app.js') }}"></script>
+    <script src="{{ url_for('static', filename='My97DatePicker/WdatePicker.js') }}"></script>
+
+
+    {#    <script src="{{ url_for('static', filename='assets/js/page/btc_tsc_detail.js') }}" charset="GB2312"></script>#}
+    {#    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>#}
+    {#    tab #}
+     <script src="{{ url_for('static', filename='layui/layui.js') }}"></script>
+    <script>
+    function querydetail(single) {
+        remark = JSON.parse(single.replace(/'/g, '"')).remark;
+        keyword = JSON.parse(single.replace(/'/g, '"')).kw;
+        addr = JSON.parse(single.replace(/'/g, '"')).addr;
+        coin = JSON.parse(single.replace(/'/g, '"')).coin;
+        domain = JSON.parse(single.replace(/'/g, '"')).domain;
+        sdate = JSON.parse(single.replace(/'/g, '"')).sdate;
+        edate = JSON.parse(single.replace(/'/g, '"')).edate;
+        document.getElementById("remarks").value = remark;
+        document.getElementById("kws").value = keyword;
+        document.getElementById("addrs").value = addr;
+        document.getElementById("coins").value = coin;
+        document.getElementById("domains").value = domain;
+        document.getElementById("sdates").value = sdate;
+        document.getElementById("edates").value = edate;
+        document.getElementById("query_form").action = "{{ url_for('btc.i2p_query_detail') }}";
+        document.getElementById("query_form").submit();
+    }
+function gen_query() {
+        var num=0;
+        var num_uncheck=0;
+        var check = new Array();
+        var uncheck = new Array();
+        var attr_ = document.getElementsByName("attr");
+        for ( var i = 0; i < attr_.length; i++) {
+            if (attr_[i].checked) {
+                check[num]=attr_[i].id;
+                num++;
+            }
+            else {
+                uncheck[num_uncheck]=attr_[i].id+'s';
+                num_uncheck++;
+            }
+
+        }
+        if(num==0){
+            alert("请选择条件!");
+        }
+        else{
+            {#alert(check);#}
+        for ( var i = 0; i < uncheck.length; i++) {
+               document.getElementById(uncheck[i]).hidden=true;
+        }
+        }
+       /* $.ajax({
+            url:'/darknet/query/' ,
+            type:'POST',
+            contentType: 'application/json; charset=UTF-8',
+            data:Udata,
+            success:function () {
+                if(res.code[0] == 'addr'){
+                    layer.closeAll();
+
+
+                }else{
+                    layer.msg(res.message,{time:2000})
+                }
+                location.reload(true);
+            }
+        })*/
+
+        {#prompt("ss","sad");#}
+        //window.alert(check[0]+num);
+
+    }
+function remeber() {
+    var r=confirm("是否记住本次查询？");
+    if (r==true)
+    {
+        var kw=window.prompt("请输入本次查询的关键词：")
+        if (length(kw)>0){
+            var addr = $('#addrs').val();
+            var domain = $('#domains').val();
+            var coin = $('#coins').val();
+            var sdate = $('#sdates').val();
+            var edate = $('#edates').val();
+            var Udata= JSON.stringify({"addr":addr,"domain":domain,"coin":coin,"sdate":sdate,"edate":edate,"kw":kw});
+            $.ajax({
+            url:'/saveQuery/' ,
+            type:'POST',
+            contentType: 'application/json; charset=UTF-8',
+            data:Udata,
+            success:function (res) {
+
+                    layer.msg(res.code,{time:2000})
+
+            }
+        })
+        }
+        else {
+            return 0;
+        }
+
+    }
+    else
+    {
+        x="你按下了\"取消\"按钮!";
+    }
+    {#alert(x);#}
+
+}
+
+   </script>
+    <script>
+    function query_again(single){
+       keyword = JSON.parse(single.replace(/'/g,'"')).kw;
+       addr = JSON.parse(single.replace(/'/g,'"')).addr;
+       coin = JSON.parse(single.replace(/'/g,'"')).coin;
+       domain = JSON.parse(single.replace(/'/g,'"')).domain;
+       sdate = JSON.parse(single.replace(/'/g,'"')).sdate;
+       edate = JSON.parse(single.replace(/'/g,'"')).edate;
+       {#alert(keyword+addr+coin+domain+sdate+edate);#}
+       document.getElementById("addrs").value=addr;
+       document.getElementById("coins").value=coin;
+       document.getElementById("domains").value=domain;
+       document.getElementById("sdates").value=sdate;
+       document.getElementById("edates").value=edate;
+       document.getElementById("query_form").action="{{ url_for('btc.get_i2p') }}";
+       document.getElementById("query_form").submit();
+            }
+
+     function gen_sql(){
+    layui.use(['layer', 'form'], function(){
+        var layer = layui.layer
+         ,form = layui.form;
+       layer.open({
+            type:1,
+            skin:'layui-layer-molv',
+            area:  ['400px', '75%'],
+            content:'<form class="layui-form" style="margin-top: 20px" > ' +
+            '<div class="layui-form-item" >' +
+            ' <label class="layui-form-label" style="color:black">为本次查询添加关键词：</label>' +
+            '<div class="layui-input-inline"> ' +
+            '<input type="text" name="kw"  id="kw">' +
+            '</div>' +
+            '</div>' +
+            '</form>',
+            btn: ['添加', '取消'],
+            btnAlign: 'c',
+            yes: function(){
+                get_kw();
+                layer.closeAll();
+            },
+            btn2: function(){
+                layer.closeAll();
+            },
+            success: function(layero, index){
+                layui.use(['form','element'],function () {
+                    var form = layui.form, element = layui.element;
+                    form.render();
+                });
+
+            }
+        });
+});}
+	function dateClick() {
+		WdatePicker({
+			dateFmt : 'yyyy-MM-dd HH:mm:ss',  //格式设置相对应界面可选择也变化
+			highLineWeekDay:true,  //周末的日期是否高亮
+			readOnly:true,  //是否允许键盘输入值，false为禁止输入，只能鼠标选
+		});
+	}
+	</script>
+
+{% endblock %}

@@ -1,0 +1,80 @@
+
+
+.bee-badge{
+    background-color: #7dc855;
+    border-radius: 10px;
+    padding: 3px 7px;
+}
+
+
+
+.bee-container-fluid{
+    padding: 0 100px;
+}
+
+@media (min-width: 992px){
+    .bee-container{
+    max-width: 1200px;
+}
+}
+/* bee-card base bootstrap card */
+/* despatch */
+.bee-card{
+    color: white;
+
+}
+.bee-card .card-header{
+background-color: #2e2e2e;
+
+}
+
+.bee-card .card-body{
+    background-color: #232323;
+}
+
+.bee-card .card-header a{
+    cursor: pointer;
+    float: right;
+}
+
+
+/* theme */
+.f-c-w{ /* font color */
+    color: white;
+}
+
+
+/* bootstrap card */
+.card-body{
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+
+.card-body.pb0{
+    padding-bottom: 0;
+}
+
+/* bootstrap table */
+
+
+/* start sllick dots position */
+
+.slick-dotted.slick-slider{
+    margin-bottom: 0px;
+}
+
+.slick-dots{
+    position: static;
+    margin-top: -6px; /* slick list 高度会在内部元素高度的基础上+6px 抵消6px */
+}
+
+
+
+
+/* modal */
+@media (min-width: 576px){
+.modal-dialog {
+    max-width: 800px;
+    margin: 1.75rem auto;
+}
+}

@@ -1,0 +1,157 @@
+{% extends 'base3.html' %}
+{% block title %}{% endblock %}
+{% block head_style %}
+    {#    slick muban3527 #}
+    <style type="text/css">
+    </style>
+<script src="{{ url_for('static', filename='js/jquery-2.1.4.min.js') }}"></script>
+{% endblock %}
+{% block content %}
+    {% include '_btccrumb.html' %}
+    {#    <h1>BTC TRANSACTIONS</h1>#}
+    <div class="bee-row2">
+        <div class="bee-row">
+            <div>共<span class="transes_total">{{ count }}</span>个结果(默认当天)，用时{{ usetime }}ms</div>
+            <div>
+                <form action="{{ url_for('btc.btc_tag_search') }}" class="">
+                    地址：
+                    <input name="address" style="width: 180px;" type="text" value="">
+                    标签：
+                    <input name="tags" style="width: 80px;" type="text" value="">
+                    来源：
+                    <input name="sources" style="width: 80px;" type="text" value="">
+                    网站：
+                    <input name="coms" style="width: 100px;" type="text" value="">
+                    <button type="submit" style="margin-left: 30px;" class="btn btn-primary btn-sm">搜索</button>
+                </form>
+            </div>
+            <div>
+                <button type="submit" style="margin-left: 30px;" class="btn btn-primary btn-sm" onclick="add_tag()">添加标签</button>
+            </div>
+        </div>
+    </div>
+    <!-- start latestTransList-->
+    <table id="transes-table" class="table bee-transes-table">
+        <thead>
+        <tr>
+            <th>地址</th>
+            <th>类型</th>
+            <th>来源</th>
+            <th>标签</th>
+            <th>网站</th>
+            <th>更多</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        {% for single in list %}
+            <tr>
+                <td><a href="{{ url_for('btc.btc_address_detail',address = single['addr']) }}">{{ single['addr'] }}</a></td>
+                <td>bitcoin</td>
+                <td>{{ single['source'][0] }}</td>
+                <td>{{ single['category'][0] }}</td>
+                <td>{{ single['com'][0] }}</td>
+                <td style="color: #1E90FF" id="{{ single }}" onclick="look_detail(this.id)">查看详情</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {{ pagination.links }}
+    <div class="m-style pagination"></div> <!-- pagination.js -->
+    <!-- start latestTransList-->
+
+{% endblock %}
+
+{% block body_script %}
+
+    {#    chartjs 3492 demo #}
+    <script src="{{ url_for('static', filename='plugins/chart.js/Chart.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='plugins/chart.js/utils.js') }}"></script>
+    {#    <script src="{{ url_for('static', filename='muban/3492/charts-custom.js') }}"></script>  {# 饼状图 #}
+    {#    <script src="{{ url_for('static', filename='assets/demo/big-deal.js') }}"></script>#} <!-- 大额异动 -->
+    {#    3527 banner slick #}
+
+
+    {#    echarts #}
+    {#    <script src="{{ url_for('static', filename='plugins/echarts/echarts.js') }}"></script>#}
+
+
+    <script src="{{ url_for('static', filename='layui/layui.js') }}"></script>
+<script>
+    function add_tag(){
+    layui.use(['layer', 'form'], function(){
+        var layer = layui.layer
+         ,form = layui.form;
+       layer.open({
+            type:1,
+            skin:'layui-layer-molv',
+            area: ['370px', '35%'],
+            content:'<form class="layui-form" style="margin-top: 20px"> ' +
+            '<div class="layui-form-item" >' +
+            ' <label class="layui-form-label" style="color:black">地址</label>' +
+            '<div class="layui-input-inline"> ' +
+            '<input type="text" name="addr" autocomplete="off" class="layui-input" id="treeNodeName">' +
+            '</div>' +
+            '</div>' +
+            '<div class="layui-form-item" >' +
+            ' <label class="layui-form-label" style="color:black">标签</label>      <div class="layui-input-inline"> ' +
+            '<input type="text" name="tag" autocomplete="off" class="layui-input" id="memo" ></div> ' +
+            '<div class="layui-form-item" >' +
+            ' <label class="layui-form-label" style="color:black">来源</label>     ' +
+            ' <div class="layui-input-inline"> ' +
+            '<input type="text" name="source" autocomplete="off" class="layui-input" id="source" >' +
+            '</div>'+
+            '<div class="layui-form-item" >' +
+            ' <label class="layui-form-label" style="color:black">网站</label>'+'<div class="layui-input-inline"> ' +
+            '<input type="text" name="com" autocomplete="off" class="layui-input" id="com" ></div>'+
+            '</form>',
+            btn: ['保存', '关闭'],
+            btnAlign: 'c',
+            yes: function(){
+                saveNode();
+            },
+            btn2: function(){
+                layer.closeAll();
+            },
+            success: function(layero, index){
+                layui.use(['form','element'],function () {
+                    var form = layui.form, element = layui.element;
+                    form.render();
+                });
+
+            }
+        });
+
+});}
+
+       function look_detail(single){
+       addr = JSON.parse(single.replace(/'/g,'"')).addr;
+       source = JSON.parse(single.replace(/'/g,'"')).source;
+       category = JSON.parse(single.replace(/'/g,'"')).category;
+       com = JSON.parse(single.replace(/'/g,'"')).com
+       alert('地址:'+addr+'\n'+'来源:'+source+'\n'+'标签:'+category+'\n'+'网站:'+com);
+            }
+
+      function saveNode() {
+        var addr = $('#treeNodeName').val();
+        var source = $('#source').val();
+        var tag = $('#memo').val();
+        var com = $('#com').val();
+        var Udata= JSON.stringify({"addr":addr,"tag":tag,"source":source,"com":com});
+        $.ajax({
+            url:'/btc/saveTag/' ,
+            type:'POST',
+            contentType: 'application/json; charset=UTF-8',
+            data:Udata,
+            success:function (res) {
+                if(res.code == '0000'){
+                    layer.closeAll();
+                }else{
+                    layer.msg(res.message,{time:2000})
+                }
+                location.reload(true);
+            }
+        })
+    }
+   </script>
+{% endblock %}

@@ -1,0 +1,1 @@
+{"took": 2, "timed_out": false, "_shards": {"total": 5, "successful": 5, "skipped": 0, "failed": 0}, "hits": {"total": 10001, "max_score": 1.0, "hits": [{"_index": "btc_tag", "_type": "raw", "_id": "1JGc3MtMun1kwJ2TSSJtW5WNZ4fw9NPnLx", "_score": 1.0, "_source": {"sources": ["Bittrex.com"], "tags": {"Exchanges": ["Bittrex.com"]}}}]}}

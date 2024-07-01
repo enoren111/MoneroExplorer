@@ -1,0 +1,135 @@
+{% extends 'baseETH.html' %}
+{% block title %}{% endblock %}
+
+{% block head_style %}
+    <style type="text/css">
+
+    </style>
+
+{% endblock %}
+
+{% block content %}
+    {#<h1>BIG DEAL</h1>#}
+
+    <div id="big-deal" style="height: 500px;width: 100%;"></div>
+
+    <br>
+
+
+    <div class="bee-row2">
+
+        <div class="bee-row bee-filter">
+
+            {#    <div><span>共 7,300,440 个结果</span></div>#}
+            {#        <div>{{ pagination.info }}</div>#}
+
+            <div>共<span id="table_item_total">{{ total }}</span>个结果(默认当天)</div>
+
+
+            <div class="dropdown">
+                <button class="btn btn-primary btn-sm" type="button" id="trf-button" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">按时间筛选 <i class="fa fa-caret-down"></i>
+                </button>
+                <div class="dropdown-menu" aria-labelledby="trf-button">
+                    {% for item in  tr_options %}
+                        <a class="dropdown-item">{{ item }}</a>
+                    {% endfor %}
+
+                </div>
+            </div>
+            <div>
+                金额≥<input id="value" style="width: 50px" type="text">
+
+            </div>
+            <div><span>单位</span></div>
+            <div class="dropdown">
+                <button class="btn btn-primary btn-sm" type="button" id="unit" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">ETH <i class="fa fa-caret-down"></i>
+                </button>
+                <div class="dropdown-menu" aria-labelledby="unit">
+                    <a class="dropdown-item">ETH</a>
+                    <a class="dropdown-item">USD</a>
+                    <a class="dropdown-item">RMB</a>
+
+
+                </div>
+            </div>
+                    <div>
+                地址监测 <input id="address" placeholder="请输入地址"  type="text">
+
+            </div>
+
+
+        </div>
+        <div class="bee-row2 bee-pagination f-ai-c" style="width: 275px">
+            <button class="btn btn-primary btn-sm prev">上一页</button>
+            <input class="jump-ipt" style="width: 50px;" type="text" value="1">/ <span
+                class="pages">{{ pages }}</span>
+            <button class="btn btn-primary btn-sm next">下一页</button>
+        </div>
+    </div>
+
+    <!-- start latestTransList-->
+    <table id="big-transes-table" class="table bee-transes-table">
+        <thead>
+        <tr>
+            <th>交易哈希</th>
+            <th>所在区块</th>
+            <th>时间</th>
+            <th>发送方</th>
+            <th>接收方</th>
+            <th>交易额(ETH)</th>
+        </tr>
+        </thead>
+        <tbody>
+
+
+        {% for item in bigTransesList %}
+            <tr>
+                <td><a href="{{ url_for('eth.eth_tsc_detail', hash=item['hash']) }}">{{ item['hash']|truncate(20) }}</a>
+                </td>
+                <td>
+                    <a href="{{ url_for('eth.eth_block_detail',blockNumber = item['blockNumber']) }}">{{ item['blockNumber'] }}</a>
+                </td>
+                <td>{{ item['time'] }}</td>
+                <td title="{{ item['from'] }}"><a
+                        href="{{ url_for('eth.eth_address_detail',addr =  item['from'] ) }}">{{ item['from']|truncate(20) }}</a>
+                </td>
+                <td title="{{ item['to'] }}"><a href="
+
+
+                        {% if item['to']!=None %}{{ url_for('eth.eth_address_detail',addr =  item['to'] ) }}{% endif %}">
+                    {% if item['to']!=None %} {{ item['to']|truncate(20) }}{% endif %}</a>
+                <span>{% if item['to_type'] %}<i class="fa fa-cogs"></i>{% endif %}</span>
+                </td>
+                <td>{{ item['value'] }}</td>
+            </tr>
+        {% endfor %}
+
+
+        </tbody>
+    </table>
+{#    {{ pagination.links }}#}
+
+    <div class="m-style pagination"></div>
+    {#    <div class="m-style pagination"></div> <!-- pagination.js -->#}
+    <!-- start latestTransList-->
+
+
+{% endblock %}
+
+{% block body_script %}
+
+
+
+    <script type="text/javascript">
+        var exception_trans =
+        {{ exception_trans|tojson }} <!-- 日大额交易笔数列表 -->
+        var dates =
+        {{ date_list|tojson }} <!-- 日大额交易笔数列表 -->
+        var tr_option_list = {{ tr_options|tojson }}
+        var pages = {{ pages }}
+        var unit_list = {{unit_list|tojson }}
+    </script>
+    <script src="{{ url_for('static', filename='assets/js/page/big-deal.js') }}"></script>
+{% endblock %}

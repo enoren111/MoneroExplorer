@@ -1,0 +1,199 @@
+{% extends 'baseXMR.html' %}
+
+
+{% block head_style %}
+{#    datatable #}
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='plugins/jquery-datatable/css/jquery.dataTables.min.css') }}"/>
+<style>
+#miner{display: none;}
+</style>
+
+{% endblock %}
+{# <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/bee.theme.dark.css') }}"/>#}
+<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="{{ url_for('static', filename='vendor/js/jquery-3.3.1.min.js') }}"></script>
+<script src="{{ url_for('static', filename='vendor/js/popper.min.js') }}"></script>
+<script src="{{ url_for('static', filename='vendor/js/bootstrap.min.js') }}"></script>
+{#    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>#} {# 302 #}
+
+
+{% block content %}
+        {% include '_xmrcrumb.html' %}
+
+{#    <h1>BTC BLOCK DETAIL</h1>#}
+    <br>
+<div class="bee-card card bg-dark">
+    <div class="card-header">Information Summary>>{{ blockInfo['hash']}}</div>
+    <div class="card-body">
+        <div class="bee-row2">
+        <div style="flex:1"class="bee-border-r-b">
+            <table class="table table-sm table-hover bee-table">
+                <tbody>
+                <tr>
+                    <td>Height</td>
+                    <td>{{ blockInfo['height'] }}</td>
+                </tr>
+                <tr>
+                    <td>Block Time</td>
+                    <td title="UTC时间：{{ blockInfo['time1'] }}">{{ blockInfo['time_bj'] }}</td>
+                </tr>
+                <tr>
+                    <td>Number of Transactions</td>
+                    <td>{{ blockInfo['trans_num']}}</td>
+                </tr>
+                <tr>
+                    <td>Block Size</td>
+                    <td>{{ blockInfo['block_size'] }}</td>
+                </tr>
+                <tr>
+                    <td>Mining Difficulty</td>
+                    <td>{{ blockInfo['difficulty'] }}</td>
+                </tr>
+                <tr>
+                    <td>Block Reward</td>
+                    <td>{{ blockInfo['reward'] }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div style="flex: 1">
+            <table class="table table-sm table-hover bee-table">
+                <tr>
+                    <td>Block Hash</td>
+                    <td><a href="{{ url_for('xmr.xmr_block_detail',hash= blockInfo['hash']) }}">{{ blockInfo['hash']|truncate(30) }}</a></td>
+                </tr>
+                <tr>
+                    <td>Parent Block Hash</td>
+                    <td><a href="{{ url_for('xmr.xmr_block_detail',hash= blockInfo['prev_hash']) }}">{{ blockInfo['prev_hash']|truncate(30) }}</a></td>
+                </tr>
+                <tr>
+                    <td>Value of Nonce</td>
+                    <td>{{ blockInfo['nonce'] }}</td>
+                </tr>
+{#                <tr>#}
+{#                    <td>Number of Confirmations</td>#}
+{#                    <td>{{ blockInfo['confirm_num'] }}</td>#}
+{#                </tr>#}
+                <tr>
+                    <td>Miner Transaction Hash
+                    </td>
+                    <td>{{ blockInfo['miner_tx_hash']|truncate(30) }}</td>
+                </tr>
+                                <tr>
+                    <td>Number of transactions
+                    </td>
+                    <td>{{ blockInfo['trans_num'] }}</td>
+
+                </tr>
+                <tr>
+                    <td>Version
+                    </td>
+                    <td>{{ blockInfo['minor_version'] }}</td>
+
+                </tr>
+                <tr>
+
+           </tr>
+ </table>
+                  
+
+        </div>
+        </div>
+    </div>
+    <br>
+    <div class="bee-card card bg-dark">
+    <div class="card-header">Transaction Information</div>
+    <div class="card-body">
+
+        <table class="display bee-db" id="trans-in-block1" >
+            <thead>
+            <tr>
+                <th>Transaction Hash</th>
+                <th>Block</th>
+                <th>Time</th>
+                <th>Number of senders</th>
+                <th>Number of recipients</th>
+                <th>Transaction volume(XMR)</th>
+            </tr>
+            </thead>
+            <tbody>
+
+        {% for block in blocktrans %}
+            <tr>
+                <td>
+                    <a href="{{ url_for('xmr.xmr_tsc_detail', hash=block['_id']) }}">{{ block['_id']|truncate(15) }}</a>
+                </td>
+                <td>
+                    <a href="{{ url_for('xmr.xmr_block_detail',hash = block['_source']["block_hash"]) }}">{{ blockInfo['height']}}</a>
+                </td>
+                <td title="UTC时间：{{ blockInfo['time1'] }}">{{ blockInfo['time_bj'] }}</td>
+                <td>{{ block['vin'] }}</td>
+                <td>{{ block['vout'] }}</td>
+                <td>{{ block['value'] }}</td>
+            </tr>
+        {% endfor %}
+
+
+        </tbody>
+        </table>
+        {{ pagination.links }}
+    </div>
+    </div>
+</div>
+    <br>
+
+{% endblock %}
+
+{% block body_script %}
+    <script src="{{ url_for('static', filename='plugins/jquery-datatable/js/jquery.dataTables.min.js') }}"></script>
+    <script type="text/javascript">
+
+        var bid = {{ blockInfo['height'] }};
+        var col_names = {{ col_names|tojson }}
+
+    </script>
+    <script src="{{ url_for('static', filename='assets/js/page/block_detail.js') }}"></script>
+<script type="text/javascript">
+
+ window.onload = function(){
+
+document.getElementById("button1").onclick = function(){
+
+ document.getElementById("miner").style.display = "block";
+
+}
+ document.getElementById("button2").onclick = function(){
+
+ document.getElementById("miner").style.display = "none";
+
+}
+ }
+</script>
+
+<script type="text/javascript">
+function show (event) {
+    //取消冒泡
+    let oevent = event || window.event
+    if (document.all) {
+        oevent.cancelBubble = true
+    } else {
+        oevent.stopPropagation()
+    }
+    if (document.getElementById('miner').style.display === 'none' || document.getElementById('miner').style.display === '') {
+        document.getElementById('miner').style.display = 'block'
+    } else {
+        document.getElementById('miner').style.display = 'none'
+    }
+}
+document.onclick = function () {
+    document.getElementById('miner').style.display = 'none'
+}
+document.getElementById('miner').onclick = function (event) {
+    let oevent = event || window.event
+    oevent.stopPropagation()
+}
+
+</script>
+
+{% endblock %}

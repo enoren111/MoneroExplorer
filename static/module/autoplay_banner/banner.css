@@ -1,0 +1,35 @@
+/* Slick slider plugin */
+.slick-next,
+.slick-prev {
+	display: none;
+	visibility: hidden;
+}
+
+.slick-dots {
+	margin: 0;
+	padding: 16px 0;
+	position: static;
+}
+
+/*.card-block .slick-dots {*/
+	/*margin-bottom: -16px 24px 24px;*/
+/*}*/
+
+.slick-dots li {
+	vertical-align: middle;
+}
+
+.slick-dots li button:before {
+	color: rgba(0, 20, 35, 0.38);
+	font-size: 8px;
+	-webkit-transition: opacity .15s ease-out;
+	transition: opacity .15s ease-out;
+}
+
+.slick-dots li.slick-active button:before {
+	color: #7dc855;
+}
+
+.slick-slider{
+    margin-bottom: 0;
+}

@@ -1,0 +1,177 @@
+/* base D:\workspace\front\module\nav\jiaoben1017\css\flatnav.css */
+@import url(css.css);
+/** {*/
+/*margin: 0; */
+/*padding: 0;*/
+/*}*/
+
+.blacknav .nav {
+    background: #232323;
+    height: 60px;
+    display: inline-block;
+    /*display: table;*/
+}
+
+/* li display:list-item */
+.blacknav .nav li {
+    float: left;
+    list-style-type: none;
+    /*display: table-cell;*/
+    position: relative;   /* 与subnav相关 */
+}
+
+/* a在此是块级元素 */
+.blacknav .nav li a {
+    font-size: 16px;
+
+    color: white;
+    /*display: block;*/
+    height: 60px;
+    /*line-height: 60px;*/ /* flex 布局，不需要line-height*/
+    padding: 0 26px;
+    text-decoration: none;
+    border-left: 1px solid #2e2e2e;
+    font-family: Montserrat, sans-serif;
+    text-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
+}
+
+.blacknav .nav li:first-child a{
+    border-left: none;
+}
+
+
+
+.blacknav .nav li a:hover {
+    background-color: #2e2e2e;
+}
+
+
+
+.blacknav .nav li a img:hover{
+    /*content: url("/static/assets/img/BTC.svg");*/
+}
+
+
+#settings a {
+    padding: 18px;  /* 决定了img显示大小 */
+    height: 60px; /* 原为24px，未知 */
+    font-size: 10px;
+    line-height: 24px;
+}
+
+#search {
+    width: 357px;
+    margin: 4px;
+}
+
+#search_text {
+    width: 297px;
+    padding: 15px 0 15px 20px;
+    font-size: 16px;
+    font-family: Montserrat, sans-serif;
+    border: 0 none;
+    height: 52px;
+    margin-right: 0;
+    color: white;
+    outline: none;
+    background: #1f7f5c;
+    float: left;
+    box-sizing: border-box;
+    transition: all 0.15s;
+}
+
+::-webkit-input-placeholder { /* WebKit browsers */
+    color: white;
+}
+
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color: white;
+}
+
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color: white;
+}
+
+:-ms-input-placeholder { /* Internet Explorer 10+ */
+    color: white;
+}
+
+#search_text:focus {
+    background: rgb(64, 151, 119);
+}
+
+#search_button {
+    border: 0 none;
+    background: #1f7f5c url(search.png) center no-repeat;
+    width: 60px;
+    float: left;
+    padding: 0;
+    text-align: center;
+    height: 52px;
+    cursor: pointer;
+}
+
+.blacknav .nav li.options a  {
+    border-left: 0 none;
+}
+
+.blacknav .nav li.options > a {
+    background-image: url(triangle.png);
+    background-position: 85% center;
+    background-repeat: no-repeat;
+    padding-right: 42px; !important;
+}
+
+.subnav {
+    visibility: hidden;
+    position: absolute;
+    top: 110%;
+    right: 0;
+    width: 200px;
+    height: auto;
+    opacity: 0;
+    z-index: 10;
+    transition: all 0.1s;
+    background: #232323;
+}
+
+.subnav li {
+    float: none;
+}
+
+.subnav li a {
+    width: 200px; /* 原无 */
+    border-bottom: 1px solid #2e2e2e;
+}
+
+.options:hover .subnav {
+    visibility: visible;
+    top: 100%;
+    opacity: 1;
+}
+
+
+
+
+
+
+/* DIY by self  */
+.blacknav .nav li a img {
+    height: 100%;
+    vertical-align: middle
+}
+
+
+.blacknav .nav li a{
+    display: flex;
+    align-items: center;
+}
+
+#settings {
+    float: right;
+}
+
+#bee-logo a{
+    padding-left: 0;
+    padding-right: 0;
+}

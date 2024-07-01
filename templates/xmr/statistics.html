@@ -1,0 +1,75 @@
+<!--
+ * @Author: @Jinhao Liu
+ * @Date: 2023-03-31 15:15:52
+ * Copyright (c) 2023 by @Jinhao Liu, All Rights Reserved.
+-->
+{% extends 'baseXMR.html' %}
+{% block title %}
+{% endblock %}
+
+{% block head_style %}
+
+<script src="https://cdn.staticfile.org/echarts/4.3.0/echarts.min.js"></script>
+{% endblock %}
+
+{% block content %}
+{% include '_xmrcrumb.html' %}
+
+<div class="container">
+  <h1 class="text-center">Statistics</h1>
+
+  <div class="row clearfix">
+    <table class="table">
+      <thead >
+        <tr >
+          <th class="text-center">
+            Type
+          </th>
+          <th class="text-center">
+            Transaction quantity
+          </th>
+
+          <th class="text-center">
+            Total transaction amount belonging to tx
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for i in data %}
+        <tr class="text-center">
+          <td>{{i['type']}} </td>
+          <td>{{i['quan']}} </td>
+          <td>{{i['amount']}}</td>
+        </tr>
+        {% endfor%}
+
+      </tbody>
+    </table>
+
+
+
+  </div>
+ 
+  
+
+  
+
+  
+
+
+
+</div>
+
+
+
+
+
+
+{% endblock %}
+
+{% block body_script %}
+
+
+
+
+{% endblock %}

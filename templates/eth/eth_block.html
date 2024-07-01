@@ -1,0 +1,157 @@
+{#  三种dropdown button共存 #}
+
+{% extends 'baseETH.html' %}
+{% block title %}{% endblock %}
+
+{% block head_style %}
+
+
+
+    {#   open-iconic 双箭头 #}
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='vendor/css/open-iconic/font/css/open-iconic-bootstrap.css') }}">
+
+    {#    checkbox #}
+    {#    paginationjs #}
+
+    {#    theme #}
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/bee.theme.dark.css') }}"/>
+
+    <style>
+        .item-checked {
+            background-color: #EEE5DE;
+
+        }
+
+        .dropdown-item:active {
+            background-color: #EEDFCC;
+            color: black;
+        }
+
+        .item-checked:hover {
+            background-color: #EEE5DE;
+        }
+
+        .item-checked:active {
+            background-color: #EEDFCC;
+
+        }
+
+
+    </style>
+
+{% endblock %}
+
+{% block content %}
+    {% include '_ethcrumb.html' %}
+{#    <h1>ETH BLOCK </h1>#}
+    <div class="bee-row2">
+
+        <div class="bee-row">
+
+            {#    <div><span>共 7,300,440 个结果</span></div>#}
+            {#        <div>{{ pagination.info }}</div>#}
+
+            <div>共<span id="block_total">{{ block_total }}</span>个结果(默认当天)，用时{{ took }}ms</div>
+            <form action="{{ url_for('eth.eth_block_search') }}" class="">
+                    显示规则：
+                    <input name="name1" class="btn btn-primary btn-sm" id="seltext" type="hidden" value="{{ sortname }}">
+                    <select id="ttest" name="sortname">
+                        <option value="desc">desc</option>
+                        <option value="asc">asc</option>
+                    </select>
+                     开始时间:
+                    <input class="jump-ipt" style="width:90px;" type="text" onclick="dateClick()" value="" name="starttime">
+                    截至时间:
+                    <input class="jump-ipt" style="width:90px;" type="text" onclick="dateClick()" value=""  name="endtime">
+                    <button type="submit" style="margin-left: 30px;" class="btn btn-primary btn-sm">搜索</button>
+                </form>
+        </div>
+    </div>
+
+
+    <table id="block_table" class="table">
+        <thead>
+        <tr>
+            <th>高度</th>
+            <th>哈希值</th>
+            <th>矿工</th>
+            <th>出块时间</th>
+            <th>交易数</th>
+            <th>区块大小(字节)</th>
+            <th>叔块</th>
+            <th>出块奖励(ETH)</th>
+            <th>总交易额(ETH)</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        {% for block in blocks %}
+            <tr>
+                <td>
+                    <a href="{{ url_for('eth.eth_block_detail',blockNumber = block['height']) }}">{{ block['height'] }}</a>
+                </td>
+                <td>
+                    <a href="{{ url_for('eth.eth_block_detail',blockNumber = block['height']) }}">{{ block['hash']|truncate(15) }}</a>
+                </td>
+                <td>
+                    <a href="{{ url_for('eth.eth_address_detail',addr =  block['miner'] ) }}">{{ block['miner']|truncate(15) }}</a>
+                </td>
+                <td>{{ block['time'] }}</td>
+                <td>{{ block['trans_num'] }}</td>
+                <td>{{ block['size'] }}</td>
+                <td>{{ block['uncles'] }}</td>
+                <td>{{ block['cost']['block_reward'] }}</td>
+                <td>{{ block['cost']['total_value'] }} </td>
+            </tr>
+        {% endfor %}
+
+
+        </tbody>
+    </table>
+      {{ pagination.links }}
+    <div class="m-style M-box4"></div>
+
+
+
+{% endblock %}
+
+{% block body_script %}
+      <script src="{{ url_for('static', filename='My97DatePicker/WdatePicker.js') }}"></script>
+     <script type="text/javascript">
+         function sclick(){
+         alert("ceshi");
+         }
+     </script>
+    <script>
+         function fun() {
+            str = document.getElementById("sel_text").value;
+            obj = document.getElementById("test");
+            for (i = 0; i < obj.length; i++) {
+                if (obj[i].value == str)
+                    obj[i].selected = true;
+            }
+            sort = document.getElementById("seltext").value;
+            select = document.getElementById("ttest");
+            for (i = 0; i < select.length; i++) {
+                if (select[i].value == sort)
+                    select[i].selected = true;
+            }
+            }
+
+        {#window.onload=fun#}
+     </script>
+      <script>
+	function dateClick() {
+		WdatePicker({
+			dateFmt : 'yyyy-MM-dd HH:mm:ss',  //格式设置相对应界面可选择也变化
+			highLineWeekDay:true,  //周末的日期是否高亮
+			readOnly:true,  //是否允许键盘输入值，false为禁止输入，只能鼠标选
+		});
+	}
+	</script>
+    {#    checkbox block_order_switch#}
+    <script type="text/javascript"
+            src="{{ url_for('static', filename='assets/js/table-filter.js') }}"></script>
+{% endblock %}
+</html>

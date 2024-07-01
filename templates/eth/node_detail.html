@@ -1,0 +1,360 @@
+{% extends 'baseETH.html' %}
+{% block title %}{% endblock %}
+
+{% block head_style %}
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='plugins/jquery-datatable/css/jquery.dataTables.min.css') }}"/>
+
+    <style type="text/css">
+
+        .flex {
+            /*flex 布局*/
+            display: flex;
+            /*实现垂直居中*/
+            align-items: center;
+            /*实现水平居中*/
+        {#justify-content: center;#} text-align: justify;
+
+        }
+
+        .float-test {
+            height: 30px;
+            line-height: 30px;
+        }
+
+
+    </style>
+{% endblock %}S
+
+{% block content %}
+    {#    <h1>NODE DETAIL</h1>#}
+    {% include '_ethcrumb.html' %}
+
+
+    <br>
+    {#    <div class="float-test">#}
+    {#        <a style="margin-left: 20px">123</a><span style="float:left"><i class="fa fa-camera-retro fa-lg"></i></span>#}
+    {#    </div>#}
+
+    {#    <h4>概要信息</h4>#}
+
+
+    <div class="card">
+        <div class="card-header">概要信息<a class="bee-c-p" data-target="#node-history" data-toggle="modal">历史信息</a>
+        </div>
+        <div class="card-body">
+
+            <div class="bee-row2">
+                <div style="flex:1" class="bee-border-r-b">
+                    <table class="table table-sm table-hover bee-table">
+
+                        <tbody>
+                        <tr>
+                            <td>节点ID</td>
+                            <td>{{ node['nodeID']|truncate(40) }}</td>
+                            {#                            <td>NaN</td>#}
+                        </tr>
+                        <tr>
+                            <td>IP地址</td>
+                            <td>{{ node['nodeIP'] }}</td>
+                            {#                            <td>NaN</td>#}
+                        </tr>
+                        <tr>
+                            <td>端口</td>
+                            <td>{{ node['nodePort'] }}</td>
+                            {#                            <td>nan</td>#}
+                        </tr>
+                        <tr>
+                            <td>最后在线时间</td>
+                            <td>{{ node['lastOnline'] }}</td>
+{#                            <td>nan</td>#}
+                        </tr>
+                        <tr>
+                            <td>客户端</td>
+                            <td>{{ node['client'] }}</td>
+                            {#                            <td>nan</td>#}
+                        </tr>
+                        <tr>
+                            <td>版本</td>
+                            <td>{{ node['clientVersion'] }}</td>
+                            {#                            <td>nan</td>#}
+                        </tr>
+                        <tr>
+                            <td>操作系统</td>
+                            <td>{{ node['os'] }}</td>
+                            {#                            <td>nan</td>#}
+                        </tr>
+                        <tr>
+                            <td>能力</td>
+                            <td>{{ node['capabilities'] }}</td>
+                            {#                            <td>nan</td>#}
+                        </tr>
+
+
+                        </tbody>
+                    </table>
+                </div>
+                <div style="flex: 1">
+                    <table class="table table-sm table-hover bee-table">
+
+                        <tbody>
+
+
+                        <tr>
+                            <td>网络ID</td>
+                            <td>{{ node['networkID'] }}</td>
+                            {#                            <td>nan</td>#}
+                        </tr>
+                        <tr>
+                            <td>总难度</td>
+                            <td>{{ node['tDifficulty'] }}</td>
+                        </tr>
+                        <tr>
+                            <td>Best hash</td>
+                            <td>{{ node['bestHash']|truncate(30) }}</td>
+                        </tr>
+                        <tr>
+                            <td>Genesis hash</td>
+                            <td>{{ node['genesisHash']|truncate(30) }}</td>
+                            {#                            <td>nan</td>#}
+                        </tr>
+                        <tr>
+                            <td>地理位置</td>
+                            <td>{{ node['country']}}</td>
+                        </tr>
+                        <tr>
+                            <td>网络</td>
+                            <td>{{ node['asnum'] }}</td>
+                        </tr>
+                        <tr>
+                            <td>高度</td>
+                            <td>{{ node['height'] }}</td>
+                        </tr>
+
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <br>
+
+    <div class="card">
+        <div class="card-header">网络状态</div>
+        <div class="card-body">
+
+            <div class="row">
+                <div class="col-md-5 bee-border-r-b">
+
+                    <table class="table table-sm table-hover bee-table">
+
+
+                        <tbody>
+                        <tr>
+                            <td>在线状态</td>
+                            <td>NaN</td>
+                        </tr>
+                        <tr>
+                            <td>平均延迟</td>
+                            <td>NaN</td>
+                        </tr>
+                        <tr>
+                            <td>网速</td>
+                            <td>NaN</td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-7">
+                    24小时延迟
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <br>
+    <div class="card">
+        <div class="card-header">网络拓扑</div>
+        <div class="card-body">
+
+            <div class="row">
+                <div class="col-md-5 bee-border-r-b">
+
+                </div>
+                <div class="col-md-7">
+                    <div style="text-align: center;">周围恶意节点一览</div>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>节点ID</th>
+                            <th>IP地址</th>
+                            <th>端口</th>
+                            <th>恶意行为</th>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {#        {% for item in node_list %}#}
+                        <tr>
+
+                            <td>NaN</td>
+                            <td>NaN</td>
+                            <td>NaN</td>
+                            <td>NaN</td>
+
+
+                        </tr>
+                        {#        {% endfor %}#}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <br>
+    <div class="card">
+        <div class="card-header">K桶结构</div>
+        <div class="card-body">
+
+            <div class="row">
+                <div class="col-md-5 bee-border-r-b">
+                    <table class="table table-sm table-hover bee-table">
+                        <tbody>
+                        <tr>
+                            <td>最后更新时间</td>
+                            <td>NaN</td>
+                        </tr>
+                        <tr>
+                            <td>K桶节点总数</td>
+                            <td>NaN</td>
+                        </tr>
+                        <tr>
+                            <td>是否正常</td>
+                            <td>NaN</td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+
+                </div>
+                <div class="col-md-7">
+                    <table class="display bee-db bee-node-kbuckets" id="node-kbuckets">
+
+                        <thead hidden>
+                        <tr>
+                            <th>rname</th>
+                            <th>c0</th>
+                            <th>c1</th>
+                            <th>c2</th>
+                            <th>c3</th>
+                            <th>c4</th>
+                            <th>c5</th>
+                            <th>c6</th>
+                            <th>c7</th>
+                            <th>c8</th>
+                            <th>c9</th>
+                            <th>c10</th>
+                            <th>c11</th>
+                            <th>c12</th>
+                            <th>c13</th>
+                            <th>c14</th>
+                            <th>c15</th>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <br>
+
+
+
+
+    {#    <div class="bee-row3">#}
+    {#        <div class="bee-test" style="width: 40%">#}
+    {#        </div><!--#}
+    {#        --><div class="bee-test" style="width: 60%">网格</div>#}
+    {#    </div>#}
+
+    <!--Default Bootstrap Modal base 034 Modals -->
+    <!--===================================================-->
+
+    <div class="modal fade" id="node-history" role="dialog" tabindex="-1" aria-labelledby="demo-default-modal"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!--Modal header-->
+                <div class="modal-header">
+                    {#                    <button type="button" class="" data-dismiss="modal">关闭</button>#}
+                    <h4 class="modal-title">Modal Heading</h4>
+                </div>
+
+                <!--Modal body-->
+                <div class="modal-body">
+                    <p class="text-semibold text-main">Bootstrap Modal Vertical Alignment Center</p>
+                    <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt
+                        ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci
+                        tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</p>
+                    <br>
+                    <p class="text-semibold text-main">Popover in a modal</p>
+                    <p>This
+                        <button class="btn btn-sm btn-warning demo-modal-popover add-popover" data-toggle="popover"
+                                data-trigger="focus"
+                                data-content="And here's some amazing content. It's very engaging. right?"
+                                data-original-title="Popover Title">button
+                        </button>
+                        should trigger a popover on click.
+                    </p>
+                    <br>
+                    <p class="text-semibold text-main">Tooltips in a modal</p>
+                    <p>
+                        <a class="btn-link text-bold add-tooltip" href="#" data-original-title="Tooltip">This link</a>
+                        and
+                        <a class="btn-link text-bold add-tooltip" href="#" data-original-title="Tooltip">that link</a>
+                        should have tooltips on hover.
+                    </p>
+                </div>
+
+                <!--Modal footer-->
+                <div class="modal-footer">
+                    <button data-dismiss="modal" class="btn btn-default" type="button">Close</button>
+                    <button class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--===================================================-->
+    <!--End Default Bootstrap Modal-->
+
+
+{% endblock %}
+
+{% block body_script %}
+    {#<script src="{{ url_for('static', filename='') }}"></script>#}
+    <script type="text/javascript">
+        var nodeid = node['nodeID']
+    </script>
+
+    <!--  datatable -->
+    <script src="{{ url_for('static', filename='plugins/jquery-datatable/js/jquery.dataTables.min.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='assets/js/page/node_detail.js') }}"></script>
+{% endblock %}

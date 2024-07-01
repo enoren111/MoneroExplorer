@@ -1,0 +1,179 @@
+{% extends 'base3.html' %}
+{% from 'macros.html' import reciver %}
+{% block title %}{% endblock %}
+
+{% block head_style %}{% endblock %}
+
+{% block content %}
+{#    <h1>TRANSACTION DETAIL</h1>#}
+{% include '_btccrumb.html' %}
+    <br>
+<div class="card" style="box-sizing: border-box">
+        <div class="card-header">标签信息</div>
+        <div class="card-body">
+            <div class="bee-row2" ​>
+                ​
+                <div style="flex: 1" class="bee-border-r-b">
+                    <table class="table table-sm table-hover bee-table">
+                        <tbody>
+                        <tr>
+                            <td>地址</td>
+                            <td>{{ address}}</td>
+                        </tr>
+                      <tr>
+                            <td>原始标签数</td>
+                            <td>{{ seed_count }}</td>
+                        </tr>
+                        <tr>
+                            <td>标签个数</td>
+                            <td>{{ count }}</td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+                <div style="flex: 1">
+                    <table class="table table-sm table-hover bee-table">
+                        <tbody>
+                        <tr>
+                            <td>其他信息</td>
+                            <td>集群id: {{other_info}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    </br>
+    {% if label_clash == 1 %}
+    <div class="bee-card card bg-dark">
+    <div class="card-header tx_head">
+        <div>
+        可能产生标签硬冲突（对同一个属性的值，有相互矛盾的语义）
+        </div>
+    </div>
+    </div>
+    {% endif %}
+    {% if label_clash == 0 %}
+    <div class="bee-card card bg-dark">
+    <div class="card-header tx_head">
+        <div>
+        可能产生标签软冲突（对同一个属性的值，有不同角度或不同词汇的描述）
+        </div>
+    </div>
+    </div>
+    {% endif %}
+    {% if label_clash == 2 %}
+    <div class="bee-card card bg-dark">
+    <div class="card-header tx_head">
+        <div>
+        可能存在不同级别的标签
+        </div>
+    </div>
+    </div>
+    {% endif %}
+
+    {% for label in labels %}
+    <br>
+    <div class="bee-card card bg-dark">
+        <div class="card-header tx_head">
+            {% if label.source=='Label Spread' %}
+            <div>
+                集群标签名{{i}}: {{ label.name }}
+            </div>
+            {% else %}
+            <div>
+            标签名{{i}}: {{ label.name }}
+            </div>
+            {% endif %}
+        </div>
+
+    <div class="card-body">
+        <div class="bee-row2" ​>
+
+<!--            <div >标签类型：{{ label.category }} </div>-->
+<!--            <div >标签来源：{{ label.source }} </div>-->
+<!--            <div >标签创建时间：{{ label.createtime}} </div>-->
+<!--            <div >货币类型：{{ label.currency}} </div>-->
+            <div style="flex: 1" class="bee-border-r-b">
+                    <table class="table table-sm table-hover bee-table">
+                        <tbody>
+                        <tr>
+                            <td>标签类型</td>
+                            <td>{{ label.category }}</td>
+                        </tr>
+                        <tr>
+                            <td>标签来源</td>
+                            <td>{{ label.source }}</td>
+                        </tr>
+                        <tr>
+                            <td>创建时间</td>
+                            <td>{{ label.createtime}}</td>
+                        </tr>
+                        <tr>
+                            <td>货币类型</td>
+                            <td>{{ label.currency}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+<!--            <div >详细信息：{{ label.detail}} </div>-->
+            <div style="flex: 1" >
+                    <table class="table table-sm table-hover bee-table">
+
+                        <tbody>
+                        <tr>
+                            <td>详细信息</td>
+                        </tr>
+                        {% if label.source=='whale alert'%}
+                        <tr>
+                            <td>
+                            地址大额交易信息：
+                            </td>
+                        </tr>
+                        {% for detail in label.detail %}
+                        <tr>
+                            <td>
+                                {{ detail.time}}    from:{{ detail.from_owner}}  to:{{ detail.to_owner }} 交易金额(BTC):{{ detail.btc }}
+                                <a href="{{ url_for('btc.btc_tsc_detail',hash = detail['txid'])}}" style="color: #1E90FF">交易详情</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        {% else %}
+                        {% for detail in label.detail %}
+                        <tr>
+                            <td>{{ detail}} </td>
+                        </tr>
+                        {% endfor %}
+                        {% endif %}
+                        </tbody>
+                    </table>
+            </div>
+        </div>
+    </div>
+    </div>
+    </br>
+    {% endfor %}
+{% endblock %}
+{% block body_script %}
+    <script src="{{ url_for('static', filename='') }}"></script>
+    <script type="text/javascript"></script>
+    <script type="text/javascript">
+    $(".tx_content").hide();
+    $(".tx_head").click(function () {
+                var text=$(this).children().last().text();
+                if (text=="查看交易列表")
+                {
+                    $(this).next().slideDown();
+                    $(this).children().last().text("关闭交易列表");
+                }
+                if (text=="关闭交易列表")
+                {
+                    $(this).next().slideUp();
+                    $(this).children().last().text("查看交易列表");
+                }
+        });
+</script>
+
+{% endblock %}

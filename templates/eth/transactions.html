@@ -1,0 +1,142 @@
+{# 删除日统计信息 20190523 #}
+
+{% extends 'baseETH.html' %}
+{% block title %}{% endblock %}
+
+{% block head_style %}
+    {#    slick muban3527 #}
+
+
+    <style type="text/css">
+
+
+
+    </style>
+
+{% endblock %}
+
+{% block content %}
+
+
+    {% include '_ethcrumb.html' %}
+{#    <h1>ETH TRANSACTIONS</h1>#}
+    <div class="bee-row2">
+
+
+        <div class="bee-row">
+            {#    <div><span>共 7,300,440 个结果</span></div>#}
+            <div>共<span class="transes_total">{{ trans_total }}</span>个结果(默认当天)，用时{{ took }}ms</div>
+             <form action="{{ url_for('eth.eth_transaction_search') }}" class="">
+                    显示规则：
+                    <input name="name1" id="seltext" type="hidden" value="{{ sortname }}">
+                    <select id="ttest" name="sortname">
+                        <option value="desc">desc</option>
+                        <option value="asc">asc</option>
+                    </select>
+                    开始时间:
+                    <input class="jump-ipt" style="width:90px;" type="text" onclick="dateClick()" value="" name="starttime">
+                    截至时间:
+                    <input class="jump-ipt" style="width:90px;" type="text" onclick="dateClick()" value=""  name="endtime">
+                    最小值:
+                    <input class="jump-ipt" style="width:40px;" type="text" value="" name="minvalue">
+                    最大值:
+                    <input class="jump-ipt" style="width:40px;" type="text" value="" name="maxvalue">
+{#                     类别:#}
+{#                    <input name="name2" class ="dropdown" id="sel_text" type="hidden" value="{{ servicename }}">#}
+{#                    <select id="test" name="servicename">#}
+{#                        <option value="BTC">ETH</option>#}
+{#                        <option value="USD">USD</option>#}
+{#                    </select>#}
+                    <button type="submit" style="margin-left: 30px;" class="btn btn-primary btn-sm">搜索</button>
+                </form>
+    </div>
+    </div>
+    <!-- start latestTransList-->
+    <table id="transes-table" class="table bee-transes-table">
+        <thead>
+        <tr>
+            <th>交易哈希</th>
+            <th>所在区块</th>
+            <th>时间</th>
+            <th>发送方</th>
+            <th>接收方</th>
+            <th>类型</th>
+{#            <th>手续费(ETH)</th>#}
+            <th>交易额(ETH)</th>
+        </tr>
+        </thead>
+        <tbody>
+
+
+        {% for item in latestTransList %}
+            <tr>
+                <td><a href="{{ url_for('eth.eth_tsc_detail', hash=item['_id']) }}">{{ item['_id']|truncate(20) }}</a>
+                </td>
+                <td>
+                    <a href="{{ url_for('eth.eth_block_detail',blockNumber = item['_source']['blockNumber']) }}">{{ item['_source']['blockNumber'] }}</a>
+                </td>
+                <td>{{ item['_source']['time'] }}</td>
+                <td title="{{ item['_source']['from'] }}"><a
+                        href="{{ url_for('eth.eth_address_detail',addr =  item['_source']['from'] ) }}">{{ item['_source']['from']|truncate(20) }}</a>
+                </td>
+                <td title="{{ item['to'] }}">
+                    <a href="{% if item['to']!=None %}{{ url_for('eth.eth_address_detail',addr =  item['_source']['to'] ) }}{% endif %}">
+                        {% if item['to']!=None %} {{ item['_source']['to']|truncate(20) }}{% endif %}
+                    </a>
+                    <span>{% if item['to_type'] %}<i class="fa fa-cogs"></i>{% endif %}</span>
+                </td>
+                <td>{{ item['_source']['trans_type'] }}</td>
+{#                <td>{{ item['_source']['trans_fee'] }}</td>#}
+                <td>{{ item['_source']['value'] }}</td>
+            </tr>
+        {% endfor %}
+
+
+        </tbody>
+    </table>
+     {{ pagination.links }}
+    <div class="m-style pagination"></div> <!-- pagination.js -->
+    <!-- start latestTransList-->
+
+{% endblock %}
+
+{% block body_script %}
+<script src="{{ url_for('static', filename='plugins/chart.js/Chart.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='plugins/chart.js/utils.js') }}"></script>
+{#    <script src="{{ url_for('static', filename='muban/3492/charts-custom.js') }}"></script>  {# 饼状图 #}
+    {#    <script src="{{ url_for('static', filename='assets/demo/big-deal.js') }}"></script>#} <!-- 大额异动 -->
+    {#    3527 banner slick #}
+
+
+    {#    echarts #}
+    {#    <script src="{{ url_for('static', filename='plugins/echarts/echarts.js') }}"></script>#}
+{#    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>#}
+    <script src="{{ url_for('static', filename='assets/js/page/transactions.js') }}"></script>
+     <script>
+         function fun() {
+            str = document.getElementById("sel_text").value;
+            obj = document.getElementById("test");
+            for (i = 0; i < obj.length; i++) {
+                if (obj[i].value == str)
+                    obj[i].selected = true;
+            }
+            sort = document.getElementById("seltext").value;
+            select = document.getElementById("ttest");
+            for (i = 0; i < select.length; i++) {
+                if (select[i].value == sort)
+                    select[i].selected = true;
+            }
+            }
+        window.onload=fun
+     </script>
+     <script>
+	function dateClick(){
+		WdatePicker({
+			dateFmt : 'yyyy-MM-dd HH:mm:ss',  //格式设置相对应界面可选择也变化
+			highLineWeekDay:true,  //周末的日期是否高亮
+			readOnly:true,  //是否允许键盘输入值，false为禁止输入，只能鼠标选
+		});
+	}
+	</script>
+<script src="{{ url_for('static', filename='My97DatePicker/WdatePicker.js') }}"></script>
+{% endblock %}

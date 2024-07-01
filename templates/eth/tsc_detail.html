@@ -1,0 +1,107 @@
+{% extends 'baseETH.html' %}
+{% from 'macros.html' import reciver %}
+{% block title %}{% endblock %}
+
+{% block head_style %}{% endblock %}
+
+{% block content %}
+{#    <h1>TRANSACTION DETAIL</h1>#}
+{% include '_ethcrumb.html' %}
+    <br>
+
+
+    <div class="card">
+        <div class="card-header">概要信息</div>
+        <div class="card-body">
+            <div class="bee-row2" ​>
+                ​
+                <div style="flex: 1" class="bee-border-r-b">
+                    <table class="table table-sm table-hover bee-table">
+                        <tbody>
+                        <tr>
+                            <td>交易哈希</td>
+                            <td><a href="{{ url_for('eth.eth_tsc_detail', hash=tsc_info['hash']) }}">{{ tsc_info['hash']|truncate(50) }}</a></td>
+                        </tr>
+                        <tr>
+{#                            <td>交易结果</td>#}
+{#                            <td>{{ tsc_info['status'] }}</td>#}
+{#                            <td>成功|失败</td>#}
+                        </tr>
+                        <tr>
+                            <td>所在区块</td>
+                            <td><a href="{{ url_for('eth.eth_block_detail',blockNumber = tsc_info['blockNumber'])}}">{{ tsc_info['blockNumber'] }}</a></td>
+                        </tr>
+                        <tr>
+                            <td>时间</td>
+                            <td>{{ tsc_info['time'] }}</td>
+                        </tr>
+                        <tr>
+                            <td>发送方</td>
+                            <td><a href="{{ url_for('eth.eth_address_detail', addr =  tsc_info['from']) }}">{{ tsc_info['from'] }}</a></td>
+                        </tr>
+                        <tr>
+                            <td>接收方</td>
+                            <td><a href="{{ reciver(tsc_info['to']) }}">  {% if tsc_info['to']!=None %}{{ tsc_info['to'] }}{% endif %}</a></td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+                <div style="flex: 1">
+
+                    <table class="table table-sm table-hover bee-table">
+
+                        <tbody>
+                        <tr>
+                            <td>金额</td>
+                            <td>{{ tsc_info['value'] }}</td>
+                        </tr>
+                        <tr>
+                            <td>手续费</td>
+                            <td>{{ tsc_info['trans_fee'] }}</td>
+                        </tr>
+{#                        <tr>#}
+{#                            <td>Gas消耗(gasUsed)</td>#}
+{#                            <td>{{ tsc_info['gasUsed'] }}</td>#}
+{#                        </tr>#}
+                        <tr>
+                            <td>Gas限额(gasLimited)</td>
+                            <td>{{ tsc_info['gas'] }}</td>
+                        </tr>
+                        <tr>
+                            <td>Gas均价(gasPrice)</td>
+                            <td>{{ tsc_info['gasPrice'] }}</td>
+                        </tr>
+{#                        <tr>#}
+{#                            <td>Nonce;{position}</td>#}
+{#                            <td>{{ tsc_info['nonce'] }} | { {{ tsc_info['transactionIndex'] }} }</td>#}
+{#                        </tr>#}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br>
+
+
+    <div class="card">
+    <div class="card-body">
+    <p>输入数据(input)</p>
+    <textarea class="form-control" rows="5" readonly>{{ tsc_info['input'] }}</textarea>
+    <p>事件日志</p>
+    <textarea class="form-control" rows="5" readonly>{{ tsc_info['log'] }}</textarea>
+
+    </div>
+</div>
+
+
+
+
+{% endblock %}
+
+{% block body_script %}
+    <script src="{{ url_for('static', filename='') }}"></script>
+    <script type="text/javascript"></script>
+{% endblock %}

@@ -1,0 +1,103 @@
+/*补充代码*/
+.ileft{float:left;}
+.iright{float:right;}
+.mr10{ margin-right: 10px;}
+ /*选项卡tab*/
+   .layui-tab-title{ position: relative;}
+   .layui-tab-title .layui-title-right{ position: absolute; right: 5px; top: 4px;}
+/*面包屑*/
+.iCrumbs{ background: #fff; line-height: 40px; padding-left: 10px;border:1px #EEEEEE solid; display: block;font-size: 14px;color:#00e4a; position: relative;}
+.iCrumbs a{color:#00e4a;}
+.iCrumbs a:hover{color:#00e4a}
+.iCrumbs .iCrumbs-ative{color:#ff5722}
+.iCrumbs .iCrumbs-right{ position: absolute; right: 5px; top:0px;}
+.iCrumbs .iCrumbs-right .mr10{ margin-right: 10px;}
+.iCrumb{width: 100%; background: #fff; line-height: 40px; padding-left: 10px;border:1px #EEEEEE solid; display: block;font-size: 14px;color:#00e4a; position: absolute; top:60px;left:0px;z-index: 999;}
+.iCrumb a{color:#00e4a;}
+.iCrumb a:hover{color:#00e4a}
+.iCrumb .iCrumbs-ative{color:#ff5722}
+.iCrumb .iCrumbs-right{ position: absolute; right: 5px; top:0px;}
+.iCrumb .iCrumbs-select{ position: absolute; right:200px; top:0px;}
+
+.iCrumb .iCrumbs-right .mr10{ margin-right: 10px;}
+/*字体颜色*/
+
+.itext-color{ color: #009688;}
+.itext-color-warm{ color:#FFB800;}
+.itext-color-danger{ color:#FF5722;}
+.itext-color:hover{ color: #009688;}
+.itext-color-warm:hover{ color:#FFB800;}
+.itext-color-danger:hover{ color:#FF5722;}
+/*弹出框*/
+.box-con{ padding: 40px;}
+.box-bth-w{ width: 150px;}
+.box-bottom{ position: absolute; bottom:50px; left: 10%;}
+/*空价值树*/
+.iTree{ width: 157px; height: 85px; margin: 60px auto; background: url(../../images/news.png) center no-repeat; text-align: center; padding-top:150px; line-height: 40px;}
+
+
+/**新样式**/
+.icheckbox{margin-right: 6px;}
+.border-none td{border:none; padding: 5px;}
+.border-none .tdbg{ background: #eee;}
+.border-none .tdbg:hover{background: #eee;}
+.border-none .tdbg1{ background: #fff;}
+.border-none .tdbg1:hover{background: #fff;}
+
+/*计算器*/
+.ijbg{ background: #009688;padding:10px;}
+.ijbg1{position: absolute;top:60px;left:0px; z-index: 9999; background: #009688;padding:10px 20px 10px 0px;width: 100%;}
+.ijbox{ background: #f0f0f0;padding: 20px;width: 1366px; margin: 0px auto; }
+.ijbox1{position: absolute;top:100px;left:0px; z-index: 9999;}
+.ijbox-bth{ height: 40px; width: 500px; margin: 0px auto;}
+.ijbox-h1{width: 100%; height: 40px; line-height: 40px; color: #fff; background: #00564e; font-size: 16px; text-align: center; margin: 10px 0px;}
+.ijbox-p{ padding: 10px; border:2px solid #666; background: #ffcc99;line-height: 20px; margin-top: 20px;}
+.ijbox-c{width: 1366px;}
+.ijbox-c .ijleft{width: 860px;float: left;padding: 10px 0;}
+.ijbox-c .ijright{width:400px;float: left; padding: 10px 0;}
+.ijbox-c .icleft{width: 400px;float: left;padding: 10px 0;}
+.ijbox-c .icright{width:900px;float: left; padding: 10px 0;}
+/*色彩*/
+.ijhs{background:#ffff00;}
+.ijls{background:#99cc00;}
+.ijlas{background:#33cccc;}
+.ijsla{background:#ccffff;}
+.ijfs{background: #ff99cc;}
+.ijsl{background: #ccffcc;}
+.ijsls{background: #339966;}
+.ijjhs{background: #ffcc99;}
+.ifs1{background: #00ccff;}
+.ifs2{background: #99ccff;}
+.ifs3{background: #33cccc;}
+.ifs4{background: #00ffff;}
+.ifs5{background: #ccffff;}
+.ifs6{background: #ccffcc;}
+.ifs7{background: #ffff99;}
+.ifs8{background: #ffff00;}
+.ifs9{background: #99cc00;}
+.ifred{background:#ff0000}
+/*end*/
+.ijbg td{ border:2px solid #666; color: #333;}
+.text-center{text-align: center;}
+.m-t-10{ margin-top: 10px;}
+.m-l-10{margin-left: 10px;}
+
+/*用户评分*/
+.User_ratings .ratings_title01 input{width:200px;height:48px;border:0;float:left;background:url(../../images/batton_01.png) -202px -2441px no-repeat;}
+.User_ratings .ratings_title01 input:hover{background:url(../../images/batton_01.png) -202px -2489px no-repeat;}
+.User_ratings .ratings_title01 input{background:url(../../images/batton_01.png) -202px -2537px no-repeat;}
+.User_ratings .ratings_title input{width:200px;height:48px;border:0;float:left;background:url(../../images/batton_01.png) -202px -2441px no-repeat;}
+.User_ratings .ratings_title input:hover{background:url(../../images/batton_01.png) -202px -2489px no-repeat;}
+.User_ratings .ratings_title input{background:url(../../images/batton_01.png) -202px -2537px no-repeat;}
+.User_ratings .ratings_bars{height:27px;margin-top:10px;float:left;}
+.User_ratings .ratings_bars #title0{width:25px;height:25px;text-align:left;line-height:25px;font-size:14px;float:left;}
+.User_ratings .ratings_bars .bars_10{font-family:Georgia, "Times New Roman", Times, serif;font-size:18px;line-height:25px;float:left;color:#a0a0a0;}
+.User_ratings .ratings_bars .scale{width:200px; margin:8px;height:13px;float:left;position:relative;background:url(../../images/progress02.png) 0 0 no-repeat;}
+.User_ratings .ratings_bars .scale div{width:0px;position:absolute;width:0;left:0;height:13px;bottom:0;background:url(../../images/progress02.png) 0 -14px no-repeat;}
+.User_ratings .ratings_bars .scale span{width:10px;height:26px;position:absolute;left:-2px;top:-7px;cursor:pointer;background:url(../../images/j.png) no-repeat;}
+
+/*新tree*/
+.nTreebody{left: 222px; top:100px;}
+.nTreeleft{width: 220px; position: absolute; top:100px; background: #f3f3f0; border-right: 1px solid #ddd;}
+.nTreeleft .nTreeleft-Top{ width: 220px; border: 1px solid #ddd; background: #f3f3f0;}
+.nTreeleft .nTreeleft-bottom{border-left: 1px solid #ddd;position:fixed;bottom:44px;overflow-y:scroll;top:360px;width: 220px}

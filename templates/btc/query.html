@@ -1,0 +1,123 @@
+{# 删除日统计信息 20190523 #}
+
+{% extends 'base3.html' %}
+{% block title %}{% endblock %}
+
+{% block head_style %}
+    {#    slick muban3527 #}
+
+
+    <style type="text/css">
+  textarea::-webkit-input-placeholder {
+  /* WebKit browsers */
+  color: #9c9c9c;
+}
+textarea:-moz-placeholder {
+  /* Mozilla Firefox 4 to 18 */
+  color: #9c9c9c;
+}
+textarea::-moz-placeholder {
+  /* Mozilla Firefox 19+ */
+  color: #9c9c9c;
+}
+textarea::-ms-input-placeholder {
+  /* Internet Explorer 10+ */
+  color: #9c9c9c;
+
+}
+    </style>
+ <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+<script src="{{ url_for('static', filename='My97DatePicker/WdatePicker.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+
+    {% include '_btccrumb.html' %}
+{#    <h1>BTC TRANSACTIONS</h1>#}
+
+
+    {#    <canvas id="trans_eg1"></canvas>#}
+    {#    <canvas id="trans_eg2"></canvas>#}
+
+    <div class="bee-row2">
+
+        <div class="bee-row">
+            <div style="">共<span class="transes_total">{{ trans_total }}</span>个结果，用时{{ took }}ms
+
+            </div>
+            <form action="{{ url_for('btc.btc_query_search') }}" class="">
+              <textarea name="text" cols="40" rows="4" placeholder="查询字段及格式：交易时间 blocktime:2020-12-25T19:24:08,交易金额(BTC) inputvalue:double,手续费(聪)fee:int 输入地址 inputaddr:String,输出地址 outputaddr:String，输入地址类别 type:(P2SH,P2SKH,NEW),发送方地址个数 inputaddrnum:int,接收方地址个数outputaddrnum:int,费率feerate:double" style="width:900px;height:125px;font-size:20px;color:black;"></textarea>
+                    <button type="submit" style="margin-left: 30px;" class="btn btn-primary btn-sm">搜索</button>
+                </form>
+        </div>
+         <div>
+
+            </div>
+    </div>
+
+    <!-- start latestTransList-->
+    <table id="transes-table" class="table bee-transes-table">
+        <thead>
+        <tr>
+            <th>交易哈希</th>
+            <th>所在区块</th>
+            <th>时间</th>
+            <th>发送方</th>
+            <th>接收方</th>
+            <th>交易额(BTC)</th>
+            <!--<th>交易额(USD)</th>-->
+        </tr>
+        </thead>
+        <tbody id="tbodydata">
+        {% for item in latestTransList %}
+            <tr>
+                <td><a href="{{ url_for('btc.btc_tsc_detail', hash=item['_id']) }}">{{ item['_id']|truncate(20) }}</a>
+                </td>
+                <td>
+                    <a href="{{ url_for('btc.btc_block_detail',hash = item['_source']['blockhash']) }}">{{ item['_source']['blockheight'] }}</a>
+                </td>
+                <td>{{ item['_source']['blocktime'] }}</td>
+                 <td>{{ item['vin_times'] }}</td>
+                 <td>{{ item['vout_times'] }}</td>
+                <td>{{ item['value'] }}</td>
+                <!--<td>{{ item['usdvalue'] }}</td>-->
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+     {{ pagination.links }}
+    <div class="m-style pagination"></div> <!-- pagination.js -->
+    <!-- start latestTransList-->
+
+{% endblock %}
+
+{% block body_script %}
+
+    {#    chartjs 3492 demo #}
+    <script src="{{ url_for('static', filename='plugins/chart.js/Chart.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='plugins/chart.js/utils.js') }}"></script>
+{#    <script src="{{ url_for('static', filename='muban/3492/charts-custom.js') }}"></script>  {# 饼状图 #}
+    {#    <script src="{{ url_for('static', filename='assets/demo/big-deal.js') }}"></script>#} <!-- 大额异动 -->
+    {#    3527 banner slick #}
+
+
+    {#    echarts #}
+    {#    <script src="{{ url_for('static', filename='plugins/echarts/echarts.js') }}"></script>#}
+
+    <script src="{{ url_for('static', filename='assets/js/page/transactions.js') }}"></script>
+     <script>
+       function addtag(){
+       strr = "
+       alert(strr);
+       }
+     </script>
+     <script>
+	function dateClick() {
+		WdatePicker({
+			dateFmt : 'yyyy-MM-dd HH:mm:ss',  //格式设置相对应界面可选择也变化
+			highLineWeekDay:true,  //周末的日期是否高亮
+			readOnly:true,  //是否允许键盘输入值，false为禁止输入，只能鼠标选
+		});
+	}
+	</script>
+{% endblock %}

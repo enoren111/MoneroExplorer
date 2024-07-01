@@ -1,0 +1,436 @@
+{% extends 'base3.html' %}
+{% from 'macros.html' import reciver %}
+{% block title %}{% endblock %}
+
+{% block head_style %}
+    <style type="text/css">
+        #wrap {
+            word-break: break-all;
+            width: 800px;
+        }
+        #specvalues::placeholder {
+        color: #4c5667;
+    }
+    #fees::placeholder {
+        color: #4c5667;
+    }
+    #topics::placeholder {
+        color: #4c5667;
+    }
+    #sdates::placeholder {
+        color: #4c5667;
+    }
+    #inputnums::placeholder {
+        color: #4c5667;
+    }
+     #outputnums::placeholder {
+        color: #4c5667;
+    }
+    #heights::placeholder {
+        color: #4c5667;
+    }
+    #edates::placeholder {
+        color: #4c5667;
+    }
+    #maxvalues::placeholder {
+        color: #4c5667;
+    }
+    #minvalues::placeholder {
+        color: #4c5667;
+    }
+    #inputaddrs::placeholder {
+        color: #4c5667;
+    }
+    #outputaddrs::placeholder {
+        color: #4c5667;
+    }
+    </style>
+
+{% endblock %}
+
+{% block content %}
+
+    {#    <h1>TRANSACTION DETAIL</h1>#}
+    {% include '_btccrumb.html' %}
+    <br>
+
+    <div class="card">
+
+        <div class="card-header">选择条件<button type="submit" style="float: right" class="btn btn-primary btn-sm" onclick="gen_query()">开始查询</button><button type="submit" style="float: right;margin-right: 25px" class="btn btn-primary btn-sm" onclick="location.reload()">重置条件</button></div>
+        <div class="card-body">
+                    <table class="table table-sm table-hover bee-table">
+                        <tbody>
+            <span class="colorful-lable">
+                  <label class="sign">
+                    <input type="checkbox" name="attr"  id="height">区块高度
+                </label>&nbsp;
+                <label class="sign">
+                    <input type="checkbox" name="attr"  id="inputaddr" value="">输入地址
+                </label>&nbsp;
+                <label class="sign">
+                    <input type="checkbox" name="attr"  id="outputaddr" value="">输出地址
+                </label>&nbsp;
+                <label class="sign">
+                    <input type="checkbox" name="attr"  id="sdate" value="">开始时间(北京)
+                </label>&nbsp;
+                 <label class="sign">
+                    <input type="checkbox" name="attr"  id="edate" value="">截止时间(北京)
+                </label >&nbsp
+{#                <label class="sign">#}
+{#                    <input type="checkbox" name="attr"  id="sdate_utc" value="">开始时间(utc)#}
+{#                </label>&nbsp;#}
+{#                 <label class="sign">#}
+{#                    <input type="checkbox" name="attr"  id="edate_utc" value="">截止时间(utc)#}
+{#                </label >&nbsp;#}
+                 <label class="sign">
+                    <input type="checkbox" name="attr"  id="minvalue">最小金额
+                </label>&nbsp;
+                <label class="sign">
+                    <input type="checkbox" name="attr"  id="maxvalue">最大金额
+                </label>&nbsp;
+                <label class="sign">
+                    <input type="checkbox" name="attr"  id="specvalue">精确金额
+                </label>&nbsp;
+                <label class="sign">
+                    <input type="checkbox" name="attr"  id="fee">手续费
+                </label>&nbsp;
+                <label class="sign">
+                    <input type="checkbox" name="attr"  id="inputnum">输入地址数
+                </label>&nbsp;
+                <label class="sign">
+                    <input type="checkbox" name="attr"  id="outputnum">输出地址数
+                </label>&nbsp;
+                <label class="sign">
+                    <input type="checkbox" name="attr"  id="topic">交易关联事件
+                </label>&nbsp;
+
+
+            </span>
+                        </tbody>
+                    </table>
+
+        </div>
+    </div>
+       <br>
+    <div class="bee-tab">
+        <ul class="nav nav-tabs nav-tabs-alt" data-toggle="tabs">
+            <li>
+                <a href="#attrs_input" class="active">输入条件</a>
+            </li>
+            <li>
+                <a href="#query_hitory">我的查询</a>
+            </li>
+        </ul>
+        <div class="card-block tab-content">
+
+            <div class="tab-pane active" id="attrs_input">
+           <form action="{{ url_for('btc.btc_transaction_search') }}" method="post" class="layui-form" style="margin-top: 20px " id="query_form" >
+
+               <div style="display: none" class="layui-form-item" >
+            <div >
+                    <input type="text" name="keyword" class="layui-input" id="keywords" value=""  >
+            </div></div>
+     <div  style="display: none" class="layui-form-item" >
+            <div >
+                    <input type="text" name="remark" class="layui-input" id="remarks" value=""  >
+            </div></div>
+               <div class="layui-form-item" >
+            <div >
+                    <input type="text" name="height" class="layui-input" id="heights" value="" placeholder="区块高度" >
+            </div></div>
+               <div class="layui-form-item">
+                <div >
+            <input type="text" name="inputaddr" autocomplete="off" class="layui-input" id="inputaddrs" value="" placeholder="输入地址(支持模糊地址)" /></div></div>
+            <div class="layui-form-item">
+                <div >
+            <input type="text" name="outputaddr" autocomplete="off" class="layui-input" id="outputaddrs" value="" placeholder="输出地址(支持模糊地址)" /></div></div>
+
+               <div class="layui-form-item">
+                <div >
+            <input type="text" name="minvalue" autocomplete="off" class="layui-input" id="minvalues" value="" placeholder="最小金额" /></div></div>
+            <div class="layui-form-item" >
+            <div >
+            <input type="text" name="maxvalue" autocomplete="off" class="layui-input" id="maxvalues" value="" placeholder="最大金额"/>
+            </div></div>
+               <div class="layui-form-item" >
+            <div >
+            <input type="text" name="specvalue" autocomplete="off" class="layui-input" id="specvalues" value="" placeholder="精确金额"/>
+            </div></div><div class="layui-form-item" >
+            <div >
+                <input type="text" name="starttime" autocomplete="off" class="layui-input" id="sdates" value="" placeholder="开始时间(北京)" onclick="dateClick()" >
+            </div></div>
+                <div class="layui-form-item" >
+            <div >
+                    <input type="text" name="endtime" class="layui-input" id="edates" value="" placeholder="截止时间(北京)" onclick="dateClick()" >
+            </div></div>
+
+               <div class="layui-form-item" >
+            <div >
+                    <input type="text" name="fee" class="layui-input" id="fees" value="" placeholder="手续费"  >
+            </div></div>
+               <div class="layui-form-item" >
+            <div >
+                    <input type="text" name="input_num" class="layui-input" id="inputnums" value="" placeholder="输入地址数"  >
+            </div></div>
+               <div class="layui-form-item" >
+            <div >
+                    <input type="text" name="output_num" class="layui-input" id="outputnums" value="" placeholder="输出地址数"  >
+            </div></div>
+               <div class="layui-form-item" >
+            <div >
+                    <input type="text" name="topic" class="layui-input" id="topics" value="" placeholder="交易关联事件"  >
+            </div></div>
+               <center><button type="submit"  class="btn btn-primary btn-sm"  value="" >查询</button><button type="reset"  style="margin-left: 20px "class="btn btn-primary btn-sm" onclick="layer.closeAll()">取消</button></center>
+            </form>
+            </div>
+            <div class="tab-pane " id="query_hitory">
+                    <table class="table " >
+                        <thead>
+             <tr>
+                 <th>序号</th>
+                <th>关键词</th>
+                 <th>备注信息(情报来源)</th>
+{#                <th>高度</th>#}
+{#                 <th>输入地址</th>#}
+{#                 <th>输出地址</th>#}
+{#                 <th>输入数量</th>#}
+{#                 <th>输出数量</th>#}
+{#                <th>最大金额</th>#}
+{#                <th>最小金额</th>#}
+{#                 <th>精确金额</th>#}
+{#                <th>起始时间</th>#}
+{#                <th>截止时间</th>#}
+{#                 <th>手续费</th>#}
+{#                 <th>关联事件</th>#}
+
+                 <th ></th>
+                 <th ></th>
+            </tr>
+            </thead>
+            <tbody>
+
+        {% for single in list %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td title="{{ single['kw'] }}">
+                    <a >{{ single['kw'] | truncate(20)}}</a>
+                </td>
+{#                <td>#}
+{#                    <a >{{ single['height']}}</a>#}
+{#                </td>#}
+{#                <td>#}
+{#                    <a title="{{ single['input'] }}" >{{ single['input']|truncate(10)}}</a>#}
+{#                </td>#}
+{##}
+{#                <td>#}
+{#                    <a title="{{ single['output'] }}">{{ single['output']|truncate(10)}}</a>#}
+{#                </td>#}
+{#                 <td>#}
+{#                    <a >{{ single['inputnum']}}</a>#}
+{#                </td>#}
+{#                <td>#}
+{#                    <a >{{ single['outputnum']}}</a>#}
+{#                </td>#}
+{#                <td>#}
+{#                    <a >{{ single['maxval']}}</a>#}
+{#                </td>#}
+{#                <td>{{ single['minval'] }}</td>#}
+{#                <td>{{ single['specvalue'] }}</td>#}
+{#                <td title="{{ single['sdate'] }}">{{ single['sdate']|truncate(10)}}</td>#}
+{#                <td title="{{ single['edate'] }}">{{ single['edate'] |truncate(10)}}</td>#}
+{#                <td>{{ single['fee'] }}</td>#}
+{#                <td>{{ single['topic'] }}</td>#}
+                <td title="{{ single['remark'] }}">{{ single['remark'] |truncate(50) }} </td>
+            <td><a style="color: cornflowerblue" id="{{ single }}" href="javascript:void(0);" onclick="querydetail(this.id)">查看详情</a></td>
+            <td><button style="color: white" id="{{ single }}" class="btn btn-primary btn-sm" onclick="query_again(this.id)">再次查询</button></td>
+            </tr>
+
+        {% endfor %}
+
+        </tbody>
+                    </table>
+                     {{ pagination.links }}
+                <br>
+            </div>
+        </div>
+    </div>
+
+
+
+    <br>
+{% endblock %}
+
+{% block body_script %}
+    <script src="{{ url_for('static', filename='muban/3527/app.js') }}"></script>
+    <script src="{{ url_for('static', filename='My97DatePicker/WdatePicker.js') }}"></script>
+
+
+    {#    <script src="{{ url_for('static', filename='assets/js/page/btc_tsc_detail.js') }}" charset="GB2312"></script>#}
+    {#    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>#}
+    {#    tab #}
+     <script src="{{ url_for('static', filename='layui/layui.js') }}"></script>
+    <script>
+    function querydetail(single){
+       keyword = JSON.parse(single.replace(/'/g,'"')).kw;
+       maxval = JSON.parse(single.replace(/'/g,'"')).maxval;
+       minval = JSON.parse(single.replace(/'/g,'"')).minval;
+       {#domain = JSON.parse(single.replace(/'/g,'"')).domain;#}
+       sdate = JSON.parse(single.replace(/'/g,'"')).sdate;
+       edate = JSON.parse(single.replace(/'/g,'"')).edate;
+       inputaddr=JSON.parse(single.replace(/'/g,'"')).input;
+       outputaddr=JSON.parse(single.replace(/'/g,'"')).output;
+       height=JSON.parse(single.replace(/'/g,'"')).height;
+       fee=JSON.parse(single.replace(/'/g,'"')).fee;
+       inputnum=JSON.parse(single.replace(/'/g,'"')).inputnum;
+       outputnum=JSON.parse(single.replace(/'/g,'"')).outputnum;
+       topic=JSON.parse(single.replace(/'/g,'"')).topic;
+        specvalue=JSON.parse(single.replace(/'/g,'"')).specvalue;
+        remark=JSON.parse(single.replace(/'/g,'"')).remark;
+       {#alert(keyword+maxval+minval+sdate+edate);#}
+      var Udata= JSON.stringify({"maxvalue":maxval,"minvalue":minval,"sdate":sdate,"edate":edate,"kw":keyword,"input":inputaddr,"output":outputaddr,"height":height,"fee":fee,"inputnum":inputnum,"outputnum":outputnum,"topic":topic,"specvalue":specvalue,"remark":remark});
+      document.getElementById("maxvalues").value=maxval;
+       document.getElementById("minvalues").value=minval;
+       document.getElementById("sdates").value=sdate;
+       document.getElementById("edates").value=edate;
+       document.getElementById("inputaddrs").value=inputaddr;
+       document.getElementById("outputaddrs").value=outputaddr;
+       document.getElementById("heights").value=height;
+       document.getElementById("fees").value=fee;
+       document.getElementById("inputnums").value=inputnum;
+        document.getElementById("outputnums").value=outputnum;
+        document.getElementById("topics").value=topic;
+       document.getElementById("specvalues").value=specvalue;
+       document.getElementById("keywords").value=keyword;
+
+       document.getElementById("remarks").value=remark;
+       document.getElementById("query_form").action="{{ url_for('btc.btc_queryhistory_detail') }}";
+       document.getElementById("query_form").submit();
+            }
+    </script>
+    <script>
+function gen_query() {
+        var num=0;
+        var num_uncheck=0;
+        var check = new Array();
+        var uncheck = new Array();
+        var attr_ = document.getElementsByName("attr");
+        for ( var i = 0; i < attr_.length; i++) {
+            if (attr_[i].checked) {
+                check[num]=attr_[i].id;
+                num++;
+            }
+            else {
+                uncheck[num_uncheck]=attr_[i].id+'s';
+                num_uncheck++;
+            }
+
+        }
+        if(num==0){
+            alert("请选择条件!");
+        }
+        else{
+            {#alert(check);#}
+        for ( var i = 0; i < uncheck.length; i++) {
+               document.getElementById(uncheck[i]).hidden=true;
+        }
+        }
+       /* $.ajax({
+            url:'/darknet/query/' ,
+            type:'POST',
+            contentType: 'application/json; charset=UTF-8',
+            data:Udata,
+            success:function () {
+                if(res.code[0] == 'addr'){
+                    layer.closeAll();
+
+
+                }else{
+                    layer.msg(res.message,{time:2000})
+                }
+                location.reload(true);
+            }
+        })*/
+
+        {#prompt("ss","sad");#}
+        //window.alert(check[0]+num);
+
+    }
+
+   </script>
+    <script>
+    function query_again(single){
+       keyword = JSON.parse(single.replace(/'/g,'"')).kw;
+       maxval = JSON.parse(single.replace(/'/g,'"')).maxval;
+       minval = JSON.parse(single.replace(/'/g,'"')).minval;
+       {#domain = JSON.parse(single.replace(/'/g,'"')).domain;#}
+       sdate = JSON.parse(single.replace(/'/g,'"')).sdate;
+       edate = JSON.parse(single.replace(/'/g,'"')).edate;
+       inputaddr=JSON.parse(single.replace(/'/g,'"')).input;
+       outputaddr=JSON.parse(single.replace(/'/g,'"')).output;
+       height=JSON.parse(single.replace(/'/g,'"')).height;
+       fee=JSON.parse(single.replace(/'/g,'"')).fee;
+       inputnum=JSON.parse(single.replace(/'/g,'"')).inputnum;
+       outputnum=JSON.parse(single.replace(/'/g,'"')).outputnum;
+       topic=JSON.parse(single.replace(/'/g,'"')).topic;
+       specvalue=JSON.parse(single.replace(/'/g,'"')).specvalue;
+       {#alert(keyword+maxval+minval+sdate+edate);#}
+       document.getElementById("maxvalues").value=maxval;
+       document.getElementById("minvalues").value=minval;
+       document.getElementById("sdates").value=sdate;
+       document.getElementById("edates").value=edate;
+       document.getElementById("inputaddrs").value=inputaddr;
+       document.getElementById("outputaddrs").value=outputaddr;
+       document.getElementById("heights").value=height;
+       document.getElementById("fees").value=fee;
+       document.getElementById("inputnums").value=inputnum;
+        document.getElementById("outputnums").value=outputnum;
+        document.getElementById("topics").value=topic;
+        document.getElementById("specvalues").value=specvalue;
+       document.getElementById("query_form").action="{{ url_for('btc.btc_transaction_search') }}";
+       document.getElementById("query_form").submit();
+            }
+
+     function gen_sql(){
+    layui.use(['layer', 'form'], function(){
+        var layer = layui.layer
+         ,form = layui.form;
+       layer.open({
+            type:1,
+            skin:'layui-layer-molv',
+            area:  ['400px', '75%'],
+            content:'<form class="layui-form" style="margin-top: 20px" > ' +
+            '<div class="layui-form-item" >' +
+            ' <label class="layui-form-label" style="color:black">为本次查询添加关键词：</label>' +
+            '<div class="layui-input-inline"> ' +
+            '<input type="text" name="kw"  id="kw">' +
+            '</div>' +
+            '</div>' +
+            '</form>',
+            btn: ['添加', '取消'],
+            btnAlign: 'c',
+            yes: function(){
+                get_kw();
+                layer.closeAll();
+            },
+            btn2: function(){
+                layer.closeAll();
+            },
+            success: function(layero, index){
+                layui.use(['form','element'],function () {
+                    var form = layui.form, element = layui.element;
+                    form.render();
+                });
+
+            }
+        });
+});}
+	function dateClick() {
+		WdatePicker({
+			dateFmt : 'yyyy-MM-dd HH:mm:ss',  //格式设置相对应界面可选择也变化
+			highLineWeekDay:true,  //周末的日期是否高亮
+			readOnly:true,  //是否允许键盘输入值，false为禁止输入，只能鼠标选
+		});
+	}
+	</script>
+
+{% endblock %}

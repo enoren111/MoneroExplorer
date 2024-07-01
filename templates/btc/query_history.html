@@ -1,0 +1,200 @@
+{% extends 'base3.html' %}
+{% from 'macros.html' import reciver %}
+{% block title %}{% endblock %}
+
+{% block head_style %}
+
+{% endblock %}
+
+{% block content %}
+
+    {#    <h1>TRANSACTION DETAIL</h1>#}
+    {% include '_btccrumb.html' %}
+    <br>
+    <div style="display:none">
+ <form action="{{ url_for('btc.btc_transaction_search') }}" method="post" class="layui-form" style="margin-top: 20px " id="query_form"  >
+     <div class="layui-form-item" >
+            <div >
+                    <input type="text" name="keyword" class="layui-input" id="keywords" value=""  >
+            </div></div>
+     <div class="layui-form-item" >
+            <div >
+                    <input type="text" name="remark" class="layui-input" id="remarks" value=""  >
+            </div></div>
+     <div class="layui-form-item" >
+            <div >
+                    <input type="text" name="height" class="layui-input" id="heights" value=""  >
+            </div></div>
+               <div class="layui-form-item">
+                <div >
+            <input type="text" name="inputaddr" autocomplete="off" class="layui-input" id="inputaddrs" value=""  /></div></div>
+            <div class="layui-form-item">
+                <div >
+            <input type="text" name="outputaddr" autocomplete="off" class="layui-input" id="outputaddrs" value="" /></div></div>
+
+               <div class="layui-form-item">
+                <div >
+            <input type="text" name="minvalue" autocomplete="off" class="layui-input" id="minvalues" value=""  /></div></div>
+            <div class="layui-form-item" >
+            <div >
+            <input type="text" name="maxvalue" autocomplete="off" class="layui-input" id="maxvalues" value="" />
+            </div></div><div class="layui-form-item" >
+            <div >
+                <input type="text" name="starttime" autocomplete="off" class="layui-input" id="sdates" value="" >
+            </div></div>
+                <div class="layui-form-item" >
+            <div >
+                    <input type="text" name="endtime" class="layui-input" id="edates" value="" >
+            </div></div>
+               <div class="layui-form-item" >
+            <div >
+                    <input type="text" name="fee" class="layui-input" id="fees" value=""   >
+            </div></div>
+               <div class="layui-form-item" >
+            <div >
+                    <input type="text" name="input_num" class="layui-input" id="inputnums" value=""   >
+            </div></div>
+               <div class="layui-form-item" >
+            <div >
+                    <input type="text" name="output_num" class="layui-input" id="outputnums" value=""  >
+            </div></div>
+       <div class="layui-form-item" >
+            <div >
+                    <input type="text" name="topic" class="layui-input" id="topics" value=""  >
+            </div></div>
+     <div class="layui-form-item" >
+            <div >
+                    <input type="text" name="specvalue" class="layui-input" id="specvalues" value=""  >
+            </div></div>
+            </form>
+</div>
+    <div class="card">
+
+        <div class="card-header">我的查询<button type="submit" style="float: right;margin-right: 25px" class="btn btn-primary btn-sm" onclick="window.location.href='{{ url_for('bee.trans_senior_query') }}'">新的查询</button></div>
+        <div class="card-body">
+                    <table class="table " >
+                        <thead>
+             <tr>
+                 <th>序号</th>
+                <th>关键词</th>
+                 <th>备注信息(情报来源)</th>
+
+                 <th ></th>
+                 <th ></th>
+            </tr>
+            </thead>
+            <tbody>
+
+        {% for single in list %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td title="{{ single['kw'] }}">
+                    <a >{{ single['kw']|truncate(20)}}</a>
+                </td>
+                <td title="{{ single['remark'] }}">{{ single['remark'] |truncate(50) }} </td>
+            <td><a style="color: cornflowerblue" id="{{ single }}" href="javascript:void(0);" onclick="querydetail(this.id)">查看详情</a></td>
+            <td><button style="color: white" id="{{ single }}" class="btn btn-primary btn-sm" onclick="query_again(this.id)">再次查询</button></td>
+            </tr>
+
+        {% endfor %}
+
+        </tbody>
+                    </table>
+          {{ pagination.links }}
+
+        </div>
+    </div>
+     <div class="m-style M-box4"></div>
+       <br>
+
+
+
+    <br>
+{% endblock %}
+
+{% block body_script %}
+    <script src="{{ url_for('static', filename='muban/3527/app.js') }}"></script>
+    <script src="{{ url_for('static', filename='My97DatePicker/WdatePicker.js') }}"></script>
+
+
+    {#    <script src="{{ url_for('static', filename='assets/js/page/btc_tsc_detail.js') }}" charset="GB2312"></script>#}
+    {#    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>#}
+    {#    tab #}
+     <script src="{{ url_for('static', filename='layui/layui.js') }}"></script>
+    <script>
+    function query_again(single){
+       maxval = JSON.parse(single.replace(/'/g,'"')).maxval;
+       minval = JSON.parse(single.replace(/'/g,'"')).minval;
+       {#domain = JSON.parse(single.replace(/'/g,'"')).domain;#}
+       sdate = JSON.parse(single.replace(/'/g,'"')).sdate;
+       edate = JSON.parse(single.replace(/'/g,'"')).edate;
+       inputaddr=JSON.parse(single.replace(/'/g,'"')).input;
+       outputaddr=JSON.parse(single.replace(/'/g,'"')).output;
+       height=JSON.parse(single.replace(/'/g,'"')).height;
+       fee=JSON.parse(single.replace(/'/g,'"')).fee;
+       inputnum=JSON.parse(single.replace(/'/g,'"')).inputnum;
+       outputnum=JSON.parse(single.replace(/'/g,'"')).outputnum;
+       topic=JSON.parse(single.replace(/'/g,'"')).topic;
+        specvalue=JSON.parse(single.replace(/'/g,'"')).specvalue;
+       {#alert(keyword+maxval+minval+sdate+edate);#}
+       document.getElementById("maxvalues").value=maxval;
+       document.getElementById("minvalues").value=minval;
+       document.getElementById("sdates").value=sdate;
+       document.getElementById("edates").value=edate;
+       document.getElementById("inputaddrs").value=inputaddr;
+       document.getElementById("outputaddrs").value=outputaddr;
+       document.getElementById("heights").value=height;
+       document.getElementById("fees").value=fee;
+       document.getElementById("inputnums").value=inputnum;
+        document.getElementById("outputnums").value=outputnum;
+        document.getElementById("topics").value=topic;
+       document.getElementById("specvalues").value=specvalue;
+       document.getElementById("query_form").action="{{ url_for('btc.btc_transaction_search') }}";
+       document.getElementById("query_form").submit();
+            }
+    function querydetail(single){
+       keyword = JSON.parse(single.replace(/'/g,'"')).kw;
+       maxval = JSON.parse(single.replace(/'/g,'"')).maxval;
+       minval = JSON.parse(single.replace(/'/g,'"')).minval;
+       {#domain = JSON.parse(single.replace(/'/g,'"')).domain;#}
+       sdate = JSON.parse(single.replace(/'/g,'"')).sdate;
+       edate = JSON.parse(single.replace(/'/g,'"')).edate;
+       inputaddr=JSON.parse(single.replace(/'/g,'"')).input;
+       outputaddr=JSON.parse(single.replace(/'/g,'"')).output;
+       height=JSON.parse(single.replace(/'/g,'"')).height;
+       fee=JSON.parse(single.replace(/'/g,'"')).fee;
+       inputnum=JSON.parse(single.replace(/'/g,'"')).inputnum;
+       outputnum=JSON.parse(single.replace(/'/g,'"')).outputnum;
+       topic=JSON.parse(single.replace(/'/g,'"')).topic;
+        specvalue=JSON.parse(single.replace(/'/g,'"')).specvalue;
+        remark=JSON.parse(single.replace(/'/g,'"')).remark;
+       {#alert(keyword+maxval+minval+sdate+edate);#}
+      var Udata= JSON.stringify({"maxvalue":maxval,"minvalue":minval,"sdate":sdate,"edate":edate,"kw":keyword,"input":inputaddr,"output":outputaddr,"height":height,"fee":fee,"inputnum":inputnum,"outputnum":outputnum,"topic":topic,"specvalue":specvalue,"remark":remark});
+      document.getElementById("maxvalues").value=maxval;
+       document.getElementById("minvalues").value=minval;
+       document.getElementById("sdates").value=sdate;
+       document.getElementById("edates").value=edate;
+       document.getElementById("inputaddrs").value=inputaddr;
+       document.getElementById("outputaddrs").value=outputaddr;
+       document.getElementById("heights").value=height;
+       document.getElementById("fees").value=fee;
+       document.getElementById("inputnums").value=inputnum;
+        document.getElementById("outputnums").value=outputnum;
+        document.getElementById("topics").value=topic;
+       document.getElementById("specvalues").value=specvalue;
+       document.getElementById("keywords").value=keyword;
+       document.getElementById("remarks").value=remark;
+       document.getElementById("query_form").action="{{ url_for('btc.btc_queryhistory_detail') }}";
+       document.getElementById("query_form").submit();
+        {#alert(Udata);#}
+            }
+	function dateClick() {
+		WdatePicker({
+			dateFmt : 'yyyy-MM-dd HH:mm:ss',  //格式设置相对应界面可选择也变化
+			highLineWeekDay:true,  //周末的日期是否高亮
+			readOnly:true,  //是否允许键盘输入值，false为禁止输入，只能鼠标选
+		});
+	}
+	</script>
+
+{% endblock %}

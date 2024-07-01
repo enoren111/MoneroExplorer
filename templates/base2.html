@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    {#    {% block head %}#}
+    <title>{% block title %}{% endblock %}</title>
+    {#        <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">#}
+
+
+    <link rel="stylesheet" href="static/css/linearicons.css"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap413.css') }}"/>
+    <link rel="stylesheet" id="css-app" href="static/css/muban/ccpt_27_cpa-main.css"/>
+    <link rel="stylesheet" href="static/css/font-awesome.min.css"/>
+
+    {% block head_style %}
+
+    {% endblock head_style %}
+    {#    {% endblock head %}#}
+</head>
+<body>
+
+<!-- Start Header2 Area -->
+<header id="header">
+    <div class="container">
+        <div class="row align-items-center justify-content-between d-flex">
+            <div id="logo">
+                <a href="index.html"><img src="{{ url_for('static', filename='img/main/logo.png') }}" alt="" title=""/></a>
+            </div>
+            <nav id="nav-menu-container">
+                <ul class="nav-menu">
+                    <li class="menu-active"><a href="index.html">Home</a></li>
+                    <li><a href="{{ url_for('eth.eth_home') }}">Ethereum</a></li>
+                    <li><a href="{{ url_for('btc.btc_home') }}">Bitcoin</a></li>
+                    <li class="menu-has-children"><a href="">Pages</a>
+                        <ul>
+                            <li><a href="elements.html">Elements</a></li>
+                        </ul>
+                    </li>
+                    <li class="menu-has-children"><a href="">Blog</a>
+                        <ul>
+                            <li><a href="blog-home.html">Blog Home</a></li>
+                            <li><a href="blog-single.html">Blog Details</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav><!-- #nav-menu-container -->
+        </div>
+    </div>
+</header>
+<!-- End Header2 Area -->
+
+
+{#<a href="{{ url_for('eth_home') }}">以太坊</a>#}
+{#<a href="{{ url_for('btc_home') }}">比特币</a>#}
+
+
+{% block content %}
+
+
+{% endblock %}
+
+
+
+
+{#<script src="static/vendor/js/jquery-3.3.1.min"></script>  错误#}
+<script src="static/js/jquery-2.1.4.min.js"></script>
+<script src="static/js/bootstrap.min.js"></script>
+
+{# header base ccpt_27_cpa #}
+<script src="static/js/muban/main.js"></script>
+<script src="static/js/muban/wow.min.js"></script>
+<script src="static/js/muban/superfish.min.js"></script>
+<script src="static/js/muban/jquery.magnific-popup.min.js"></script>
+<script src="static/js/muban/jquery.counterup.min.js"></script>
+
+{% block body_script %}
+{% endblock body_script %}
+
+
+</body>
+</html>

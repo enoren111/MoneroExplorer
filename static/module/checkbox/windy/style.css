@@ -1,0 +1,38 @@
+/* base D:\workspace\front\module\checkbox\css3-windy-switch\css\style.css */
+
+
+#switch,
+#circle {
+	height: 31px;
+	cursor: pointer;
+	border: 2px solid #000;
+	-webkit-transition: all 0.4s cubic-bezier(0.54, 1.6, 0.5, 1);
+		transition: all 0.4s cubic-bezier(0.54, 1.6, 0.5, 1);
+} 
+#switch {
+	width: 60px;
+	/*margin: 0 auto;*/
+	border-radius: 27px;
+	position: relative;
+	display: block;
+	text-align: center;
+	margin: 0 auto;
+    /*transform: translateY(10px);*/
+}
+#circle {
+	margin-top: 5%;
+	margin-left: 5%;
+	width: 40%;  /* 原40% */
+	height: 80%;
+	border-radius: 50%;
+	box-shadow: inset 4px -1px 0 0 #f1c40f;
+}
+.switched {
+	border-color: #000 !important;
+}
+.switched #circle {
+	margin-left: 55%;
+	box-shadow: inset 4px -1px 0 0 #2ecc71;
+}
+
+

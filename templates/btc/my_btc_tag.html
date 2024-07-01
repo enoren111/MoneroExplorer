@@ -1,0 +1,395 @@
+{% extends 'base3.html' %}
+{% block title %}{% endblock %}
+{% block head_style %}
+    <style type="text/css">
+        dd {
+            color: black;
+        }
+
+    </style>
+    {#    slick muban3527 #}
+    <style type="text/css">
+    </style>
+<script src="{{ url_for('static', filename='js/jquery-2.1.4.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/jquery-1.8.min.js') }}"></script>
+<style id="__jsx-3954331054">.section-stats.jsx-3954331054{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-box-pack:center;-webkit-justify-content:center;-ms-flex-pack:center;justify-content:center;background:#222;}.stats-container-content.jsx-3954331054{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-flex-wrap:nowrap;-ms-flex-wrap:nowrap;flex-wrap:nowrap;}.image-container.jsx-3954331054{background-image:url('/static/moon2.jpg?height=300&width=2000'),linear-gradient(#2f2f2f,#2f2f2f);background-size:cover;background-repeat:no-repeat;background-position:48%;position:relative;height:300px;}@media screen and (max-width:1500px) and (min-width:1000px){.image-container.jsx-3954331054{background-image:url('/static/moon2.jpg?height=300&width=1500'),linear-gradient(#2f2f2f,#2f2f2f);background-size:cover;background-repeat:no-repeat;background-position:48%;position:relative;height:300px;}}@media (min-width:1000px){.mobile-search.jsx-3954331054{display:none;}}@media screen and (max-width:1000px) and (min-width:614px){.stats-container-content.jsx-3954331054::before{content:'';-webkit-flex:0 0 3vw;-ms-flex:0 0 3vw;flex:0 0 3vw;}.stats-container-content.jsx-3954331054::after{content:'';-webkit-flex:0 0 3vw;-ms-flex:0 0 3vw;flex:0 0 3vw;}.stats-container.jsx-3954331054{margin:0 1rem;-webkit-mask-image:linear-gradient(to right,transparent,black 10%,black 90%,transparent);mask-image:linear-gradient(to right,transparent,black 10%,black 90%,transparent);cursor:-webkit-grab;cursor:-moz-grab;cursor:grab;padding:0 1rem;overflow-x:auto;overflow-y:hidden;-ms-overflow-style:-ms-autohiding-scrollbar;-webkit-overflow-scrolling:touch;-webkit-box-orient:horizontal;-webkit-box-direction:normal;}.image-container.jsx-3954331054{background-image:url('/static/moon2.jpg?height=300&width=1000'),linear-gradient(#2f2f2f,#2f2f2f);}}@media screen and (max-width:614px){.stats-container.jsx-3954331054{margin:0 1rem;-webkit-mask-image:linear-gradient(to right,transparent,black 10%,black 90%,transparent);mask-image:linear-gradient(to right,transparent,black 10%,black 90%,transparent);cursor:-webkit-grab;cursor:-moz-grab;cursor:grab;padding:0 1rem;overflow-x:auto;overflow-y:hidden;-ms-overflow-style:-ms-autohiding-scrollbar;-webkit-overflow-scrolling:touch;-webkit-box-orient:horizontal;-webkit-box-direction:normal;}.image-container.jsx-3954331054{background-image:url('/static/moon2.jpg?height=300&width=614'),linear-gradient(#2f2f2f,#2f2f2f);}}.stats-container.jsx-3954331054::-webkit-scrollbar{display:none;}.stats-card.jsx-3954331054{padding:1rem;-webkit-flex:0 0 auto;-ms-flex:0 0 auto;flex:0 0 auto;}.stats-header.jsx-3954331054{font-size:0.8rem;color:#aaa;}.stats-content.jsx-3954331054{color:#fff;font-size:1rem;}#stats.jsx-3954331054{border-radius:10px;background-color:#dfd6bc66;-webkit-transition-timing-function:cubic-bezier(0.25,0.46,0.45,0.94);transition-timing-function:cubic-bezier(0.25,0.46,0.45,0.94);-webkit-transition-property:all;transition-property:all;-webkit-transition-delay:0s;transition-delay:0s;-webkit-transition-duration:0.3s;transition-duration:0.3s;box-shadow:0 2px 3px rgba(10,10,10,0.1),0 0 0 1px rgba(10,10,10,0.1);}#stats.jsx-3954331054:hover{box-shadow:0 5px 10px 0 rgba(182,191,210,0.6);}.hero-text.jsx-3954331054{pointer-events:none;background-color:white;color:black;font-size:calc(2vw + 2rem);font-weight:bold;margin:0 auto;padding:10px;text-align:center;position:absolute;width:50%;top:50%;left:50%;-webkit-transform:translate(-50%,-50%);-ms-transform:translate(-50%,-50%);transform:translate(-50%,-50%);mix-blend-mode:screen;}.search.jsx-3954331054{padding:10px;position:absolute;margin:0 auto;width:80%;top:95%;left:50%;-webkit-transform:translate(-50%,-50%);-ms-transform:translate(-50%,-50%);transform:translate(-50%,-50%);}</style>
+<style id="__jsx-263509302">a.jsx-263509302{width:-webkit-fit-content;width:-moz-fit-content;width:fit-content;}.link-content.jsx-263509302>a.jsx-263509302{padding:0.15rem 0;font-size:0.9rem;}</style></head>
+
+{% endblock %}
+{% block content %}
+    {% include '_btccrumb.html' %}
+    {#    <h1>BTC TRANSACTIONS</h1>#}
+
+    <div class="bee-row2">
+        <div class="bee-row">
+<!--            <div><span class="transes_total">查找标签：</span></div>-->
+                <form action="{{ url_for('btc.syc_btc_tag_search') }}" class="">
+                    <div style="float:left;">
+                   当前查看：
+                    <select style="width:60px" name="flag">
+                      <option {% if reback.flag=='seed' %}selected{% endif %}  value ="seed" >原始标签</option>
+                        <option {% if reback.flag=='clu' %}selected{% endif %} value ="clu">聚类产生的标签</option>
+                    </select>
+                    地址：
+                    <input name="address" style="width: 120px;" type="text" id="tag_addr" value="{{reback.address}}">
+                    标签名：
+                    <input name="tags" style="width: 60px;" type="text" id="tag_name" value="{{reback.tag}}">
+                    标签来源：
+<!--                    <input name="sources" style="width: 60px;" type="text" value="{{reback.source}}">-->
+                    <select style="width:80px" id="tag_source" name="sources">
+                        <option value="" selected>All</option>
+                      <option {% if reback.source=='Bitcoinwhoswho' %}selected{% endif %}  value ="Bitcoinwhoswho" >Bitcoinwhoswho</option>
+                        <option {% if reback.source=='WalletExplorer' %}selected{% endif %} value ="WalletExplorer">WalletExplorer</option>
+                      <option {% if reback.source=='whale alert' %}selected{% endif %} value="whale alert">whale alert</option>
+                      <option  {% if reback.source=='BitcoinTalk Forum' %}selected{% endif %} value="BitcoinTalk Forum">BitcoinTalk Forum</option>
+                      <option  {% if reback.source=='Twitter' %}selected{% endif %} value="Twitter">Twitter</option>
+                      <option  {% if reback.source=='Github' %}selected{% endif %} value="Github">Github</option>
+                        <option  {% if reback.source=='Ransomwhere' %}selected{% endif %} value="Ransomwhere">Ransomwhere</option>
+                        <option  {% if reback.source=='Telegram' %}selected{% endif %} value="Telegram">Telegram</option>
+                        <option  {% if reback.source=='BitcoinAbuse' %}selected{% endif %} value="BitcoinAbuse">BitcoinAbuse</option>
+                        <option  {% if reback.source=='Charitycoin' %}selected{% endif %} value="Charitycoin">Charitycoin</option>
+
+                    <option  {% if reback.source=='user-defined' %}selected{% endif %} value="user-defined">自定义标签</option>
+                    </select>
+                    标签类型：
+                    <select style="width:80px" name="category" id="tag_category">
+                        <option value="" selected>All</option>
+                      <option {% if reback.category=='Services' %}selected{% endif %}  value ="Services" >Services(服务)</option>
+                        <option {% if reback.category=='Exchanges' %}selected{% endif %} value ="Exchanges">Exchanges(交易平台)</option>
+                      <option {% if reback.category=='user' %}selected{% endif %} value="user">User(社交网站用户)</option>
+                      <option  {% if reback.category=='Gambling' %}selected{% endif %} value="Gambling">Gambling(赌博)</option>
+                      <option  {% if reback.category=='scam' %}selected{% endif %} value="scam">scam(诈骗地址)</option>
+                      <option  {% if reback.category=='Pools' %}selected{% endif %} value="Pools">Pools(矿池)</option>
+                    <option  {% if reback.category=='Ransomware' %}selected{% endif %} value="Ransomware">Ransomware(勒索地址)</option>
+                    <option  {% if reback.category=='victim' %}selected{% endif %} value="victim">victim(勒索地址)</option>
+                    <option  {% if reback.category=='Historic' %}selected{% endif %} value="Historic">Historic(历史地址)</option>
+                    <option  {% if reback.category=='other' %}selected{% endif %} value="other">other(其他地址)</option>
+
+                    </select>
+                    多元标签数：
+                    <input name="num" style="width: 40px";type="text" value="{{reback.num}}" id="tag_num">
+                    标签冲突：
+                        <select style="width:60px" name="label_clash" id="label_clash">
+                        <option value="" selected>-</option>
+                      <option {% if reback.label_clash=='1' %}selected{% endif %}  value ="1" >硬冲突</option>
+                        <option {% if reback.label_clash=='0' %}selected{% endif %} value ="0">软冲突</option>
+                      <option {% if reback.label_clash=='2' %}selected{% endif %} value="2">多级标签</option>
+
+
+                    </select>
+                    </select>
+                </div>
+            <div style="float:right">
+                <button type="submit" style="margin-left: 5px;" class="btn btn-primary btn-sm">搜索</button>
+
+            </div>
+            </form>
+            <div><button type="submit" style="float: right;margin-left: 5px;" class="btn btn-primary btn-sm" onclick="add_tag()">添加标签</button></div>
+
+
+        </div>
+
+    </div>
+    <div class="bee-row2">
+        <div>共<span class="transes_total">{{ count }}</span>个结果 （注：标签级别E—交易平台级；U—用户级；O—在线钱包级）</div>
+        <div><button type="submit"  id ="{{ result_1000 }}"style="float: right;margin-left: 5px;" class="btn btn-primary btn-sm" onclick="gen_sheet(this.id)">导出查询结果</button></div>
+
+    </div>
+
+    <!-- start latestTransList-->
+    <table id="transes-table" class="table bee-transes-table" >
+        <thead>
+        <tr>
+            <th>地址</th>
+            <th>多元标签</th>
+            <th>标签名</th>
+            <th>标签来源</th>
+            <th>标签类型</th>
+            <th>标签级别</th>
+            <th>创建时间</th>
+            <th>标签详情</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        {% for single in single_list %}
+            {% if single['addr'] in repeat_addr %}
+            <tr class="parent" id="{{ single['addr'] }}">
+                <td><i>+</i>&nbsp;&nbsp
+                   <a href="{{ url_for('btc.btc_address_detail', address=single['addr']) }}">{{ single['addr'] }}</a></td>
+                <td>{{ single['labels_sum']}}</td>
+                <td>{{ single['name'] |truncate(25)}}</td>
+                <td>{{ single['source'] }}</td>
+                <td>{{ single['category']}}</td>
+                <td>{{ single['rank'] }}</td>
+                <td>{{ single['createtime']}}</td>
+                <td><a style="color: #1E90FF" href="{{ url_for('btc.btc_tag_detail',address = single['addr'])}}">查看详情</a></td>
+                </tr>
+            </tr>
+            {% for repeat in repeat_list %}
+                {% if repeat['addr'] == single['addr'] %}
+                <tr class="child_{{ repeat['addr'] }}" style="display: none">
+                    <td>&nbsp&nbsp&nbsp&nbsp<a href="{{ url_for('btc.btc_address_detail', address=repeat['addr']) }}">{{ repeat['addr'] }}
+                    </a>
+                    </td>
+                    <td> </td>
+                    <td>{{ repeat['name'] |truncate(25)}}</td>
+                    <td>{{ repeat['source'] }}</td>
+                    <td>{{ repeat['category']}}</td>
+                    <td>{{ repeat['rank'] }}</td>
+                    <td>{{ repeat['createtime']}}</td>
+                    <td></td>
+                </tr>
+                {% endif %}
+            {% endfor %}
+            {% else %}
+            <tr class="parent" id="{{ single['addr'] }}">
+                <td><a href="{{ url_for('btc.btc_address_detail', address=single['addr']) }}">{{ single['addr'] }}</a></td>
+                <td>{{ single['labels_sum']}}</td>
+                <td>{{ single['name'] |truncate(25)}}</td>
+                <td>{{ single['source'] }}</td>
+                <td>{{ single['category']}}</td>
+                <td>{{ single['rank'] }}</td>
+                <td>{{ single['createtime']}}</td>
+                <td><a style="color: #1E90FF" href="{{ url_for('btc.btc_tag_detail',address = single['addr'])}}">查看详情</a></td>
+                </tr>
+            </tr>
+            {% endif %}
+        {% endfor %}
+    </tbody>
+    </table>
+    {{ pagination.links }}
+    <div class="m-style pagination"></div> <!-- pagination.js -->
+    <!-- start latestTransList-->
+
+{% endblock %}
+
+{% block body_script %}
+
+    {#    chartjs 3492 demo #}
+    <script src="{{ url_for('static', filename='plugins/chart.js/Chart.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='plugins/chart.js/utils.js') }}"></script>
+    {#    <script src="{{ url_for('static', filename='muban/3492/charts-custom.js') }}"></script>  {# 饼状图 #}
+    {#    <script src="{{ url_for('static', filename='assets/demo/big-deal.js') }}"></script>#} <!-- 大额异动 -->
+    {#    3527 banner slick #}
+
+
+    {#    echarts #}
+    {#    <script src="{{ url_for('static', filename='plugins/echarts/echarts.js') }}"></script>#}
+
+
+    <script src="{{ url_for('static', filename='layui/layui.js') }}"></script>
+<script>
+
+    $(function() {
+        $("tr.parent").on("click", function() {
+         $(this).siblings('.child_'+this.id).toggle(1000, function() {
+             if ($(this).prev().find("i").text() == "+") {
+                 $(this).prev().find("i").text("-");
+             } else {
+                 $(this).prev().find("i").text("+");
+             }
+         });
+            {#  $("tr.parent").click(function() {
+        $(this).toggleClass("selected").siblings('.child_'+this.id).toggle();
+        #}
+        });
+      });
+    function add_tag(){
+    layui.use(['layer', 'form'], function(){
+        var layer = layui.layer
+         ,form = layui.form;
+       layer.open({
+            type:1,
+            skin:'layui-layer-molv',
+            area: ['370px', '50%'],
+            content:'<form class="layui-form" style="margin-top: 20px"> ' +
+            '<div class="layui-form-item" >' +
+            ' <label class="layui-form-label" style="color:black">地址</label>' +
+            '<div class="layui-input-inline"> ' +
+            '<input type="text" name="addr" autocomplete="off" class="layui-input" id="treeNodeName">' +
+            '</div>' +
+            '</div>' +
+            '<div class="layui-form-item" >' +
+            ' <label class="layui-form-label" style="color:black">标签</label>      <div class="layui-input-inline"> ' +
+            '<input type="text" name="tag" autocomplete="off" class="layui-input" id="memo" ></div> ' +
+
+            '<div class="layui-form-item" >' +
+            ' <label class="layui-form-label" style="color:black">类型</label>      <div class="layui-input-inline"> ' +
+            '<select class="layui-form-select" name="type" id="type"  type="text" >   <option value="Services" selected style="color:black">Services(服务)</option>  <option value ="Exchanges" >Exchanges(交易平台)</option>  <option value ="user">User(社交网站用户)</option>  <option value="Gambling">Gambling(赌博)</option> > <option value="Scam" >Scam(诈骗地址)</option>   <option value="Pools" >Pools(矿池地址)</option> <option value="Ransomware" >Ransomware(勒索地址)</option> <option value="victim" >victim(被勒索的受害者)</option> <option value="Historic" >Historic(历史服务地址如silk road)</option> <option value="other" >other(其他地址)</option></select> </div> ' +
+            '<div class="layui-form-item" >' +
+            ' <label class="layui-form-label" style="color:black">来源</label>     ' +
+            ' <div class="layui-input-inline"> ' +
+            '<input type="text" name="source" autocomplete="off" class="layui-input" id="source" value="user-defined" readonly="true" >' +
+            '</div>'+
+                
+             '<div class="layui-form-item" >' +
+            ' <label class="layui-form-label" style="color:black">备注</label>'+'<div class="layui-input-inline"> ' +
+            '<input type="text" name="com" autocomplete="off" class="layui-input" id="com" ></div>'+
+            '</form>',
+            btn: ['保存', '关闭'],
+            btnAlign: 'c',
+            yes: function(){
+                saveNode();
+            },
+            btn2: function(){
+                layer.closeAll();
+            },
+            success: function(layero, index){
+                layui.use(['form','element'],function () {
+                    var form = layui.form, element = layui.element;
+                    form.render();
+                });
+
+            }
+        });
+
+});}
+
+       function look_detail(single){
+       addr = JSON.parse(single.replace(/'/g,'"')).addr;
+       source = JSON.parse(single.replace(/'/g,'"')).source;
+       category = JSON.parse(single.replace(/'/g,'"')).category;
+       com = JSON.parse(single.replace(/'/g,'"')).com
+       alert('地址:'+addr+'\n'+'来源:'+source+'\n'+'标签:'+category+'\n'+'网站:'+com);
+            }
+
+      function saveNode() {
+        var addr = $('#treeNodeName').val();
+        var source = $('#source').val();
+        var tag = $('#memo').val();
+        var com = $('#com').val();
+        var type = $('#type').val();
+        var Udata= JSON.stringify({"addr":addr,"tag":tag,"source":source,"detail":com,"type":type});
+        $.ajax({
+            url:'/btc/saveMyTag/' ,
+            type:'POST',
+            contentType: 'application/json; charset=UTF-8',
+            data:Udata,
+            success:function (res) {
+                if(res.code == '0000'){
+                    alert("添加成功!");
+                    layer.closeAll();
+                }else{
+                     alert("添加失败!请检查地址是否正确！");
+                }
+                location.reload(true);
+            }
+        })
+    }
+   </script>
+        <script src="https://cdn.bootcdn.net/ajax/libs/xlsx/0.16.5/xlsx.mini.min.js"></script>
+        <script>
+    function gen_sheet(item){
+            var addr=$('#tag_addr').val();
+            var name=$('#tag_name').val();
+            var source = $('#tag_source').val();
+            var category = $('#tag_category').val();
+            var num = $('#tag_num').val();
+            var label_clash  = $('#label_clash').val();
+
+            if (label_clash == 1) {
+                label_clash = "硬冲突";
+            }
+            if (label_clash == 0){
+                label_clash = '软冲突';
+            }
+            if (label_clash ==2){
+                label_clash= '多级标签';
+            }
+        {#查询条件    #}
+        let head_require=['地址','标签名','标签来源','标签类型','多元标签数','标签冲突'];
+        {#查询结果#}
+        let head = ['地址', '多元标签', '标签名','标签来源','标签类型','标签级别','创建时间','详细信息']
+        let data = [];
+        let data_require=[[addr,name,source,category,num,label_clash]]
+        {#item = item.replace(/\"/g," ")#}
+        item= item.replaceAll('None','Null')
+
+        {#item = item.replaceAll(/\\"/g,'"')#}
+        {#item = item.replace(/'/g,'"')#}
+        console.log(item)
+        test=JSON.parse(item.replace(/'/g,'"'));
+        {#var test = jQuery.parseJSON(item.replace(/'/g,'"'))#}
+        {#var test = eval("(" + item + ")");#}
+        console.log(test)
+        for(var i =0;i<test.length;i++){
+             {#console.log(test[i]['_id']);#}
+             {#data.push([test[i]._id,test[i]['_source']['blockheight'],test[i]['time_bj'],test[i]['vin_times'],test[i]['vout_times'],test[i]['value']])#}
+             console.log(test[i])
+             data.push([test[i]['addr'],test[i]['labels_sum'],test[i]['name'],test[i]['source'],test[i]['category'],test[i]['rank'],test[i]['createtime'],test[i]['detail']])
+        }
+        console.log(data);
+          //将一个sheet转成最终的excel文件的blob对象
+        const sheetname1 = '查询结果'
+        const sheetname2 = '查询条件'
+        let workbook1 = {
+          SheetNames: [sheetname1,sheetname2],
+          Sheets: {}
+        }
+        let sheet1 = XLSX.utils.json_to_sheet(data)
+        sheet1.A1.v = head[0]
+        sheet1.B1.v = head[1]
+        sheet1.C1.v = head[2]
+        sheet1.D1.v = head[3]
+        sheet1.E1.v = head[4]
+        sheet1.F1.v = head[5]
+        sheet1.G1.v = head[6]
+        sheet1.H1.v = head[7]
+        let sheet2 = XLSX.utils.json_to_sheet(data_require)
+        sheet2.A1.v = head_require[0]
+        sheet2.B1.v = head_require[1]
+        sheet2.C1.v = head_require[2]
+        sheet2.D1.v = head_require[3]
+        sheet2.E1.v = head_require[4]
+        sheet2.F1.v = head_require[5]
+        workbook1.Sheets[sheetname1] = sheet1
+        workbook1.Sheets[sheetname2] = sheet2
+        // 生成excel的配置项
+        const wopts = {
+          bookType: 'xlsx', // 要生成的文件类型
+          bookSST: false, // 是否生成Shared String Table，官方解释是，如果开启生成速度会下降，但在低版本IOS设备上有更好的兼容性
+          type: 'binary'
+        };
+        const wbout = XLSX.write(workbook1, wopts);
+        const blob = new Blob([s2ab(wbout)], {
+          type: "application/octet-stream"
+        });
+        console.log(head_require)
+        r=window.prompt("请输入文件名：")
+        if (r!=='.' && r){
+            title=r+'.xlsx';
+            download(blob, title);
+            {#console.log(title);#}
+        }
+        else {
+            alert("请输入正确的文件名!")
+        }
+
+    }
+
+      // 字符串转ArrayBuffer
+      function s2ab(s) {
+        var buf = new ArrayBuffer(s.length);
+        var view = new Uint8Array(buf);
+        for (var i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
+        return buf;
+      }
+
+      function download(blob, name) {
+        // 用URL.createObjectURL下载
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url;
+        a.download = name;
+        let event;
+        if (window.MouseEvent) {
+          event = new MouseEvent('click');
+        } else {
+          event = document.createEvent('MouseEvents');
+          event.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+        }
+        a.dispatchEvent(event);
+      }
+    </script>
+{% endblock %}

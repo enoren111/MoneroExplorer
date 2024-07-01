@@ -1,0 +1,124 @@
+{% extends 'baseETH.html' %}
+{% block title %}{% endblock %}
+
+{% block head_style %}
+{#    <link rel="stylesheet" href="{{ url_for('static', filename='plugins/draggable-chart/css/style.css') }}"/>#}
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='plugins/amcharts/demo/index.css') }}"/>
+
+
+{% endblock %}
+
+{% block content %}
+{#    <h1>ETH ADDRERSS</h1>#}
+
+
+        {% include '_ethcrumb.html' %}
+
+    {# <div id="drawing"></div>#}
+    {#    <div id="SmoothChart" class="Chart"></div>#}
+
+
+    <br>
+    <br>
+    <div>
+        <div id="chartdiv"></div>
+    </div>
+
+    <div class="binary-body">
+        <div id="piechartdiv"></div>
+    <div class="bee-richer">
+
+    <span class="title">富豪榜(虚拟数据)</span>
+    <ul class="bee-ul">
+    <li>
+        <span>TOP 1-10</span>
+        <span class="right">12.75%</span>
+    </li>
+    <li>
+        <span>TOP 11-50</span>
+        <span class="right">12.34%</span>
+    </li>
+    <li>
+        <span>TOP 51-200</span>
+        <span class="right">18.54%</span>
+    </li>
+    <li>
+        <span>其他</span>
+        <span class="right">56.28%</span>
+    </li>
+    </ul>
+
+    </div>
+    </div>
+
+    <!-- start latestTransList-->
+    <table class="table">
+        <thead>
+        <tr>
+            <th>名次</th>
+            <th>地址</th>
+            <th>交易量</th>
+            <th>金额(ETH)</th>
+            <th>百分比</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in richList %}
+            <tr>
+
+                <td>{{ item['rank'] }}</td>
+                <td><a href="{{ url_for('eth.eth_address_detail',addr =  item['address'] ) }}">{{ item['address'] }}</a></td>
+                <td>{{ item['trans_num']['value'] }}</td>
+                <td>{{ item['value'] }}</td>
+                <td>{{ item['perc'] }}%</td>
+
+            </tr>
+        {% endfor %}
+
+
+        </tbody>
+    </table>
+{#    {{ pagination.links }}#}
+<div class="m-style pagination"></div>
+    <!-- start latestTransList-->
+
+
+{% endblock %}
+
+{% block body_script %}
+{#    <script src="{{ url_for('static', filename='plugins/svg/svg.js') }}"></script>#}
+{#    <script type="text/javascript">#}
+{#        var draw = SVG('drawing').size(300, 300)#}
+{#        var rect = draw.rect(100, 100).attr({fill: '#f06'})#}
+{#    </script>#}
+
+{#    <script src="{{ url_for('static', filename='plugins/draggable-chart/js/amcharts.js') }}"></script>#}
+{#    <script src="{{ url_for('static', filename='plugins/draggable-chart/js/serial.js') }}"></script>#}
+{#    <script src="{{ url_for('static', filename='plugins/draggable-chart/js/index.js') }}"></script>#}
+
+
+{# amchart #}
+    <script>
+        {#var chart_data = {{ chart_data}}#}
+        var date = {{ date|tojson }}
+        var new_address = {{ new_address|tojson }}
+        var active_address = {{ active_address|tojson }}
+        var pages = {{ pages }}
+    </script>
+    <script src="{{ url_for('static', filename='plugins/amcharts/core.js') }}"></script>
+    <script src="{{ url_for('static', filename='plugins/amcharts/charts.js') }}"></script>
+    <script src="{{ url_for('static', filename='plugins/amcharts/themes/dark.js') }}"></script>
+    <script src="{{ url_for('static', filename='plugins/amcharts/themes/animated.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='plugins/amcharts/demo/index.js') }}"></script>
+{#    <script src="{{ url_for('static', filename='plugins/amcharts/demo/bullet_color_test.js') }}"></script>#}
+    <script src="{{ url_for('static', filename='plugins/amcharts/demo/piechart1.js') }}"></script>
+
+
+
+    <script src="{{ url_for('static', filename='assets/js/page/address.js') }}"></script>
+
+{% endblock %}
+
